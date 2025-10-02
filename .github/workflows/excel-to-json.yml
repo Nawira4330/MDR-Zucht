@@ -1,0 +1,45 @@
+name: Convert Excel to JSON
+
+on:
+  push:
+    paths:
+      - "data/*.xlsx"
+  schedule:
+    - cron: "0 3 * * *"  # läuft täglich um 03:00 Uhr UTC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install deps
+        run: pip install pandas openpyxl
+
+      - name: Convert Excel → JSON
+        run: |
+          python << 'EOF'
+          import pandas as pd
+
+          # Stuten
+          stuten = pd.read_excel("data/stuten.xlsx", sheet_name="Stuten")
+          stuten.to_json("data/stuten.json", orient="records", force_ascii=False, indent=2)
+
+          # Hengste
+          hengste = pd.read_excel("data/hengste.xlsx", sheet_name="Hengste")
+          hengste.to_json("data/hengste.json", orient="records", force_ascii=False, indent=2)
+          EOF
+
+      - name: Commit JSON back
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/*.json
+          git commit -m "Update JSON from Excel" || echo "No changes"
+          git push
