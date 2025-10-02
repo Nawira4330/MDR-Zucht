@@ -5,7 +5,7 @@ on:
     paths:
       - "data/*.xlsx"
   schedule:
-    - cron: "0 3 * * *"  # läuft täglich um 03:00 Uhr UTC
+    - cron: "0 22 * * *"  # läuft täglich um 24:00 Uhr GMT
 
 jobs:
   build:
