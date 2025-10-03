@@ -1,69 +1,35 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Pferdezucht Matching</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    select, button { margin: 10px 0; padding: 8px; }
-    .result { margin-top: 20px; font-weight: bold; }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pferdezucht Matcher</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Stute-Hengst Matching</h1>
-  <label for="stute">Wähle eine Stute:</label>
-  <select id="stute"></select>
-  <div class="result" id="result"></div>
+  <header><h1>Pferdezucht Matcher</h1></header>
 
-  <script>
-    let stuten = [];
-    let hengste = [];
+  <main>
+    <section class="controls">
+      <label for="stuteSelect">Stute auswählen</label>
+      <select id="stuteSelect"><option value="">-- bitte wählen --</option></select>
+      <button id="btnShowSelected">Zeige Vorschläge (für Stute)</button>
+      <button id="btnShowAll">Alle Anpaarungsvorschläge anzeigen</button>
+    </section>
 
-    async function loadData() {
-      stuten = await fetch('data/stuten.json').then(r => r.json());
-      hengste = await fetch('data/hengste.json').then(r => r.json());
+    <section id="result" class="result">
+      <!-- Ergebnisse werden hier injectet -->
+    </section>
 
-      let select = document.getElementById("stute");
-      stuten.forEach(s => {
-        let opt = document.createElement("option");
-        opt.value = s.Name;
-        opt.textContent = s.Name || "Stute ohne Name";
-        select.appendChild(opt);
-      });
+    <section class="tablewrap">
+      <h3>Alle Hengste (sortiert nach Score für die ausgewählte Stute)</h3>
+      <table id="hengsteTable">
+        <thead><tr><th>Hengst</th><th>Farbgenetik</th><th>Erwarteter Score</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </section>
+  </main>
 
-      select.addEventListener("change", () => matchHengst(select.value));
-    }
-
-    function deviationScore(stute, hengst) {
-      let score = 0;
-      for (let key in stute) {
-        if (key !== "Name" && hengst[key] && hengst[key] !== stute[key]) {
-          score++;
-        }
-      }
-      return score;
-    }
-
-    function matchHengst(stuteName) {
-      let stute = stuten.find(s => s.Name === stuteName);
-      if (!stute) return;
-
-      let best = null;
-      let bestScore = Infinity;
-
-      hengste.forEach(h => {
-        let score = deviationScore(stute, h);
-        if (score < bestScore) {
-          best = h;
-          bestScore = score;
-        }
-      });
-
-      document.getElementById("result").innerText =
-        `Bester Hengst für ${stute.Name}: ${best ? best.Name : "Keiner gefunden"}`;
-    }
-
-    loadData();
-  </script>
+<script src="app.js"></script>
 </body>
 </html>
