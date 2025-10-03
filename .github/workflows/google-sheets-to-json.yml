@@ -1,0 +1,65 @@
+name: Google Sheets -> JSON (Stuten & Hengste)
+
+on:
+  workflow_dispatch:   # manuell ausführen möglich
+  schedule:
+    - cron: "0 22 * * *"  # täglich 24:00 GTM (einstellbar)
+  push:
+    paths:
+      - ".github/workflows/google-sheets-to-json.yml"
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install deps
+        run: pip install pandas
+
+      - name: Download CSVs from Google Sheets
+        env:
+          STUTEN_CSV: ${{ secrets.SHEET_STUTEN_CSV }}
+          HENGSTE_CSV: ${{ secrets.SHEET_HENGSTE_CSV }}
+        run: |
+          echo "Downloading STUTEN CSV ..."
+          curl -s -L "$STUTEN_CSV" -o /tmp/stuten.csv || (echo "failed to download stuten"; exit 1)
+          echo "Downloading HENGSTE CSV ..."
+          curl -s -L "$HENGSTE_CSV" -o /tmp/hengste.csv || (echo "failed to download hengste"; exit 1)
+          ls -l /tmp/*.csv
+
+      - name: Convert CSV -> JSON
+        run: |
+          python - <<'PY'
+          import pandas as pd, json, os
+          # read csv, normalize column names if necessary, write json
+          def csv_to_json(csv_path, json_path):
+              df = pd.read_csv(csv_path, dtype=str).fillna("")
+              # optional: rename columns to expected names, if your sheet uses other headers.
+              df.to_json(json_path, orient="records", force_ascii=False, indent=2)
+              print("Wrote", json_path)
+
+          os.makedirs("data", exist_ok=True)
+          csv_to_json("/tmp/stuten.csv", "data/stuten.json")
+          csv_to_json("/tmp/hengste.csv", "data/hengste.json")
+          PY
+
+      - name: Commit and push JSON (if changed)
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add data/stuten.json data/hengste.json || true
+          if git diff --cached --quiet; then
+            echo "No changes in JSON to commit"
+          else
+            git commit -m "Update JSON from Google Sheets"
+            git push
+          fi
