@@ -5,14 +5,17 @@ on:
     paths:
       - "data/*.xlsx"
   schedule:
-    - cron: "0 22 * * *"  # läuft täglich um 24:00 Uhr GMT
+    - cron: "0 22 * * *"   # täglich 24:00 GTM
+  workflow_dispatch:      # ermöglicht manuelles Ausführen
 
 jobs:
-  build:
+  convert:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
+      - name: Checkout
         uses: actions/checkout@v3
+        with:
+          persist-credentials: true
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -22,24 +25,47 @@ jobs:
       - name: Install deps
         run: pip install pandas openpyxl
 
-      - name: Convert Excel → JSON
+      - name: Convert Excel -> JSON
         run: |
-          python << 'EOF'
+          python - <<'PY'
           import pandas as pd
+          import os
 
-          # Stuten
-          stuten = pd.read_excel("data/stuten.xlsx", sheet_name="Stuten")
-          stuten.to_json("data/stuten.json", orient="records", force_ascii=False, indent=2)
+          def try_sheet_to_json(xlsx_path, sheet_name, out_path):
+              try:
+                  df = pd.read_excel(xlsx_path, sheet_name=sheet_name)
+                  df = df.fillna("")   # leere Zellen als "" speichern
+                  df.to_json(out_path, orient='records', force_ascii=False, indent=2)
+                  print("WROTE", out_path)
+                  return True
+              except Exception as e:
+                  print("SKIP", xlsx_path, sheet_name, "->", e)
+                  return False
 
-          # Hengste
-          hengste = pd.read_excel("data/hengste.xlsx", sheet_name="Hengste")
-          hengste.to_json("data/hengste.json", orient="records", force_ascii=False, indent=2)
-          EOF
+          written = False
+          if os.path.exists("data/stuten.xlsx"):
+              written |= try_sheet_to_json("data/stuten.xlsx", "Stuten", "data/stuten.json")
+          else:
+              print("data/stuten.xlsx not found")
 
-      - name: Commit JSON back
+          if os.path.exists("data/hengste.xlsx"):
+              written |= try_sheet_to_json("data/hengste.xlsx", "Hengste", "data/hengste.json")
+          else:
+              print("data/hengste.xlsx not found")
+
+          if not written:
+              print("No JSON written.")
+          PY
+
+      - name: Commit JSON back (only if changed)
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add data/*.json
-          git commit -m "Update JSON from Excel" || echo "No changes"
-          git push
+          # nur committen wenn Änderungen vorhanden sind
+          if git status --porcelain | grep -E 'data/stuten.json|data/hengste.json' >/dev/null; then
+            git add data/stuten.json data/hengste.json || true
+            git commit -m "Update JSON from Excel" || echo "Nothing to commit or commit failed"
+            git push || echo "Push failed or not permitted"
+          else
+            echo "No changes to JSON"
+          fi
