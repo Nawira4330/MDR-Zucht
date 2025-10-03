@@ -1,65 +1,52 @@
-name: Google Sheets -> JSON (Stuten & Hengste)
+name: Update JSON from Google Sheets
 
 on:
-  workflow_dispatch:   # manuell ausführen möglich
   schedule:
-    - cron: "0 22 * * *"  # täglich 24:00 GTM (einstellbar)
-  push:
-    paths:
-      - ".github/workflows/google-sheets-to-json.yml"
+    - cron: "0 * * * *"   # Läuft stündlich
+  workflow_dispatch:       # Manuell auslösbar
 
 jobs:
   convert:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v3
         with:
-          persist-credentials: true
+          fetch-depth: 0   # Wichtig für rebase
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: "3.x"
 
-      - name: Install deps
-        run: pip install pandas
+      - name: Install dependencies
+        run: pip install pandas openpyxl requests
 
-      - name: Download CSVs from Google Sheets
-        env:
-          STUTEN_CSV: ${{ secrets.SHEET_STUTEN_CSV }}
-          HENGSTE_CSV: ${{ secrets.SHEET_HENGSTE_CSV }}
+      - name: Download Stuten CSV
         run: |
-          echo "Downloading STUTEN CSV ..."
-          curl -s -L "$STUTEN_CSV" -o /tmp/stuten.csv || (echo "failed to download stuten"; exit 1)
-          echo "Downloading HENGSTE CSV ..."
-          curl -s -L "$HENGSTE_CSV" -o /tmp/hengste.csv || (echo "failed to download hengste"; exit 1)
-          ls -l /tmp/*.csv
+          curl -L "https://docs.google.com/spreadsheets/d/<DEINE_STUTEN_ID>/export?format=csv" -o data/stuten.csv
 
-      - name: Convert CSV -> JSON
+      - name: Download Hengste CSV
         run: |
-          python - <<'PY'
-          import pandas as pd, json, os
-          # read csv, normalize column names if necessary, write json
-          def csv_to_json(csv_path, json_path):
-              df = pd.read_csv(csv_path, dtype=str).fillna("")
-              # optional: rename columns to expected names, if your sheet uses other headers.
-              df.to_json(json_path, orient="records", force_ascii=False, indent=2)
-              print("Wrote", json_path)
+          curl -L "https://docs.google.com/spreadsheets/d/<DEINE_HENGSTE_ID>/export?format=csv" -o data/hengste.csv
 
-          os.makedirs("data", exist_ok=True)
-          csv_to_json("/tmp/stuten.csv", "data/stuten.json")
-          csv_to_json("/tmp/hengste.csv", "data/hengste.json")
-          PY
+      - name: Convert CSV to JSON
+        run: |
+          python - <<'EOF'
+          import pandas as pd
+          stuten = pd.read_csv("data/stuten.csv")
+          hengste = pd.read_csv("data/hengste.csv")
 
-      - name: Commit and push JSON (if changed)
+          stuten.to_json("data/stuten.json", orient="records", force_ascii=False, indent=2)
+          hengste.to_json("data/hengste.json", orient="records", force_ascii=False, indent=2)
+          EOF
+
+      - name: Commit and push changes
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
-          git add data/stuten.json data/hengste.json || true
-          if git diff --cached --quiet; then
-            echo "No changes in JSON to commit"
-          else
-            git commit -m "Update JSON from Google Sheets"
-            git push
-          fi
+          git add data/*.json
+          git commit -m "Update JSON from Google Sheets" || echo "No changes to commit"
+          git pull --rebase origin main
+          git push origin main
