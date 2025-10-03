@@ -21,15 +21,15 @@ jobs:
           python-version: "3.x"
 
       - name: Install dependencies
-        run: pip install pandas openpyxl requests
+        run: pip install pandas requests openpyxl
 
       - name: Download Stuten CSV
         run: |
-          curl -L "https://docs.google.com/spreadsheets/d/<DEINE_STUTEN_ID>/export?format=csv" -o data/stuten.csv
+          curl -L "https://docs.google.com/spreadsheets/d/e/2PACX-1vQUZE4HXc1di-ym2n79-_9Rc-vxHbMMniRXmgq1woBSha0MjvANgvYFoqH4w7E2LA/pub?output=csv" -o data/stuten.csv
 
       - name: Download Hengste CSV
         run: |
-          curl -L "https://docs.google.com/spreadsheets/d/<DEINE_HENGSTE_ID>/export?format=csv" -o data/hengste.csv
+          curl -L "https://docs.google.com/spreadsheets/d/e/2PACX-1vRvyxHFLsRMdLYcZR6VhzhDDHJX46TLp3WMUslb53ij2zzAY7R2o9rZjVHpani0cA/pub?output=csv" -o data/hengste.csv
 
       - name: Convert CSV to JSON
         run: |
