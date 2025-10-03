@@ -5,11 +5,22 @@ async function ladeDaten() {
   try {
     const resp1 = await fetch('data/stuten.json');
     if (!resp1.ok) throw new Error("stuten.json konnte nicht geladen werden: " + resp1.status);
-    stuten = await resp1.json();
+
+    stuten = (await resp1.json()).map(s => ({
+      ...s,
+      Name: (s.Name || "").replace(/\r?\n/g, " ").trim(),
+      Besitzer: (s.Besitzer || "").replace(/\r?\n/g, " ").trim(),
+      Farbgenetik: (s.Farbgenetik || "").replace(/\r?\n/g, " ").trim()
+    }));
 
     const resp2 = await fetch('data/hengste.json');
     if (!resp2.ok) throw new Error("hengste.json konnte nicht geladen werden: " + resp2.status);
-    hengste = await resp2.json();
+
+    hengste = (await resp2.json()).map(h => ({
+      ...h,
+      Name: (h.Name || "").replace(/\r?\n/g, " ").trim(),
+      Farbgenetik: (h.Farbgenetik || "").replace(/\r?\n/g, " ").trim()
+    }));
 
     console.log("Stuten geladen:", stuten);
     console.log("Hengste geladen:", hengste);
@@ -45,7 +56,6 @@ function fuelleDropdowns() {
 
 // Bewertungsfunktion: Wie gut gleicht der Hengst die Schwächen der Stute aus?
 function berechneScore(stute, hengst) {
-  // Vereinfachung: Je weniger Abweichungen, desto besser
   let score = 0;
   const merkmale = Object.keys(stute).filter(
     k => !["Name", "Besitzer", "Farbgenetik"].includes(k)
@@ -55,7 +65,6 @@ function berechneScore(stute, hengst) {
     const stutenWert = stute[m];
     const hengstWert = hengst[m];
     if (!stutenWert || !hengstWert) return;
-    // Beispiel: identische Werte = besser
     score += stutenWert === hengstWert ? 2 : 1;
   });
 
@@ -66,62 +75,38 @@ function zeigeVorschlaege() {
   const stutenName = document.getElementById("stuteSelect").value;
   const besitzerName = document.getElementById("besitzerSelect").value;
 
-  let stute = null;
+  let stutenListe = [];
 
   if (stutenName) {
-    stute = stuten.find(s => s.Name === stutenName);
+    stutenListe = stuten.filter(s => s.Name === stutenName);
   } else if (besitzerName) {
-    stute = stuten.find(s => s.Besitzer === besitzerName);
+    stutenListe = stuten.filter(s => s.Besitzer === besitzerName);
+  } else {
+    stutenListe = stuten; // Alle anzeigen
   }
 
   const ergebnisDiv = document.getElementById("ergebnis");
   ergebnisDiv.innerHTML = "";
 
-  if (!stute) {
-    ergebnisDiv.textContent = "Bitte Stute oder Besitzer auswählen.";
+  if (stutenListe.length === 0) {
+    ergebnisDiv.textContent = "Keine passenden Stuten gefunden.";
     return;
   }
 
-  // Score für jeden Hengst berechnen
-  const scored = hengste
-    .filter(h => h.Name && h.Farbgenetik) // nur vollständige Hengste
-    .map(h => ({
-      ...h,
-      score: berechneScore(stute, h)
-    }))
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3); // Top 3
-
-  // Anzeige
-  let html = `<h3>${stute.Name} — Besitzer: ${stute.Besitzer}</h3>`;
-  html += `<p>Farbgenetik: ${stute.Farbgenetik || "-"}</p>`;
-  html += "<ol>";
-  scored.forEach((h, idx) => {
-    html += `<li>${h.Name} — Farbe: ${h.Farbgenetik || "-"} (Score: ${h.score})</li>`;
-  });
-  html += "</ol>";
-
-  ergebnisDiv.innerHTML = html;
-}
-
-function zeigeAlle() {
-  const ergebnisDiv = document.getElementById("ergebnis");
-  ergebnisDiv.innerHTML = "";
-
-  stuten.forEach(stute => {
+  stutenListe.forEach(stute => {
     const scored = hengste
-      .filter(h => h.Name && h.Farbgenetik)
+      .filter(h => h.Name && h.Farbgenetik) // nur vollständige Hengste
       .map(h => ({
         ...h,
         score: berechneScore(stute, h)
       }))
       .sort((a, b) => b.score - a.score)
-      .slice(0, 3);
+      .slice(0, 3); // Top 3
 
     let html = `<h3>${stute.Name} — Besitzer: ${stute.Besitzer}</h3>`;
     html += `<p>Farbgenetik: ${stute.Farbgenetik || "-"}</p>`;
     html += "<ol>";
-    scored.forEach(h => {
+    scored.forEach((h, idx) => {
       html += `<li>${h.Name} — Farbe: ${h.Farbgenetik || "-"} (Score: ${h.score})</li>`;
     });
     html += "</ol><hr/>`;
