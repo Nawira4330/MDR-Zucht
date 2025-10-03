@@ -2,13 +2,23 @@ let stuten = [];
 let hengste = [];
 
 async function ladeDaten() {
-  const stutenResp = await fetch("data/stuten.json");
-  stuten = await stutenResp.json();
+  try {
+    const resp1 = await fetch('data/stuten.json');
+    if (!resp1.ok) throw new Error("stuten.json konnte nicht geladen werden: " + resp1.status);
+    stuten = await resp1.json();
 
-  const hengsteResp = await fetch("data/hengste.json");
-  hengste = await hengsteResp.json();
+    const resp2 = await fetch('data/hengste.json');
+    if (!resp2.ok) throw new Error("hengste.json konnte nicht geladen werden: " + resp2.status);
+    hengste = await resp2.json();
 
-  fuelleDropdowns();
+    console.log("Stuten geladen:", stuten);
+    console.log("Hengste geladen:", hengste);
+
+    fuelleDropdowns();
+  } catch (err) {
+    console.error("Fehler in ladeDaten():", err);
+    document.getElementById("ergebnis").innerText = "Fehler beim Laden der Daten: " + err.message;
+  }
 }
 
 function fuelleDropdowns() {
