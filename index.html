@@ -1,35 +1,75 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pferdezucht Matcher</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Pferdezucht Matcher</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f7f9;
+    }
+    header {
+      background: #25746c;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+    main {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    select, button {
+      margin: 0.5rem;
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+    #ergebnis {
+      margin-top: 2rem;
+    }
+    h3 {
+      margin-top: 1rem;
+      color: #25746c;
+    }
+    ol {
+      padding-left: 1.5rem;
+    }
+    li {
+      margin-bottom: 0.5rem;
+    }
+  </style>
 </head>
 <body>
-  <header><h1>Pferdezucht Matcher</h1></header>
+  <header>
+    <h1>Pferdezucht Matcher</h1>
+  </header>
 
   <main>
-    <section class="controls">
-      <label for="stuteSelect">Stute auswählen</label>
-      <select id="stuteSelect"><option value="">-- bitte wählen --</option></select>
-      <button id="btnShowSelected">Zeige Vorschläge (für Stute)</button>
-      <button id="btnShowAll">Alle Anpaarungsvorschläge anzeigen</button>
-    </section>
+    <div>
+      <label for="stuteSelect">Stute auswählen:</label>
+      <select id="stuteSelect" onchange="zeigeVorschlaege()">
+        <option value="">-- bitte wählen --</option>
+      </select>
 
-    <section id="result" class="result">
-      <!-- Ergebnisse werden hier injectet -->
-    </section>
+      <label for="besitzerSelect">Besitzer auswählen:</label>
+      <select id="besitzerSelect" onchange="zeigeVorschlaege()">
+        <option value="">-- bitte wählen --</option>
+      </select>
+    </div>
 
-    <section class="tablewrap">
-      <h3>Alle Hengste (sortiert nach Score für die ausgewählte Stute)</h3>
-      <table id="hengsteTable">
-        <thead><tr><th>Hengst</th><th>Farbgenetik</th><th>Erwarteter Score</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </section>
+    <div>
+      <button onclick="zeigeVorschlaege()">Zeige Vorschläge (für Auswahl)</button>
+      <button onclick="zeigeAlle()">Alle Anpaarungsvorschläge anzeigen</button>
+    </div>
+
+    <div id="ergebnis"></div>
   </main>
 
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
