@@ -2,73 +2,40 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <title>Pferdezucht Matcher</title>
+  <title>MDR Zucht Matching</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f5f7f9;
-    }
-    header {
-      background: #25746c;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-    }
-    main {
-      max-width: 1000px;
-      margin: 2rem auto;
-      padding: 1rem;
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin: 20px;
     }
     select, button {
-      margin: 0.5rem;
-      padding: 0.5rem;
-      font-size: 1rem;
-    }
-    #ergebnis {
-      margin-top: 2rem;
+      margin: 5px;
+      padding: 5px;
     }
     h3 {
-      margin-top: 1rem;
-      color: #25746c;
+      margin-top: 20px;
     }
     ol {
-      padding-left: 1.5rem;
-    }
-    li {
-      margin-bottom: 0.5rem;
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Pferdezucht Matcher</h1>
-  </header>
+  <h1>MDR Zucht — Anpaarungsvorschläge</h1>
 
-  <main>
-    <div>
-      <label for="stuteSelect">Stute auswählen:</label>
-      <select id="stuteSelect" onchange="zeigeVorschlaege()">
-        <option value="">-- bitte wählen --</option>
-      </select>
+  <label for="stuteSelect">Stute wählen:</label>
+  <select id="stuteSelect">
+    <option value="">Alle Stuten</option>
+  </select>
 
-      <label for="besitzerSelect">Besitzer auswählen:</label>
-      <select id="besitzerSelect" onchange="zeigeVorschlaege()">
-        <option value="">-- bitte wählen --</option>
-      </select>
-    </div>
+  <label for="besitzerSelect">Besitzer wählen:</label>
+  <select id="besitzerSelect">
+    <option value="">Alle Besitzer</option>
+  </select>
 
-    <div>
-      <button onclick="zeigeVorschlaege()">Zeige Vorschläge (für Auswahl)</button>
-      <button onclick="zeigeAlle()">Alle Anpaarungsvorschläge anzeigen</button>
-    </div>
+  <button onclick="zeigeVorschlaege()">Vorschläge anzeigen</button>
 
-    <div id="ergebnis"></div>
-  </main>
+  <div id="ergebnis"></div>
 
   <script src="app.js"></script>
 </body>
