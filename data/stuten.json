@@ -1,6 +1,6 @@
 [
   {
-    "StutenListe":"(E) Galiya von Sora",
+    "Name":"(E) Galiya von Sora",
     "Farbgenetik":"Sty E At D Cr RnTo",
     "Kopf":"hh Hh Hh hh | hh HH hh Hh",
     "Gebiss":"HH hH hH hh | hh Hh hh hh",
@@ -19,7 +19,7 @@
     "Besitzer":"Nawira13"
   },
   {
-    "StutenListe":"Doreen colorful *miau*",
+    "Name":"Doreen colorful *miau*",
     "Farbgenetik":"Sty Ap RnRn Rb",
     "Kopf":"HH hH hh Hh | hh hh hH hh",
     "Gebiss":"hH hh Hh hH | hh HH hh hH",
@@ -38,7 +38,7 @@
     "Besitzer":"Nawira13"
   },
   {
-    "StutenListe":"Van Ferro Chi A Lis",
+    "Name":"Van Ferro Chi A Lis",
     "Farbgenetik":"E At D Cr SB O",
     "Kopf":"Hh hh Hh hh | hh hH hh hh",
     "Gebiss":"hh hH hh hH | hh hh hh hh",
@@ -57,7 +57,7 @@
     "Besitzer":"Nawira13"
   },
   {
-    "StutenListe":"Sweet moment ~*Star*~",
+    "Name":"Sweet moment ~*Star*~",
     "Farbgenetik":"E Ap Cr Ch Rn O Spl",
     "Kopf":"Hh hh Hh hh | hh hh hh hH",
     "Gebiss":"hH hH hH hH | hh hh hH hh",
@@ -76,7 +76,7 @@
     "Besitzer":"Nawira13"
   },
   {
-    "StutenListe":"(E) Kaya von Sora",
+    "Name":"(E) Kaya von Sora",
     "Farbgenetik":"E AtA1 D Cr SBSB O Spl",
     "Kopf":"hh hh Hh HH | hH hh hh hh",
     "Gebiss":"Hh hH Hh hh | hh hh hh hH",
@@ -95,7 +95,7 @@
     "Besitzer":"Nawira13"
   },
   {
-    "StutenListe":"Amber colorful *miau*",
+    "Name":"Amber colorful *miau*",
     "Farbgenetik":"At SBRn Spl",
     "Kopf":"hH hH hh hH | hh HH hh HH",
     "Gebiss":"hh hH hh hh | hh HH hh hh",
@@ -114,7 +114,7 @@
     "Besitzer":"Nawira13"
   },
   {
-    "StutenListe":"It’s a girl ~*Star*~",
+    "Name":"It’s a girl ~*Star*~",
     "Farbgenetik":"E At DD CrCr SBTo Z O Spl",
     "Kopf":"hh hh Hh Hh | hh hh hH hh",
     "Gebiss":"Hh hh hh HH | hh hh hH Hh",
@@ -133,7 +133,7 @@
     "Besitzer":"Nawira13"
   },
   {
-    "StutenListe":"Gerda colorful *miau*",
+    "Name":"Gerda colorful *miau*",
     "Farbgenetik":"EE A1 D To SplSpl",
     "Kopf":"hh Hh hh hh | hh Hh hh hh",
     "Gebiss":"hh hH hh hh | hh hh hH hh",
@@ -152,7 +152,7 @@
     "Besitzer":"Nawira13"
   },
   {
-    "StutenListe":"SPZ* Last Day to Remember",
+    "Name":"SPZ* Last Day to Remember",
     "Farbgenetik":"EE SB",
     "Kopf":"hH hh hh hh | hh Hh hh hH",
     "Gebiss":"hH HH hh Hh | hh hh hH hh",
@@ -171,7 +171,7 @@
     "Besitzer":"Nawira13"
   },
   {
-    "StutenListe":"Moon's Blue Claws And Fangs",
+    "Name":"Moon's Blue Claws And Fangs",
     "Farbgenetik":"Sty E At D To Spl",
     "Kopf":"hh hH hh hh | hH hh hh hh",
     "Gebiss":"HH hh HH HH | hh hh hh hh",
@@ -190,7 +190,7 @@
     "Besitzer":"Nawira13"
   },
   {
-    "StutenListe":"Fauxpas ~*Star*~",
+    "Name":"Fauxpas ~*Star*~",
     "Farbgenetik":"E CrCr Rn O",
     "Kopf":"hH hH HH Hh | hh hh hH Hh",
     "Gebiss":"hH Hh hh HH | hH hh Hh Hh",
@@ -209,7 +209,7 @@
     "Besitzer":"Nawira13"
   },
   {
-    "StutenListe":"APHs Fine Girl ~Lii~",
+    "Name":"APHs Fine Girl ~Lii~",
     "Farbgenetik":"E Cr Rn O Spl",
     "Kopf":"Hh HH Hh Hh | hh hh hh Hh",
     "Gebiss":"HH Hh hH hh | hh Hh hh hh",
@@ -228,7 +228,7 @@
     "Besitzer":"Nawira13"
   },
   {
-    "StutenListe":"~~APH~~ Rocksy -Cookie-",
+    "Name":"~~APH~~ Rocksy -Cookie-",
     "Farbgenetik":"EE A1Ap D Cr SB O",
     "Kopf":"hh hh Hh Hh | hh hh hh Hh",
     "Gebiss":"Hh HH hh Hh | hh hh HH hh",
