@@ -1,6 +1,7 @@
 [
   {
     "StutenListe":"(E) Galiya von Sora",
+    "Farbgenetik":"Sty E At D Cr RnTo",
     "Kopf":"hh Hh Hh hh | hh HH hh Hh",
     "Gebiss":"HH hH hH hh | hh Hh hh hh",
     "Hals":"hh hH hh Hh | hh hh hH hH",
@@ -15,11 +16,11 @@
     "Beinstellung":"hh HH hh Hh | Hh hh Hh hh",
     "Fesseln":"Hh HH HH HH | Hh hh hH hh",
     "Hufe":"hH HH hh hH | Hh hh Hh Hh",
-    "Besitzer":"Nawira13",
-    "Genetik":"Sty E At D Cr RnTo"
+    "Besitzer":"Nawira13"
   },
   {
     "StutenListe":"Doreen colorful *miau*",
+    "Farbgenetik":"Sty Ap RnRn Rb",
     "Kopf":"HH hH hh Hh | hh hh hH hh",
     "Gebiss":"hH hh Hh hH | hh HH hh hH",
     "Hals":"hh HH hh Hh | Hh hH hh Hh",
@@ -34,11 +35,11 @@
     "Beinstellung":"Hh HH HH hh | hH hh hh hh",
     "Fesseln":"HH HH hH HH | hh hh hh hh",
     "Hufe":"Hh hh HH hh | hh hh hh Hh",
-    "Besitzer":"Nawira13",
-    "Genetik":"Sty Ap RnRn Rb"
+    "Besitzer":"Nawira13"
   },
   {
     "StutenListe":"Van Ferro Chi A Lis",
+    "Farbgenetik":"E At D Cr SB O",
     "Kopf":"Hh hh Hh hh | hh hH hh hh",
     "Gebiss":"hh hH hh hH | hh hh hh hh",
     "Hals":"hh hH hH hh | hH hh hh hh",
@@ -53,11 +54,11 @@
     "Beinstellung":"hh hH hh HH | hh hh Hh hh",
     "Fesseln":"Hh Hh hh Hh | HH hh hh hh",
     "Hufe":"Hh hh hH HH | HH hh hh Hh",
-    "Besitzer":"Nawira13",
-    "Genetik":"E At D Cr SB O"
+    "Besitzer":"Nawira13"
   },
   {
     "StutenListe":"Sweet moment ~*Star*~",
+    "Farbgenetik":"E Ap Cr Ch Rn O Spl",
     "Kopf":"Hh hh Hh hh | hh hh hh hH",
     "Gebiss":"hH hH hH hH | hh hh hH hh",
     "Hals":"hh hh HH hH | Hh hh hh hh",
@@ -72,11 +73,11 @@
     "Beinstellung":"HH hH hh hH | hh hH hh hh",
     "Fesseln":"hH hH hh Hh | hH hh hh hH",
     "Hufe":"HH hh hH hh | hh Hh hh Hh",
-    "Besitzer":"Nawira13",
-    "Genetik":"E Ap Cr Ch Rn O Spl"
+    "Besitzer":"Nawira13"
   },
   {
     "StutenListe":"(E) Kaya von Sora",
+    "Farbgenetik":"E AtA1 D Cr SBSB O Spl",
     "Kopf":"hh hh Hh HH | hH hh hh hh",
     "Gebiss":"Hh hH Hh hh | hh hh hh hH",
     "Hals":"hH Hh hH hh | Hh hh hh hh",
@@ -91,11 +92,11 @@
     "Beinstellung":"hH hH Hh Hh | hh Hh hh Hh",
     "Fesseln":"Hh hh Hh hh | hh hh hh hh",
     "Hufe":"hh hH hH hH | hH Hh hh hH",
-    "Besitzer":"Nawira13",
-    "Genetik":"E AtA1 D Cr SBSB O Spl"
+    "Besitzer":"Nawira13"
   },
   {
     "StutenListe":"Amber colorful *miau*",
+    "Farbgenetik":"At SBRn Spl",
     "Kopf":"hH hH hh hH | hh HH hh HH",
     "Gebiss":"hh hH hh hh | hh HH hh hh",
     "Hals":"hh hh hh hH | hh hh hh Hh",
@@ -110,11 +111,11 @@
     "Beinstellung":"Hh hh Hh HH | hH hh hh hH",
     "Fesseln":"hh hH hh HH | hh hH hh Hh",
     "Hufe":"hh hh Hh HH | Hh Hh hH Hh",
-    "Besitzer":"Nawira13",
-    "Genetik":"At SBRn Spl"
+    "Besitzer":"Nawira13"
   },
   {
     "StutenListe":"It’s a girl ~*Star*~",
+    "Farbgenetik":"E At DD CrCr SBTo Z O Spl",
     "Kopf":"hh hh Hh Hh | hh hh hH hh",
     "Gebiss":"Hh hh hh HH | hh hh hH Hh",
     "Hals":"Hh hH Hh hh | HH hh hh Hh",
@@ -129,11 +130,11 @@
     "Beinstellung":"hH HH hh hh | hh hh hH HH",
     "Fesseln":"HH hH hh Hh | hh Hh Hh hh",
     "Hufe":"hh hh HH Hh | hh hh Hh hh",
-    "Besitzer":"Nawira13",
-    "Genetik":"E At DD CrCr SBTo Z O Spl"
+    "Besitzer":"Nawira13"
   },
   {
     "StutenListe":"Gerda colorful *miau*",
+    "Farbgenetik":"EE A1 D To SplSpl",
     "Kopf":"hh Hh hh hh | hh Hh hh hh",
     "Gebiss":"hh hH hh hh | hh hh hH hh",
     "Hals":"Hh hH Hh Hh | hH hh hh HH",
@@ -148,11 +149,11 @@
     "Beinstellung":"HH HH hh HH | hh hh hh hh",
     "Fesseln":"hh hh hH Hh | hh Hh hh hh",
     "Hufe":"HH Hh hH Hh | hH hh hh hH",
-    "Besitzer":"Nawira13",
-    "Genetik":"EE A1 D To SplSpl"
+    "Besitzer":"Nawira13"
   },
   {
     "StutenListe":"SPZ* Last Day to Remember",
+    "Farbgenetik":"EE SB",
     "Kopf":"hH hh hh hh | hh Hh hh hH",
     "Gebiss":"hH HH hh Hh | hh hh hH hh",
     "Hals":"hh Hh Hh Hh | Hh hh hh hh",
@@ -167,11 +168,11 @@
     "Beinstellung":"HH Hh hh hH | Hh Hh hh hh",
     "Fesseln":"HH hh hH HH | HH hh hh hH",
     "Hufe":"hH Hh hh hH | hh Hh hH hh",
-    "Besitzer":"Nawira13",
-    "Genetik":"EE SB"
+    "Besitzer":"Nawira13"
   },
   {
     "StutenListe":"Moon's Blue Claws And Fangs",
+    "Farbgenetik":"Sty E At D To Spl",
     "Kopf":"hh hH hh hh | hH hh hh hh",
     "Gebiss":"HH hh HH HH | hh hh hh hh",
     "Hals":"Hh hh Hh HH | hH Hh hh hh",
@@ -186,11 +187,11 @@
     "Beinstellung":"hh Hh HH HH | hh hH hh hH",
     "Fesseln":"hH HH hh Hh | hh hh Hh hH",
     "Hufe":"Hh hH HH hh | Hh hh hh hh",
-    "Besitzer":"Nawira13",
-    "Genetik":"Sty E At D To Spl"
+    "Besitzer":"Nawira13"
   },
   {
     "StutenListe":"Fauxpas ~*Star*~",
+    "Farbgenetik":"E CrCr Rn O",
     "Kopf":"hH hH HH Hh | hh hh hH Hh",
     "Gebiss":"hH Hh hh HH | hH hh Hh Hh",
     "Hals":"hH hH hH hh | hh hh Hh hh",
@@ -205,11 +206,11 @@
     "Beinstellung":"HH hH hh HH | hh hh hH hH",
     "Fesseln":"hH hH Hh Hh | hh hh hh hh",
     "Hufe":"hh Hh HH hh | hh hh hh hh",
-    "Besitzer":"Nawira13",
-    "Genetik":"E CrCr Rn O"
+    "Besitzer":"Nawira13"
   },
   {
     "StutenListe":"APHs Fine Girl ~Lii~",
+    "Farbgenetik":"E Cr Rn O Spl",
     "Kopf":"Hh HH Hh Hh | hh hh hh Hh",
     "Gebiss":"HH Hh hH hh | hh Hh hh hh",
     "Hals":"hh Hh hh hH | hh Hh Hh hh",
@@ -224,11 +225,11 @@
     "Beinstellung":"hh Hh hH Hh | hh hh hH hh",
     "Fesseln":"hH hh hh hH | hh hh hh Hh",
     "Hufe":"hH hH HH hh | Hh hH hh hh",
-    "Besitzer":"Nawira13",
-    "Genetik":"E Cr Rn O Spl"
+    "Besitzer":"Nawira13"
   },
   {
     "StutenListe":"~~APH~~ Rocksy -Cookie-",
+    "Farbgenetik":"EE A1Ap D Cr SB O",
     "Kopf":"hh hh Hh Hh | hh hh hh Hh",
     "Gebiss":"Hh HH hh Hh | hh hh HH hh",
     "Hals":"hh hh hH hH | Hh hH hh hh",
@@ -243,7 +244,6 @@
     "Beinstellung":"Hh hH hh hH | Hh hh hh hh",
     "Fesseln":"Hh Hh hH hH | hh hh Hh hh",
     "Hufe":"Hh hH HH hh | hh hh hh hH",
-    "Besitzer":"Nawira13",
-    "Genetik":"EE A1Ap D Cr SB O"
+    "Besitzer":"Nawira13"
   }
 ]
