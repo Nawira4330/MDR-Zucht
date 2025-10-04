@@ -125,7 +125,7 @@ function createTop3Html(stute){
   html += `<p><b>Farbgenetik Stute:</b> ${escapeHtml(color)}</p>`;
   if(scored.length === 0) html += `<p><em>Keine passenden Hengste gefunden.</em></p>`;
   else {
-    html += `<ol>`;
+    html += `<ul>`;
     scored.forEach((h,i)=>{
       html += `<li><b>${i+1}. Wahl:</b> ${escapeHtml(pickName(h))} 
                <br><i>Farbgenetik:</i> ${escapeHtml(pickColor(h) || "-")} 
