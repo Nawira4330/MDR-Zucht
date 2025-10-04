@@ -1,118 +1,147 @@
+// app.js - robust, flexible Feldnamen, Top3, Besitzer-Filter, alle anzeigen
 let stuten = [];
 let hengste = [];
 
-async function ladeDaten() {
-  try {
-    const resp1 = await fetch('./data/stuten.json');
-    if (!resp1.ok) throw new Error("stuten.json konnte nicht geladen werden: " + resp1.status);
+// Mappings: mögliche Feldnamen in deinen JSONs
+const NAME_KEYS = ["Name", "Stutenname", "Stute", "name"];
+const OWNER_KEYS = ["Besitzer", "Owner", "besitzer", "owner"];
+const COLOR_KEYS = ["Farbgenetik", "Farbe", "FarbGenetik", "color", "Genetik"];
 
-    stuten = (await resp1.json()).map(s => ({
-      ...s,
-      Name: (s.Name || "").replace(/\r?\n/g, " ").trim(),
-      Besitzer: (s.Besitzer || "").replace(/\r?\n/g, " ").trim(),
-      Farbgenetik: (s.Farbgenetik || "").replace(/\r?\n/g, " ").trim()
-    }));
+// Liste der Exterieur-Merkmale (achte dass deine JSON diese Spalten enthält)
+const MERKMALE = ["Kopf","Gebiss","Hals","Halsansatz","Widerrist","Schulter","Brust",
+                  "Rückenlinie","Rückenlänge","Kruppe","Beinwinkelung","Beinstellung","Fesseln","Hufe"];
 
-    const resp2 = await fetch('./data/hengste.json');
-    if (!resp2.ok) throw new Error("hengste.json konnte nicht geladen werden: " + resp2.status);
+// Hilfsfunktionen zum sicheren Zugriff
+function pickField(obj, keys){
+  for(const k of keys) if(obj && Object.prototype.hasOwnProperty.call(obj,k) && obj[k] !== undefined && obj[k] !== "") return obj[k];
+  return "";
+}
+function pickName(obj){ return pickField(obj, NAME_KEYS) || "(ohne Name)"; }
+function pickOwner(obj){ return pickField(obj, OWNER_KEYS) || "(kein Besitzer)"; }
+function pickColor(obj){ return pickField(obj, COLOR_KEYS) || ""; }
 
-    hengste = (await resp2.json()).map(h => ({
-      ...h,
-      Name: (h.Name || "").replace(/\r?\n/g, " ").trim(),
-      Farbgenetik: (h.Farbgenetik || "").replace(/\r?\n/g, " ").trim()
-    }));
+// Lädt JSONs
+async function ladeDaten(){
+  try{
+    const s = await fetch('data/stuten.json').then(r => r.json());
+    const h = await fetch('data/hengste.json').then(r => r.json());
+    stuten = Array.isArray(s) ? s : [];
+    hengste = Array.isArray(h) ? h : [];
 
-    console.log("Stuten geladen:", stuten);
-    console.log("Hengste geladen:", hengste);
+    // Filter: ignorieren Hengste ohne jegliche Merkmale (optional)
+    hengste = hengste.filter(hg => MERKMALE.some(m => (hg[m] !== undefined && String(hg[m]).trim() !== "")));
 
     fuelleDropdowns();
-  } catch (err) {
-    console.error("Fehler in ladeDaten():", err);
-    document.getElementById("ergebnis").innerText = "Fehler beim Laden der Daten: " + err.message;
+  }catch(e){
+    console.error("Fehler beim Laden der Daten:", e);
+    document.getElementById('ergebnis').innerHTML = '<p style="color:red">Fehler beim Laden der Daten. Prüfe data/stuten.json und data/hengste.json.</p>';
   }
 }
 
-function fuelleDropdowns() {
-  const stuteSelect = document.getElementById("stuteSelect");
-  const besitzerSelect = document.getElementById("besitzerSelect");
+// Dropdowns befüllen
+function fuelleDropdowns(){
+  const selStute = document.getElementById('stuteSelect');
+  const selBesitzer = document.getElementById('besitzerSelect');
+  selStute.innerHTML = '<option value="">-- bitte wählen --</option>';
+  selBesitzer.innerHTML = '<option value="">-- bitte wählen --</option>';
 
-  // Stuten Dropdown
-  stuten.forEach(stute => {
-    const opt = document.createElement("option");
-    opt.value = stute.Name;
-    opt.textContent = stute.Name;
-    stuteSelect.appendChild(opt);
+  // Namen einfügen (Index als value)
+  stuten.forEach((s, idx) => {
+    const opt = document.createElement('option');
+    opt.value = idx;
+    opt.textContent = pickName(s);
+    selStute.appendChild(opt);
   });
 
-  // Besitzer Dropdown (einzigartige Namen)
-  const besitzerListe = [...new Set(stuten.map(s => s.Besitzer))];
-  besitzerListe.forEach(bes => {
-    const opt = document.createElement("option");
-    opt.value = bes;
-    opt.textContent = bes;
-    besitzerSelect.appendChild(opt);
+  // Besitzerliste (unique)
+  const owners = [...new Set(stuten.map(s => pickOwner(s)))].filter(x => x && x !== "(kein Besitzer)");
+  owners.forEach(o => {
+    const opt = document.createElement('option');
+    opt.value = o;
+    opt.textContent = o;
+    selBesitzer.appendChild(opt);
   });
 }
 
-// Bewertungsfunktion: Wie gut gleicht der Hengst die Schwächen der Stute aus?
-function berechneScore(stute, hengst) {
+// Scoring-Funktion (du kannst hier deine exakte genetische Logik einbauen)
+// Diese simple Version bewertet Übereinstimmung pro Merkmal: identisch = besser.
+function scorePair(stute, hengst){
   let score = 0;
-  const merkmale = Object.keys(stute).filter(
-    k => !["Name", "Besitzer", "Farbgenetik"].includes(k)
-  );
-
-  merkmale.forEach(m => {
-    const stutenWert = stute[m];
-    const hengstWert = hengst[m];
-    if (!stutenWert || !hengstWert) return;
-    score += stutenWert === hengstWert ? 2 : 1;
-  });
-
+  for(const m of MERKMALE){
+    const sv = stute[m] !== undefined ? String(stute[m]).trim() : "";
+    const hv = hengst[m] !== undefined ? String(hengst[m]).trim() : "";
+    if(!sv || !hv) continue;
+    score += (sv === hv) ? 2 : 0; // Matching gives 2 points, non-match 0
+  }
   return score;
 }
 
-function zeigeVorschlaege() {
-  const stutenName = document.getElementById("stuteSelect").value;
-  const besitzerName = document.getElementById("besitzerSelect").value;
+// Erzeuge Top3 HTML für eine Stute
+function createTop3Html(stute){
+  const name = pickName(stute);
+  const owner = pickOwner(stute);
+  const color = pickColor(stute) || "-";
 
-  let stutenListe = [];
+  // compute scores
+  const scored = hengste
+    .map(h => ({...h, __score: scorePair(stute, h)}))
+    .sort((a,b) => b.__score - a.__score)
+    .slice(0,3);
 
-  if (stutenName) {
-    stutenListe = stuten.filter(s => s.Name === stutenName);
-  } else if (besitzerName) {
-    stutenListe = stuten.filter(s => s.Besitzer === besitzerName);
+  let html = `<div class="match"><h3>${escapeHtml(name)} — Besitzer: ${escapeHtml(owner)}</h3>`;
+  html += `<p>Farbgenetik Stute: ${escapeHtml(color)}</p>`;
+  if(scored.length === 0) html += `<p><em>Keine passenden Hengste gefunden.</em></p>`;
+  else {
+    html += `<ol>`;
+    scored.forEach((h, i) => {
+      html += `<li><strong>${i+1}. Wahl:</strong> ${escapeHtml(pickName(h))} — Farbe: ${escapeHtml(pickColor(h) || "-")} (Score: ${h.__score})</li>`;
+    });
+    html += `</ol>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+// Zeige Vorschläge (je nach Auswahl)
+function zeigeVorschlaege(){
+  const selStute = document.getElementById('stuteSelect').value;
+  const selBesitzer = document.getElementById('besitzerSelect').value;
+  const out = document.getElementById('ergebnis');
+  out.innerHTML = '';
+
+  let toShow = [];
+
+  if(selStute !== ""){
+    // einzelne Stute (value ist Index)
+    const idx = parseInt(selStute, 10);
+    if(!Number.isNaN(idx) && stuten[idx]) toShow.push(stuten[idx]);
+  } else if(selBesitzer !== ""){
+    // alle Stuten dieses Besitzers
+    toShow = stuten.filter(s => pickOwner(s) === selBesitzer);
   } else {
-    stutenListe = stuten; // Alle anzeigen
+    // keine Auswahl -> alle Stuten
+    toShow = stuten;
   }
 
-  const ergebnisDiv = document.getElementById("ergebnis");
-  ergebnisDiv.innerHTML = "";
-
-  if (stutenListe.length === 0) {
-    ergebnisDiv.textContent = "Keine passenden Stuten gefunden.";
+  if(toShow.length === 0){
+    out.innerHTML = '<p>Keine Stuten gefunden (prüfe JSON und Feldnamen).</p>';
     return;
   }
 
-  stutenListe.forEach(stute => {
-    const scored = hengste
-      .filter(h => h.Name && h.Farbgenetik) // nur vollständige Hengste
-      .map(h => ({
-        ...h,
-        score: berechneScore(stute, h)
-      }))
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 3); // Top 3
-
-    let html = `<h3>${stute.Name} — Besitzer: ${stute.Besitzer}</h3>`;
-    html += `<p>Farbgenetik: ${stute.Farbgenetik || "-"}</p>`;
-    html += "<ol>";
-    scored.forEach((h, idx) => {
-      html += `<li>${h.Name} — Farbe: ${h.Farbgenetik || "-"} (Score: ${h.score})</li>`;
-    });
-    html += "</ol><hr/>`;
-
-    ergebnisDiv.innerHTML += html;
-  });
+  // build html
+  let html = '';
+  toShow.forEach(s => html += createTop3Html(s));
+  out.innerHTML = html;
 }
 
-ladeDaten();
+// Zeige alle (Button)
+function zeigeAlle(){
+  document.getElementById('stuteSelect').value = '';
+  document.getElementById('besitzerSelect').value = '';
+  zeigeVorschlaege();
+}
+
+// einfache HTML-escape
+function escapeHtml(s){ return String(s).replace(/[&<>"'\/]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#47;'}[c])); }
+
+window.addEventListener('DOMContentLoaded', ladeDaten);
