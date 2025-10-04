@@ -3,7 +3,7 @@ let hengste = [];
 
 async function ladeDaten() {
   try {
-    const resp1 = await fetch('data/stuten.json');
+    const resp1 = await fetch('./data/stuten.json');
     if (!resp1.ok) throw new Error("stuten.json konnte nicht geladen werden: " + resp1.status);
 
     stuten = (await resp1.json()).map(s => ({
@@ -13,7 +13,7 @@ async function ladeDaten() {
       Farbgenetik: (s.Farbgenetik || "").replace(/\r?\n/g, " ").trim()
     }));
 
-    const resp2 = await fetch('data/hengste.json');
+    const resp2 = await fetch('./data/hengste.json');
     if (!resp2.ok) throw new Error("hengste.json konnte nicht geladen werden: " + resp2.status);
 
     hengste = (await resp2.json()).map(h => ({
