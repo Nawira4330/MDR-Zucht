@@ -1,41 +1,33 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>MDR Zucht Matching</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    select, button {
-      margin: 5px;
-      padding: 5px;
-    }
-    h3 {
-      margin-top: 20px;
-    }
-    ol {
-      margin-bottom: 20px;
-    }
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pferdezucht Matcher</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>MDR Zucht — Anpaarungsvorschläge</h1>
+  <header><h1>Pferdezucht Matcher</h1></header>
 
-  <label for="stuteSelect">Stute wählen:</label>
-  <select id="stuteSelect">
-    <option value="">Alle Stuten</option>
-  </select>
+  <main class="container">
+    <div class="controls">
+      <label for="stuteSelect">Stute auswählen</label>
+      <select id="stuteSelect" onchange="zeigeVorschlaege()">
+        <option value="">-- bitte wählen --</option>
+      </select>
 
-  <label for="besitzerSelect">Besitzer wählen:</label>
-  <select id="besitzerSelect">
-    <option value="">Alle Besitzer</option>
-  </select>
+      <label for="besitzerSelect">Besitzer auswählen</label>
+      <select id="besitzerSelect" onchange="zeigeVorschlaege()">
+        <option value="">-- bitte wählen --</option>
+      </select>
 
-  <button onclick="zeigeVorschlaege()">Vorschläge anzeigen</button>
+      <div class="buttons">
+        <button id="btnShowAll" onclick="zeigeAlle()">Alle Anpaarungsvorschläge anzeigen</button>
+      </div>
+    </div>
 
-  <div id="ergebnis"></div>
+    <section id="ergebnis" class="ergebnis"></section>
+  </main>
 
   <script src="app.js"></script>
 </body>
