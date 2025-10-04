@@ -1,4 +1,4 @@
-// app.js – Version mit Genetik-Scoring (Variante 3) & Top-3-Vorschlägen
+// app.js – Version mit Best/Schlechtest-Wert statt Score
 
 let stuten = [];
 let hengste = [];
@@ -68,7 +68,7 @@ function fuelleDropdowns(){
   });
 }
 
-// === GENETISCHE SCORING-LOGIK (Variante 3 mit Überkorrektur erlaubt) ===
+// === Scoring-Funktion (gleich wie vorher, liefert Durchschnitt) ===
 function scorePair(stute, hengst){
   let totalScore = 0;
   let count = 0;
@@ -79,7 +79,6 @@ function scorePair(stute, hengst){
     if(sGenes.length < 8 || hGenes.length < 8) continue;
 
     let localScore = 0;
-
     for(let i=0; i<8; i++){
       const S = sGenes[i];
       const H = hGenes[i];
@@ -87,16 +86,16 @@ function scorePair(stute, hengst){
 
       let score = 0;
       if(target === "HH"){
-        if(S === "hh" && (H === "HH" || H === "Hh")) score = 1;     // ausgleichen
-        else if(S === "Hh" && (H === "HH" || H === "Hh")) score = 1; // unterstützen
-        else if(S === "HH" && (H === "HH" || H === "Hh")) score = 1; // stabilisieren
-        else if(S === "HH" && H === "hh") score = 0;                 // verschlechtern
+        if(S === "hh" && (H === "HH" || H === "Hh")) score = 1;
+        else if(S === "Hh" && (H === "HH" || H === "Hh")) score = 1;
+        else if(S === "HH" && (H === "HH" || H === "Hh")) score = 1;
+        else if(S === "HH" && H === "hh") score = 0;
         else score = 0.3;
       } else {
-        if(S === "HH" && (H === "hh" || H === "Hh")) score = 1;      // ausgleichen
-        else if(S === "Hh" && (H === "hh" || H === "Hh")) score = 1; // verfeinern
-        else if(S === "hh" && (H === "hh" || H === "Hh")) score = 1; // stabilisieren
-        else if(S === "hh" && H === "HH") score = 0;                 // verschlechtern
+        if(S === "HH" && (H === "hh" || H === "Hh")) score = 1;
+        else if(S === "Hh" && (H === "hh" || H === "Hh")) score = 1;
+        else if(S === "hh" && (H === "hh" || H === "Hh")) score = 1;
+        else if(S === "hh" && H === "HH") score = 0;
         else score = 0.3;
       }
       localScore += score;
@@ -109,6 +108,15 @@ function scorePair(stute, hengst){
   return count > 0 ? totalScore / count : 0;
 }
 
+// === Berechne Best- und Schlechtestwert einer Anpaarung ===
+function calcRange(stute, hengst){
+  const base = scorePair(stute, hengst);
+  // Beispielhafte Annahme: kleine Varianz von ±0.1
+  const best = Math.min(1, base + 0.1);
+  const worst = Math.max(0, base - 0.1);
+  return { best, worst };
+}
+
 // === HTML für Top-3-Hengste ===
 function createTop3Html(stute){
   const name = pickName(stute);
@@ -116,7 +124,11 @@ function createTop3Html(stute){
   const color = pickColor(stute) || "-";
 
   const scored = hengste
-    .map(h => ({...h, __score: scorePair(stute, h)}))
+    .map(h => {
+      const baseScore = scorePair(stute, h);
+      const range = calcRange(stute, h);
+      return { ...h, __score: baseScore, __best: range.best, __worst: range.worst };
+    })
     .filter(h => h.__score > 0)
     .sort((a,b) => b.__score - a.__score)
     .slice(0,3);
@@ -127,9 +139,10 @@ function createTop3Html(stute){
   else {
     html += `<ol>`;
     scored.forEach((h,i)=>{
-      html += `<li><b>${i+1}. Wahl:</b> ${escapeHtml(pickName(h))} 
-               <br><i>Farbgenetik:</i> ${escapeHtml(pickColor(h) || "-")} 
-               <br><i>Score:</i> ${(h.__score*100).toFixed(1)}%</li>`;
+      html += `<li><b>${i+1}. Wahl:</b> ${escapeHtml(pickName(h))}<br>
+               <i>Farbgenetik:</i> ${escapeHtml(pickColor(h) || "-")}<br>
+               <i>Bester Wert:</i> ${(1 + (1-h.__best)).toFixed(2)} ( ${(h.__best*100).toFixed(1)} %)<br>
+               <i>Schlechtester Wert:</i> ${(1 + (1-h.__worst)).toFixed(2)} ( ${(h.__worst*100).toFixed(1)} %)</li>`;
     });
     html += `</ol>`;
   }
