@@ -1,170 +1,130 @@
-/* === Allgemeine Einstellungen === */
-:root {
-  --primary: #3949ab;       /* Hauptfarbe (dunkles Blau) */
-  --primary-light: #5c6bc0;
-  --accent: #00bfa5;        /* Akzent (Türkisgrün) */
-  --bg: #f5f7fb;
-  --text: #222;
-  --text-muted: #666;
-  --card-bg: #fff;
-  --border: #e0e3ea;
-  --radius: 12px;
-  --shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
-}
-
+/* Grundlayout */
 body {
-  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
-  background-color: var(--bg);
-  color: var(--text);
+  font-family: 'Segoe UI', Roboto, sans-serif;
+  background-color: #A9D4E5; /* hellblauer Hintergrund */
+  color: #2F2F2F;
   margin: 0;
   padding: 0;
   line-height: 1.6;
 }
 
-/* === Kopfbereich === */
+/* Header */
 header {
-  background: var(--primary);
+  background-color: #7BAE3C; /* kräftiges Grün */
   color: white;
-  padding: 1rem 2rem;
   text-align: center;
-  font-size: 1.6rem;
+  padding: 1.2em;
+  font-size: 1.8em;
   font-weight: 600;
-  letter-spacing: 0.3px;
-  box-shadow: var(--shadow);
+  letter-spacing: 0.5px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
 }
 
-/* === Hauptinhalt === */
+/* Container */
 main {
-  max-width: 1100px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: var(--card-bg);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-}
-
-/* === Filterbereich === */
-.filters {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.filters label {
-  font-weight: 600;
-  color: var(--text);
-}
-
-select {
-  padding: 0.5rem 0.7rem;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
+  max-width: 1000px;
+  margin: 30px auto;
   background: white;
-  font-size: 1rem;
-  min-width: 180px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  border-radius: 12px;
+  padding: 25px 35px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Dropdowns */
+select {
+  padding: 8px 12px;
+  border: 1px solid #C4DA8C;
+  border-radius: 8px;
+  background-color: #F8FFF2;
+  font-size: 1em;
+  margin-right: 10px;
+  transition: border-color 0.3s ease;
+}
 select:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(57, 73, 171, 0.25);
+  border-color: #7BAE3C;
   outline: none;
 }
 
+/* Buttons */
 button {
-  background: var(--accent);
+  background-color: #7BAE3C;
   color: white;
   border: none;
-  border-radius: var(--radius);
-  padding: 0.55rem 1rem;
-  font-size: 1rem;
+  padding: 8px 16px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
 }
-
 button:hover {
-  background: #00a890;
-  transform: translateY(-1px);
+  background-color: #4C5B2A;
 }
 
-/* === Ergebnisbereich === */
+/* Ergebnis-Container */
 #ergebnis {
-  margin-top: 2rem;
+  margin-top: 30px;
 }
 
+/* Einzelnes Ergebnisfeld */
 .match {
-  background: #fafbff;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.2rem 1.4rem;
-  margin-bottom: 1.5rem;
-  box-shadow: var(--shadow);
+  background: #F5F9F0;
+  border-left: 6px solid #7BAE3C;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
+/* Stutenname */
 .match h3 {
-  margin-top: 0;
-  color: var(--primary);
-  font-size: 1.2rem;
-  font-weight: 600;
+  color: #4C5B2A;
+  margin: 0;
+  font-size: 1.3em;
 }
 
+/* Besitzer unter dem Namen */
+.match h3 + p {
+  margin-top: 3px;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Farbgenetik & Werte */
 .match p {
-  margin: 0.3rem 0;
+  margin: 4px 0;
+  color: #444;
+  font-size: 0.95em;
 }
 
-.match p strong {
-  color: var(--text);
-}
-
+/* Top 3 Liste */
 .match ol {
-  margin: 0.6rem 0 0 1.2rem;
-  padding: 0;
+  margin-top: 10px;
+  padding-left: 20px;
 }
-
 .match li {
-  margin-bottom: 0.4rem;
-  background: #ffffff;
-  border-left: 4px solid var(--primary-light);
-  padding: 0.4rem 0.6rem;
+  margin-bottom: 8px;
+  background: #E9F3E2;
   border-radius: 6px;
-  transition: background 0.2s;
+  padding: 6px 10px;
 }
-
-.match li:hover {
-  background: #eef1ff;
-}
-
 .match li strong {
-  color: var(--primary);
+  color: #4C5B2A;
 }
 
-/* === Fußzeile === */
-.footer {
+/* Beste/Schlechteste Werte */
+.valueBox {
+  margin-top: 6px;
+  font-style: italic;
+  color: #555;
+}
+
+/* Footer */
+footer {
   text-align: center;
-  margin-top: 2rem;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-/* === Responsiv === */
-@media (max-width: 768px) {
-  main {
-    padding: 1rem;
-    margin: 1rem;
-  }
-
-  .filters {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  select, button {
-    width: 100%;
-  }
-
-  .match {
-    padding: 1rem;
-  }
+  padding: 15px;
+  background: #C4DA8C;
+  color: #4C5B2A;
+  border-top: 2px solid #7BAE3C;
+  margin-top: 30px;
 }
