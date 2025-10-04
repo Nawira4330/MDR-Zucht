@@ -1,130 +1,178 @@
+/* ============================
+   MDR-Zucht – Gesamtstyling
+   ============================ */
+
 /* Grundlayout */
 body {
-  font-family: 'Segoe UI', Roboto, sans-serif;
-  background-color: #A9D4E5; /* hellblauer Hintergrund */
-  color: #2F2F2F;
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #f7f8fc;
+  color: #222;
   margin: 0;
   padding: 0;
   line-height: 1.6;
 }
 
-/* Header */
 header {
-  background-color: #7BAE3C; /* kräftiges Grün */
+  background: linear-gradient(135deg, #3f51b5, #1a237e);
   color: white;
   text-align: center;
-  padding: 1.2em;
-  font-size: 1.8em;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2);
+  padding: 1.8rem 1rem;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
 }
 
-/* Container */
-main {
-  max-width: 1000px;
-  margin: 30px auto;
-  background: white;
-  border-radius: 12px;
-  padding: 25px 35px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Dropdowns */
-select {
-  padding: 8px 12px;
-  border: 1px solid #C4DA8C;
-  border-radius: 8px;
-  background-color: #F8FFF2;
-  font-size: 1em;
-  margin-right: 10px;
-  transition: border-color 0.3s ease;
-}
-select:focus {
-  border-color: #7BAE3C;
-  outline: none;
-}
-
-/* Buttons */
-button {
-  background-color: #7BAE3C;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
-}
-button:hover {
-  background-color: #4C5B2A;
-}
-
-/* Ergebnis-Container */
-#ergebnis {
-  margin-top: 30px;
-}
-
-/* Einzelnes Ergebnisfeld */
-.match {
-  background: #F5F9F0;
-  border-left: 6px solid #7BAE3C;
-  padding: 20px;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-/* Stutenname */
-.match h3 {
-  color: #4C5B2A;
+header h1 {
   margin: 0;
-  font-size: 1.3em;
+  font-size: 1.9rem;
+  letter-spacing: 0.5px;
 }
 
-/* Besitzer unter dem Namen */
-.match h3 + p {
-  margin-top: 3px;
-  margin-bottom: 8px;
-  font-weight: 500;
+header p {
+  font-size: 0.95rem;
+  margin-top: 0.3rem;
+  opacity: 0.9;
+}
+
+/* Hauptcontainer */
+main {
+  max-width: 900px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.08);
+  padding: 2rem 2.5rem;
+}
+
+/* Dropdowns & Buttons */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+label {
+  font-weight: 600;
   color: #333;
 }
 
-/* Farbgenetik & Werte */
-.match p {
-  margin: 4px 0;
-  color: #444;
-  font-size: 0.95em;
+select {
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #fafafa;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
-/* Top 3 Liste */
+select:hover {
+  border-color: #3f51b5;
+  background-color: #fff;
+}
+
+button {
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 0.55rem 1.1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #283593;
+}
+
+/* Ergebniscontainer */
+#ergebnis {
+  margin-top: 1.8rem;
+}
+
+/* Einzelne Stute (Matchbox) */
+.match {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1rem 1.2rem 1.2rem;
+  margin: 1rem 0;
+  box-shadow: 0 0 12px rgba(0,0,0,0.07);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.match:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+}
+
+/* Stutenname + Besitzer */
+.match h3 {
+  color: #283593;
+  margin: 0 0 0.4rem;
+  font-size: 1.2rem;
+}
+
+.match .owner {
+  color: #666;
+  font-weight: 500;
+  font-size: 0.9em;
+}
+
+/* Farbgenetik */
+.match p strong {
+  color: #000;
+}
+
+/* Auflistung der Hengste */
 .match ol {
-  margin-top: 10px;
-  padding-left: 20px;
+  margin: 0.6rem 0 0 1.3rem;
+  padding: 0;
 }
+
 .match li {
-  margin-bottom: 8px;
-  background: #E9F3E2;
-  border-radius: 6px;
-  padding: 6px 10px;
+  margin-bottom: 0.7rem;
+  padding: 0.4rem 0.4rem 0.4rem 0;
+  border-left: 3px solid #e0e0e0;
+  padding-left: 0.6rem;
 }
+
 .match li strong {
-  color: #4C5B2A;
+  color: #1a237e;
 }
 
-/* Beste/Schlechteste Werte */
-.valueBox {
-  margin-top: 6px;
-  font-style: italic;
-  color: #555;
+/* Bewertungsfarben */
+.good {
+  color: #1b5e20;
+  font-weight: 600;
 }
 
-/* Footer */
+.bad {
+  color: #b71c1c;
+  font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 700px) {
+  main {
+    padding: 1.3rem;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  select, button {
+    width: 100%;
+  }
+}
+
+/* Fußzeile */
 footer {
   text-align: center;
-  padding: 15px;
-  background: #C4DA8C;
-  color: #4C5B2A;
-  border-top: 2px solid #7BAE3C;
-  margin-top: 30px;
+  color: #777;
+  font-size: 0.85rem;
+  margin: 2rem 0;
 }
