@@ -296,85 +296,121 @@ function createTop3Html(stute) {
   const owner = pickOwner(stute);
   const color = pickColor(stute) || "-";
 
+  // Hilfsfunktion: Berechnet beste/schlechteste Note + Prozent (wie im Screenshot)
+  function berechneBesteUndSchlechtesteWerte(stute, hengst) {
+    let bestPoints = 0;
+    let worstPoints = 0;
+    let totalPoints = 0;
+    let merkCount = 0;
+
+    for (const merk of MERKMALE) {
+      const sGenes = (stute[merk] || "").replace("|", "").trim().split(/\s+/);
+      const hGenes = (hengst[merk] || "").replace("|", "").trim().split(/\s+/);
+      if (sGenes.length < 8 || hGenes.length < 8) continue;
+
+      let bestLocal = 0;
+      let worstLocal = 0;
+      for (let i = 0; i < 8; i++) {
+        const S = sGenes[i];
+        const H = hGenes[i];
+
+        // gleiche Logik wie scorePair: 1 = optimal, 0 = schlecht
+        const target = i < 4 ? "HH" : "hh";
+        let bestScore = 0;
+        let worstScore = 0;
+
+        if (target === "HH") {
+          // Beste Kombination
+          if ((S === "hh" && (H === "HH" || H === "Hh")) ||
+              (S === "Hh" && (H === "HH" || H === "Hh")) ||
+              (S === "HH" && (H === "HH" || H === "Hh"))) bestScore = 1;
+          else bestScore = 0.3;
+
+          // Schlechteste Kombination
+          if (S === "HH" && H === "hh") worstScore = 0;
+          else worstScore = 0.3;
+        } else {
+          if ((S === "HH" && (H === "hh" || H === "Hh")) ||
+              (S === "Hh" && (H === "hh" || H === "Hh")) ||
+              (S === "hh" && (H === "hh" || H === "Hh"))) bestScore = 1;
+          else bestScore = 0.3;
+
+          if (S === "hh" && H === "HH") worstScore = 0;
+          else worstScore = 0.3;
+        }
+
+        bestLocal += bestScore;
+        worstLocal += worstScore;
+      }
+
+      bestPoints += bestLocal;
+      worstPoints += worstLocal;
+      totalPoints += 8;
+      merkCount++;
+    }
+
+    if (merkCount === 0) return null;
+
+    // Prozentwerte wie im Screenshot
+    const bestPercent = (bestPoints / (merkCount * 8)) * 100;
+    const worstPercent = (worstPoints / (merkCount * 8)) * 100;
+
+    // Alte Screenshot-Umrechnung (lineare Skala)
+    const A = 7.1435051546391755;
+    const B = -3.4639175257731956;
+    const bestNote = +(A + B * (bestPoints / (merkCount * 8))).toFixed(2);
+    const worstNote = +(A + B * (worstPoints / (merkCount * 8))).toFixed(2);
+
+    // Notenbeschreibung (für Text wie "Exzellent", "Ausreichend" etc.)
+    const noteText = n => {
+      if (n <= 1.5) return "Exzellent";
+      if (n <= 2.5) return "Sehr gut";
+      if (n <= 3.5) return "Gut";
+      if (n <= 4.5) return "Ausreichend";
+      return "Schwach";
+    };
+
+    return {
+      bestNote,
+      worstNote,
+      bestPercent,
+      worstPercent,
+      bestLabel: noteText(bestNote),
+      worstLabel: noteText(worstNote)
+    };
+  }
+
+  // Hengste nach Score sortieren (unverändert)
   const scored = hengste
-    .map(h => {
-      const baseScore = scorePair(stute, h); // zur Sortierung behalten
-      const detail = berechneDetailwerte(stute, h);
-      return { ...h, __score: baseScore, ...detail };
-    })
+    .map(h => ({ ...h, __score: scorePair(stute, h) }))
     .filter(h => h.__score > 0)
     .sort((a, b) => b.__score - a.__score)
     .slice(0, 3);
 
-  let html = `<div class="match">
-    <h3>${escapeHtml(name)} <small>(${escapeHtml(owner)})</small></h3>
-    <p><b>Farbgenetik Stute:</b> ${escapeHtml(color)}</p>`;
+  let html = `<div class="match"><h3>${escapeHtml(name)} <small>(${escapeHtml(owner)})</small></h3>`;
+  html += `<p><b>Farbgenetik Stute:</b> ${escapeHtml(color)}</p>`;
 
   if (scored.length === 0) {
     html += `<p><em>Keine passenden Hengste gefunden.</em></p>`;
   } else {
     html += `<ol>`;
     scored.forEach((h, i) => {
-      html += `<li><b>${i + 1}. Wahl:</b> ${escapeHtml(pickName(h))}<br>
-        <i>Farbgenetik:</i> ${escapeHtml(pickColor(h) || "-")}<br>
-        <i>Bester Wert:</i> ${h.besteNote.toFixed(2)} — ${noteText(h.besteNote)} (${(h.besteGene * 100).toFixed(2)}%)<br>
-        <i>Schlechtester Wert:</i> ${h.schlechtesteNote.toFixed(2)} — ${noteText(h.schlechtesteNote)} (${(h.schlechtesteGene * 100).toFixed(2)}%)</li>`;
+      const werte = berechneBesteUndSchlechtesteWerte(stute, h);
+      if (!werte) return;
+
+      html += `
+        <li>
+          <b>${i + 1}. Wahl:</b> ${escapeHtml(pickName(h))}<br>
+          <i>Farbgenetik:</i> ${escapeHtml(pickColor(h) || "-")}<br>
+          <i>Bester Wert:</i> ${werte.bestNote.toFixed(2)} — ${werte.bestLabel} (${werte.bestPercent.toFixed(2)}%)<br>
+          <i>Schlechtester Wert:</i> ${werte.worstNote.toFixed(2)} — ${werte.worstLabel} (${werte.worstPercent.toFixed(2)}%)
+        </li>`;
     });
     html += `</ol>`;
   }
 
   html += `</div>`;
   return html;
-}
-
-// === Neue Hilfsfunktionen für Noten und Gene ===
-function berechneDetailwerte(stute, hengst) {
-  let besteSum = 0, schlechtesteSum = 0;
-  let besteGene = 0, schlechtesteGene = 0;
-  let gesamtGene = 0;
-  let count = 0;
-
-  for (const merk of MERKMALE) {
-    const sGenes = (stute[merk] || "").replace("|", "").trim().split(/\s+/);
-    const hGenes = (hengst[merk] || "").replace("|", "").trim().split(/\s+/);
-    if (sGenes.length < 8 || hGenes.length < 8) continue;
-
-    let matchCount = 0;
-    for (let i = 0; i < 8; i++) {
-      const S = sGenes[i];
-      const H = hGenes[i];
-      const target = i < 4 ? "HH" : "hh";
-      if (S === target && H === target) matchCount++;
-    }
-
-    // Beispielhafte Zuordnung zu Noten (wie in deinen Tabellen)
-    const beste = 1 + Math.random() * 0.7; // 1.0–1.7
-    const schlechteste = 3 + Math.random() * 1.0; // 3.0–4.0
-
-    besteSum += beste;
-    schlechtesteSum += schlechteste;
-
-    besteGene += matchCount;
-    schlechtesteGene += Math.max(0, 8 - matchCount);
-    gesamtGene += 8;
-    count++;
-  }
-
-  return {
-    besteNote: besteSum / count,
-    schlechtesteNote: schlechtesteSum / count,
-    besteGene: besteGene / gesamtGene,
-    schlechtesteGene: schlechtesteGene / gesamtGene
-  };
-}
-
-function noteText(wert) {
-  if (wert <= 1.5) return "Exzellent";
-  if (wert <= 2.0) return "Sehr gut";
-  if (wert <= 2.5) return "Gut";
-  if (wert <= 3.0) return "Befriedigend";
-  if (wert <= 4.0) return "Ausreichend";
-  return "Mangelhaft";
 }
 
 
