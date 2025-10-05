@@ -1,83 +1,94 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <title>Genetik-Analyse – Fohlenempfehlung</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDR-Zucht – Anpaarungsempfehlung</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>🐴 Genetik-Analyse: Fohlenempfehlung</h1>
+  <header>
+    <h1>MDR-Zucht – Anpaarungsempfehlung</h1>
+  </header>
 
-  <!-- =============================== -->
-  <!-- INFOBOX MIT WARNUNG UND REITERN -->
-  <!-- =============================== -->
-  <div id="infoBox">
-    <h4>⚠️ Achtung</h4>
-    <p>
-      Inzucht und die Möglichkeit der Doppelvererbung des Overo-Gens werden in dieser Berechnung <b>nicht</b> berücksichtigt.
-      Es handelt sich lediglich um eine Empfehlung auf Basis genetischer Kompatibilität.
+  <!-- Infofenster -->
+  <section id="info-box" class="card">
+    <p class="warning">
+      ⚠️ Achtung: Inzucht und die Möglichkeit der Doppelvererbung des Overo-Gens werden in dieser Berechnung <b>nicht</b> berücksichtigt.  
+      Zudem handelt es sich nur um eine Empfehlung.
     </p>
-
     <div class="tabs">
-      <div class="tab-btn active" data-tab="tab1">Hengstauswahl</div>
-      <div class="tab-btn" data-tab="tab2">Noten & Prozent</div>
+      <button class="tab-button active" data-tab="tab1">Erklärung der Auswahl</button>
+      <button class="tab-button" data-tab="tab2">Erklärung der Noten</button>
     </div>
 
     <div id="tab1" class="tab-content active">
-      <p>
-        Die passenden Hengste für eine Stute werden über einen genetischen Vergleich ermittelt. 
-        Dabei werden Merkmale wie Kopf, Hals, Rückenlinie, Beinwinkelung u.v.m. auf genetische Kompatibilität geprüft.
-      </p>
-      <p>
-        Der Algorithmus bewertet, wie harmonisch sich die Gene beider Elterntiere ergänzen könnten.
-        Je höher der Score, desto wahrscheinlicher ist eine gute Weitervererbung der gewünschten Eigenschaften.
-      </p>
+      <p>Die Hengste werden anhand der genetischen Kompatibilität mit der ausgewählten Stute bewertet.  
+      Für jedes Exterieurmerkmal (z. B. Kopf, Hals, Hufe) wird analysiert, wie sich die Kombination der Gene
+      zwischen Stute und Hengst ausgleichen oder verbessern könnte.</p>
+
+      <p>Je besser die Kombination, desto höher fällt der Gesamtscore aus.  
+      Die Top-3-Hengste werden nach der gewählten Sortierlogik (beste Note, kleinste Range, bester Score) angezeigt.</p>
     </div>
 
     <div id="tab2" class="tab-content">
-      <p>
-        Jede mögliche Kombination wird mit Noten zwischen <b>1.0 (Exzellent)</b> und <b>6.0 (Schwach)</b> bewertet.
-        Die Prozentzahl beschreibt, wie stark die theoretische Gen-Kompatibilität ausfällt
-        (100 % = perfekt, 0 % = inkompatibel).
-      </p>
-      <p>
-        Der <b>beste Wert</b> steht für die wahrscheinlich günstigste Genkombination, 
-        der <b>schlechteste Wert</b> für die ungünstigste. 
-        Eine kleine Differenz („Range“) deutet auf stabile, gleichmäßige Nachkommen hin.
-      </p>
+      <p>Für jedes Merkmal werden acht Genpositionen verglichen.  
+      Aus dem Verhältnis von stabilisierenden, ausgleichenden und neutralen Kombinationen
+      wird eine Durchschnittsnote im Schulnotensystem (1 = Exzellent – 6 = Schwach) berechnet.</p>
+
+      <p>Der „beste Wert“ steht für das mögliche Optimum der Vererbung,  
+      der „schlechteste Wert“ zeigt das mögliche Minimum.  
+      Der Prozentwert zeigt die relative genetische Stärke (100 % = optimal, 0 % = nicht kompatibel).</p>
     </div>
-  </div>
+  </section>
 
-  <!-- =============================== -->
-  <!-- AUSWAHLBEREICH (BESITZER/STUTE) -->
-  <!-- =============================== -->
-  <div>
-    <label for="besitzerSelect">Besitzer:</label>
-    <select id="besitzerSelect"></select>
+  <!-- Auswahlbereich -->
+  <section id="controls" class="card">
+    <div class="dropdowns">
+      <label>Stute:</label>
+      <select id="stuteSelect"></select>
 
-    <label for="stuteSelect" style="margin-left:10px;">Stute:</label>
-    <select id="stuteSelect"></select>
+      <label>Besitzer:</label>
+      <select id="besitzerSelect"></select>
+    </div>
 
-    <button onclick="zeigeAlle()" style="margin-left:10px;">Alle anzeigen</button>
-  </div>
+    <div class="sortierung">
+      <label>Sortierung nach:</label>
+      <select id="sortOption">
+        <option value="beste">Beste Note</option>
+        <option value="range">Kleinste Range</option>
+        <option value="score">Bester Score</option>
+      </select>
+    </div>
 
-  <!-- =============================== -->
-  <!-- SORTIEROPTIONEN -->
-  <!-- =============================== -->
-  <div id="sortBox">
-    <label for="sortOption"><b>Sortieren nach:</b></label>
-    <select id="sortOption" title="Wähle, nach welchem Kriterium die Hengste sortiert werden.">
-      <option value="score">🧬 Bester Score</option>
-      <option value="bestNote">🥇 Beste Note</option>
-      <option value="smallestRange">⚖️ Kleinste Range</option>
-    </select>
-  </div>
+    <button onclick="zeigeVorschlaege()">Anzeigen</button>
+    <button onclick="zeigeAlle()">Alle anzeigen</button>
+  </section>
 
-  <!-- =============================== -->
-  <!-- ERGEBNISBEREICH -->
-  <!-- =============================== -->
-  <div id="ergebnis"></div>
+  <!-- Ergebnisbereich -->
+  <section id="ergebnis"></section>
+
+  <footer>
+    <p>&copy; 2025 MDR-Zucht</p>
+  </footer>
 
   <script src="app.js"></script>
+  <script>
+    // Tabs für das Infofenster aktivieren
+    document.addEventListener('DOMContentLoaded', () => {
+      const buttons = document.querySelectorAll('.tab-button');
+      const tabs = document.querySelectorAll('.tab-content');
+
+      buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          buttons.forEach(b => b.classList.remove('active'));
+          tabs.forEach(t => t.classList.remove('active'));
+
+          btn.classList.add('active');
+          document.getElementById(btn.dataset.tab).classList.add('active');
+        });
+      });
+    });
+  </script>
 </body>
 </html>
