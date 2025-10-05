@@ -273,7 +273,7 @@ function createTop3Html(stute){
   if(scored.length === 0) {
     html += `<p><em>Keine passenden Hengste gefunden.</em></p>`;
   } else {
-    html += `<ol>`;
+    html += `<ul>`;
     scored.forEach((h,i)=>{
       const disp = computePairDisplayValues(stute, h);
       if(!disp) return;
@@ -284,7 +284,7 @@ function createTop3Html(stute){
         <b>Schlechtester Wert:</b> ${disp.worstNote.toFixed(2)} — ${escapeHtml(disp.worstLabel)} (${disp.worstGenePercent}% )
       </li>`;
     });
-    html += `</ol>`;
+    html += `</ul>`;
   }
 
   html += `</div>`;
