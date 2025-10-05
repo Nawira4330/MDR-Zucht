@@ -3,16 +3,6 @@
 // & Anzeige der besten/schlechtesten Werte + Sortierauswahl
 // ===============================================================
 
-// ========== INFOFENSTER MIT REITERN ==========
-document.querySelectorAll(".tab-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
-    btn.classList.add("active");
-    document.getElementById(btn.dataset.tab).classList.add("active");
-  });
-});
-
 // ========== DATENSTRUKTUREN ==========
 let stuten = [];
 let hengste = [];
@@ -44,11 +34,17 @@ function escapeHtml(s) {
 
 // ========== DATEN LADEN ==========
 async function ladeDaten() {
-  const s = await fetch("data/stuten.json").then(r => r.json());
-  const h = await fetch("data/hengste.json").then(r => r.json());
-  stuten = s;
-  hengste = h;
-  fuelleDropdowns();
+  try {
+    const s = await fetch("data/stuten.json").then(r => r.json());
+    const h = await fetch("data/hengste.json").then(r => r.json());
+    stuten = Array.isArray(s) ? s : [];
+    hengste = Array.isArray(h) ? h : [];
+    fuelleDropdowns();
+  } catch (e) {
+    console.error("Fehler beim Laden:", e);
+    document.getElementById("ergebnis").innerHTML =
+      "<p style='color:red'>Fehler beim Laden der Daten. Prüfe data/*.json.</p>";
+  }
 }
 
 // ========== DROPDOWNS BEFÜLLEN ==========
@@ -97,4 +93,90 @@ function scorePair(stute, hengst) {
       } else {
         if (S === "HH" && (H === "hh" || H === "Hh")) s = 1;
         else if (S === "Hh" && (H === "hh" || H === "Hh")) s = 1;
-        else if (S === "hh" &&
+        else if (S === "hh" && (H === "hh" || H === "Hh")) s = 1;
+        else if (S === "hh" && H === "HH") s = 0;
+        else s = 0.3;
+      }
+      local += s;
+    }
+    total += local / 8;
+    count++;
+  }
+  return count ? total / count : 0;
+}
+
+// ========== NOTENBERECHNUNG ==========
+function berechneNoten(stute, hengst) {
+  let werte = [];
+  for (const m of MERKMALE) {
+    const sG = (stute[m] || "").trim().split(/\s+/);
+    const hG = (hengst[m] || "").trim().split(/\s+/);
+    if (sG.length < 8 || hG.length < 8) continue;
+    let n = 0;
+
+    for (let i = 0; i < 8; i++) {
+      const k = sG[i] + hG[i];
+      if (/HHHH|hhhh/.test(k)) n += 1.3;
+      else if (/HhHH|HHHh|hhHh|hHhh/.test(k)) n += 2.0;
+      else if (/HhHh|hHhH/.test(k)) n += 2.5;
+      else n += 3.5;
+    }
+    werte.push(n / 8);
+  }
+  if (!werte.length) return { best: 0, worst: 0 };
+  return { best: Math.min(...werte), worst: Math.max(...werte) };
+}
+
+function noteZuText(n) {
+  if (n <= 1.5) return "Exzellent";
+  if (n <= 2.5) return "Sehr gut";
+  if (n <= 3.5) return "Gut";
+  if (n <= 4.5) return "Ausreichend";
+  return "Schwach";
+}
+
+// ========== SORTIERUNG ==========
+function sortierteHengste(stute) {
+  const sort = document.getElementById("sortOption").value;
+  const arr = hengste.map(h => {
+    const s = scorePair(stute, h);
+    const { best, worst } = berechneNoten(stute, h);
+    return { ...h, __score: s, __best: best, __worst: worst, __range: worst - best };
+  });
+
+  if (sort === "bestNote") arr.sort((a, b) => a.__best - b.__best);
+  else if (sort === "smallestRange") arr.sort((a, b) => a.__range - b.__range);
+  else arr.sort((a, b) => b.__score - a.__score);
+
+  return arr.slice(0, 3);
+}
+
+// ========== HTML GENERIERUNG ==========
+function createTop3Html(stute) {
+  const name = pickName(stute);
+  const owner = pickOwner(stute);
+  const color = pickColor(stute) || "-";
+  const list = sortierteHengste(stute);
+
+  let html = `<div class="match"><h3>${escapeHtml(name)}</h3>
+  <p style="margin-top:-0.4em;">${escapeHtml(owner)}</p>
+  <p><b>Farbgenetik Stute:</b> ${escapeHtml(color)}</p><ol>`;
+
+  list.forEach((h, i) => {
+    const bestText = noteZuText(h.__best);
+    const worstText = noteZuText(h.__worst);
+    const bestPct = (100 - h.__best * 20).toFixed(2);
+    const worstPct = (100 - h.__worst * 20).toFixed(2);
+    html += `<li><b>${i + 1}. Wahl:</b> ${escapeHtml(pickName(h))}<br>
+      <i>Farbgenetik:</i> ${escapeHtml(pickColor(h) || "-")}<br>
+      <b>Bester Wert:</b> ${h.__best.toFixed(2)} — ${bestText} (${bestPct}%)<br>
+      <b>Schlechtester Wert:</b> ${h.__worst.toFixed(2)} — ${worstText} (${worstPct}%)</li>`;
+  });
+
+  html += "</ol></div>";
+  return html;
+}
+
+// ========== DARSTELLUNG ==========
+function zeigeVorschlaege() {
+  const s
