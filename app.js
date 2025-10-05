@@ -146,4 +146,60 @@ function createTop3Html(stute) {
 
   let html = `<div class="match">
     <h3>${escapeHtml(name)}</h3>
-    <
+    <p><small>${escapeHtml(owner)}</small></p>
+    <p><b>Farbgenetik Stute:</b> ${escapeHtml(color)}</p>
+    <ol>`;
+
+  scored.forEach((h, i) => {
+    html += `<li>
+      <b>${i + 1}. Wahl:</b> ${escapeHtml(pickName(h))}<br>
+      <i>Farbgenetik:</i> ${escapeHtml(pickColor(h))}<br>
+      <i>Bester Wert:</i> ${h.bester.toFixed(2)} — ${bewerteNote(h.bester)} (${h.besterProz}% )<br>
+      <i>Schlechtester Wert:</i> ${h.schlechtester.toFixed(2)} — ${bewerteNote(h.schlechtester)} (${h.schlechtesterProz}% )
+    </li>`;
+  });
+
+  html += `</ol></div>`;
+  return html;
+}
+
+function bewerteNote(n) {
+  if (n <= 1.5) return "Exzellent";
+  if (n <= 2.5) return "Sehr gut";
+  if (n <= 3.5) return "Gut";
+  if (n <= 4.5) return "Ausreichend";
+  return "Schwach";
+}
+
+// === Anzeige (nach Auswahl) ===
+function zeigeVorschlaege() {
+  const selStute = document.getElementById("stuteSelect").value;
+  const selBesitzer = document.getElementById("besitzerSelect").value;
+  const out = document.getElementById("ergebnis");
+  out.innerHTML = "";
+
+  let toShow = [];
+  if (selStute !== "") {
+    const idx = parseInt(selStute, 10);
+    if (!Number.isNaN(idx) && stuten[idx]) toShow.push(stuten[idx]);
+  } else if (selBesitzer !== "") {
+    toShow = stuten.filter(s => pickOwner(s) === selBesitzer);
+  } else {
+    toShow = stuten;
+  }
+
+  if (toShow.length === 0) {
+    out.innerHTML = "<p>Keine Stuten gefunden.</p>";
+    return;
+  }
+
+  out.innerHTML = toShow.map(s => createTop3Html(s)).join("");
+}
+
+// === Initialisierung ===
+window.addEventListener("DOMContentLoaded", () => {
+  ladeDaten();
+  document.getElementById("stuteSelect").addEventListener("change", zeigeVorschlaege);
+  document.getElementById("besitzerSelect").addEventListener("change", zeigeVorschlaege);
+  document.getElementById("sortOption").addEventListener("change", zeigeVorschlaege);
+});
