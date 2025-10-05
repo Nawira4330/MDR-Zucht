@@ -179,4 +179,40 @@ function createTop3Html(stute) {
 
 // ========== DARSTELLUNG ==========
 function zeigeVorschlaege() {
-  const s
+  const sI = document.getElementById("stuteSelect").value;
+  const bI = document.getElementById("besitzerSelect").value;
+  const out = document.getElementById("ergebnis");
+
+  let arr = [];
+  if (sI !== "") arr = [stuten[parseInt(sI)]];
+  else if (bI !== "") arr = stuten.filter(s => pickOwner(s) === bI);
+  else arr = stuten;
+
+  out.innerHTML = arr.map(s => createTop3Html(s)).join("") || "<p>Keine Ergebnisse.</p>";
+}
+
+function zeigeAlle() {
+  document.getElementById("stuteSelect").value = "";
+  document.getElementById("besitzerSelect").value = "";
+  zeigeVorschlaege();
+}
+
+// ========== INITIALISIERUNG ==========
+document.addEventListener("DOMContentLoaded", () => {
+  // Tabs aktivieren (erst jetzt existieren sie im DOM)
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+      btn.classList.add("active");
+      document.getElementById(btn.dataset.tab).classList.add("active");
+    });
+  });
+
+  // Daten laden & Dropdowns aktivieren
+  ladeDaten();
+
+  document.getElementById("stuteSelect").addEventListener("change", zeigeVorschlaege);
+  document.getElementById("besitzerSelect").addEventListener("change", zeigeVorschlaege);
+  document.getElementById("sortOption").addEventListener("change", zeigeVorschlaege);
+});
