@@ -457,7 +457,7 @@
   },
   {
     "Name":"Kiran °16.4° ~VL~",
-    "Farbgenetik":"CrCr RnTO O SPLSPL",
+    "Farbgenetik":null,
     "Kopf":null,
     "Gebiss":null,
     "Hals":null,
@@ -495,7 +495,7 @@
   },
   {
     "Name":"Luca °Sol°",
-    "Farbgenetik":null,
+    "Farbgenetik":"CrCr RnTO O SPLSPL",
     "Kopf":null,
     "Gebiss":null,
     "Hals":null,
