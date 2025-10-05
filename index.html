@@ -2,140 +2,81 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MDR-Zucht — Exterieur Matching</title>
-  <style>
-    body {
-      font-family: "Segoe UI", Roboto, sans-serif;
-      background: #f7f8fa;
-      color: #222;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background: #3f51b5;
-      color: white;
-      padding: 1rem;
-      text-align: center;
-      font-size: 1.4rem;
-      letter-spacing: 0.5px;
-    }
-
-    main {
-      max-width: 1000px;
-      margin: 2rem auto;
-      padding: 1rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 0.8rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .filters label {
-      font-weight: 600;
-    }
-
-    select {
-      padding: 0.4rem 0.6rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      min-width: 160px;
-      font-size: 1rem;
-    }
-
-    button {
-      background: #3f51b5;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: background 0.2s;
-    }
-
-    button:hover {
-      background: #2f3fa0;
-    }
-
-    .match {
-      background: #fafafa;
-      border-radius: 10px;
-      padding: 1rem 1.2rem;
-      margin-bottom: 1rem;
-      border: 1px solid #e3e3e3;
-    }
-
-    .match h3 {
-      margin-top: 0;
-      color: #3f51b5;
-    }
-
-    .match ol {
-      margin-top: 0.6rem;
-      padding-left: 1.4rem;
-    }
-
-    .match li {
-      margin-bottom: 0.4rem;
-      line-height: 1.4;
-    }
-
-    .footer {
-      text-align: center;
-      margin-top: 2rem;
-      font-size: 0.9rem;
-      color: #777;
-    }
-
-    @media (max-width: 700px) {
-      main {
-        margin: 0.5rem;
-        padding: 0.8rem;
-      }
-      .filters {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      select, button {
-        width: 100%;
-      }
-    }
-  </style>
+  <title>Genetik-Analyse – Fohlenempfehlung</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <h1>🐴 Genetik-Analyse: Fohlenempfehlung</h1>
 
-  <header>
-    MDR-Zucht — Exterieur Matching
-  </header>
+  <!-- =============================== -->
+  <!-- INFOBOX MIT WARNUNG UND REITERN -->
+  <!-- =============================== -->
+  <div id="infoBox">
+    <h4>⚠️ Achtung</h4>
+    <p>
+      Inzucht und die Möglichkeit der Doppelvererbung des Overo-Gens werden in dieser Berechnung <b>nicht</b> berücksichtigt.
+      Es handelt sich lediglich um eine Empfehlung auf Basis genetischer Kompatibilität.
+    </p>
 
-  <main>
-    <div class="filters">
-      <label for="stuteSelect">Stute:</label>
-      <select id="stuteSelect"></select>
-
-      <label for="besitzerSelect">Besitzer:</label>
-      <select id="besitzerSelect"></select>
-
-      <button onclick="zeigeAlle()">Alle anzeigen</button>
+    <div class="tabs">
+      <div class="tab-btn active" data-tab="tab1">Hengstauswahl</div>
+      <div class="tab-btn" data-tab="tab2">Noten & Prozent</div>
     </div>
 
-    <div id="ergebnis">
-      <p style="color: #777;">Bitte wähle eine Stute oder einen Besitzer, um Vorschläge zu sehen.</p>
+    <div id="tab1" class="tab-content active">
+      <p>
+        Die passenden Hengste für eine Stute werden über einen genetischen Vergleich ermittelt. 
+        Dabei werden Merkmale wie Kopf, Hals, Rückenlinie, Beinwinkelung u.v.m. auf genetische Kompatibilität geprüft.
+      </p>
+      <p>
+        Der Algorithmus bewertet, wie harmonisch sich die Gene beider Elterntiere ergänzen könnten.
+        Je höher der Score, desto wahrscheinlicher ist eine gute Weitervererbung der gewünschten Eigenschaften.
+      </p>
     </div>
-  </main>
 
-  <div class="footer">
-    © 2025 MDR-Zucht — Exterieur Matching powered by GitHub Pages
+    <div id="tab2" class="tab-content">
+      <p>
+        Jede mögliche Kombination wird mit Noten zwischen <b>1.0 (Exzellent)</b> und <b>6.0 (Schwach)</b> bewertet.
+        Die Prozentzahl beschreibt, wie stark die theoretische Gen-Kompatibilität ausfällt
+        (100 % = perfekt, 0 % = inkompatibel).
+      </p>
+      <p>
+        Der <b>beste Wert</b> steht für die wahrscheinlich günstigste Genkombination, 
+        der <b>schlechteste Wert</b> für die ungünstigste. 
+        Eine kleine Differenz („Range“) deutet auf stabile, gleichmäßige Nachkommen hin.
+      </p>
+    </div>
   </div>
+
+  <!-- =============================== -->
+  <!-- AUSWAHLBEREICH (BESITZER/STUTE) -->
+  <!-- =============================== -->
+  <div>
+    <label for="besitzerSelect">Besitzer:</label>
+    <select id="besitzerSelect"></select>
+
+    <label for="stuteSelect" style="margin-left:10px;">Stute:</label>
+    <select id="stuteSelect"></select>
+
+    <button onclick="zeigeAlle()" style="margin-left:10px;">Alle anzeigen</button>
+  </div>
+
+  <!-- =============================== -->
+  <!-- SORTIEROPTIONEN -->
+  <!-- =============================== -->
+  <div id="sortBox">
+    <label for="sortOption"><b>Sortieren nach:</b></label>
+    <select id="sortOption" title="Wähle, nach welchem Kriterium die Hengste sortiert werden.">
+      <option value="score">🧬 Bester Score</option>
+      <option value="bestNote">🥇 Beste Note</option>
+      <option value="smallestRange">⚖️ Kleinste Range</option>
+    </select>
+  </div>
+
+  <!-- =============================== -->
+  <!-- ERGEBNISBEREICH -->
+  <!-- =============================== -->
+  <div id="ergebnis"></div>
 
   <script src="app.js"></script>
 </body>
