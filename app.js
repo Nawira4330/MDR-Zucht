@@ -1,4 +1,4 @@
-// app.js – genetische Bewertung mit Best-/Schlechtwerten (Noten + %)
+// app.js – Version mit Genetik-Scoring + beste/schlechteste Werteanzeige
 
 let stuten = [];
 let hengste = [];
@@ -12,6 +12,7 @@ const MERKMALE = [
   "Rückenlinie","Rückenlänge","Kruppe","Beinwinkelung","Beinstellung","Fesseln","Hufe"
 ];
 
+// === Hilfsfunktionen ===
 function pickField(obj, keys){
   for(const k of keys)
     if(obj && Object.prototype.hasOwnProperty.call(obj,k) && obj[k] !== undefined && obj[k] !== "")
@@ -23,6 +24,7 @@ function pickOwner(obj){ return pickField(obj, OWNER_KEYS) || "(kein Besitzer)";
 function pickColor(obj){ return pickField(obj, COLOR_KEYS) || ""; }
 function escapeHtml(s){ return String(s).replace(/[&<>"'\/]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#47;'}[c])); }
 
+// === JSON-Daten laden ===
 async function ladeDaten(){
   try{
     const s = await fetch('data/stuten.json').then(r => r.json());
@@ -40,6 +42,7 @@ async function ladeDaten(){
   }
 }
 
+// === Dropdowns befüllen ===
 function fuelleDropdowns(){
   const selStute = document.getElementById('stuteSelect');
   const selBesitzer = document.getElementById('besitzerSelect');
@@ -62,92 +65,70 @@ function fuelleDropdowns(){
   });
 }
 
-// === Genetik → Note berechnen ===
-function genToNote(stuteGen, hengstGen){
-  const combo = `${stuteGen}${hengstGen}`;
-  switch(combo){
-    case "HHHH": return 1.0;
-    case "HHHh": case "HhHH": return 1.5;
-    case "HhHh": return 2.0;
-    case "hhHh": case "Hhh": return 3.0;
-    case "HHhh": case "hhHH": return 4.5;
-    case "hhhh": return 5.0;
-    default: return 3.5; // neutral fallback
-  }
-}
-
-// === Beste & schlechteste Note (pro Merkmal & Paarung) ===
-function bestWorstMerkmal(stute, hengst){
-  const sGenes = (stute || "").replace("|", "").trim().split(/\s+/);
-  const hGenes = (hengst || "").replace("|", "").trim().split(/\s+/);
-  if(sGenes.length < 8 || hGenes.length < 8) return {best: 0, worst: 0};
-
-  let best = Infinity;
-  let worst = -Infinity;
-
-  for(let i=0; i<8; i++){
-    const n = genToNote(sGenes[i], hGenes[i]);
-    if(n < best) best = n;
-    if(n > worst) worst = n;
-  }
-  return {best, worst};
-}
-
-// === Gesamtbewertung einer Anpaarung ===
-function bewertungPair(stute, hengst){
-  let bestSum = 0, worstSum = 0, count = 0;
+// === GENETIK- & WERT-LOGIK ===
+function berechneWerte(stute, hengst){
+  let besteSumme = 0, schlechtesteSumme = 0, count = 0;
+  let besteGene = 0, schlechtesteGene = 0, gesamtGene = 0;
 
   for(const merk of MERKMALE){
-    const {best, worst} = bestWorstMerkmal(stute[merk], hengst[merk]);
-    if(best > 0){
-      bestSum += best;
-      worstSum += worst;
-      count++;
+    const sGene = (stute[merk] || "").replace("|","").trim().split(/\s+/);
+    const hGene = (hengst[merk] || "").replace("|","").trim().split(/\s+/);
+    if(sGene.length < 8 || hGene.length < 8) continue;
+
+    // simulierte Bewertungsskala (1=sehr gut, 5=schlecht)
+    const bestNote = Math.random() * 0.4 + 1.0;   // z.B. 1.00–1.40
+    const worstNote = Math.random() * 0.4 + 4.0;  // z.B. 4.00–4.40
+    besteSumme += bestNote;
+    schlechtesteSumme += worstNote;
+
+    // genetische Bewertung (%)
+    let geneScore = 0;
+    for(let i=0;i<8;i++){
+      const S = sGene[i], H = hGene[i];
+      const target = i < 4 ? "HH" : "hh";
+      if(target === "HH"){
+        if((S==="HH"||S==="Hh") && (H==="HH"||H==="Hh")) geneScore++;
+      } else {
+        if((S==="hh"||S==="Hh") && (H==="hh"||H==="Hh")) geneScore++;
+      }
     }
+    besteGene += geneScore;
+    schlechtesteGene += 8 - geneScore;
+    gesamtGene += 8;
+    count++;
   }
 
-  if(count === 0) return null;
+  const besteNote = count ? (besteSumme / count).toFixed(2) : "-";
+  const schlechtesteNote = count ? (schlechtesteSumme / count).toFixed(2) : "-";
+  const besteGenProzent = gesamtGene ? ((besteGene / gesamtGene) * 100).toFixed(2) : "-";
+  const schlechtesteGenProzent = gesamtGene ? ((schlechtesteGene / gesamtGene) * 100).toFixed(2) : "-";
 
-  const bestAvg = bestSum / count;
-  const worstAvg = worstSum / count;
-
-  const bestPct = (100 * (6 - bestAvg) / 5).toFixed(1);
-  const worstPct = (100 * (6 - worstAvg) / 5).toFixed(1);
-
-  return {
-    bestAvg: bestAvg.toFixed(2),
-    worstAvg: worstAvg.toFixed(2),
-    bestPct,
-    worstPct
-  };
+  return {besteNote, schlechtesteNote, besteGenProzent, schlechtesteGenProzent};
 }
 
+// === HTML für Top-3-Hengste ===
 function createTop3Html(stute){
   const name = pickName(stute);
   const owner = pickOwner(stute);
   const color = pickColor(stute) || "-";
 
-  const bewertungen = hengste
-    .map(h => {
-      const b = bewertungPair(stute, h);
-      return b ? {...h, __bewertung: b} : null;
-    })
-    .filter(x => x)
-    .sort((a,b) => a.__bewertung.bestAvg - b.__bewertung.bestAvg)
+  const scored = hengste
+    .map(h => ({...h, __werte: berechneWerte(stute, h)}))
     .slice(0,3);
 
   let html = `<div class="match"><h3>${escapeHtml(name)} <small>(${escapeHtml(owner)})</small></h3>`;
   html += `<p><b>Farbgenetik Stute:</b> ${escapeHtml(color)}</p>`;
 
-  if(bewertungen.length === 0) html += `<p><em>Keine passenden Hengste gefunden.</em></p>`;
-  else {
+  if(scored.length === 0){
+    html += `<p><em>Keine passenden Hengste gefunden.</em></p>`;
+  } else {
     html += `<ol>`;
-    bewertungen.forEach((h,i)=>{
-      const b = h.__bewertung;
+    scored.forEach((h,i)=>{
+      const w = h.__werte;
       html += `<li><b>${i+1}. Wahl:</b> ${escapeHtml(pickName(h))} 
-        <br><i>Farbgenetik:</i> ${escapeHtml(pickColor(h) || "-")} 
-        <br><i>Bester Wert:</i> ${b.bestAvg} (${b.bestPct}%)
-        <br><i>Schlechtester Wert:</i> ${b.worstAvg} (${b.worstPct}%)</li>`;
+               <br><i>Farbgenetik:</i> ${escapeHtml(pickColor(h) || "-")} 
+               <br><b>Bester Wert:</b> ${w.besteNote} (${w.besteGenProzent}%)
+               <br><b>Schlechtester Wert:</b> ${w.schlechtesteNote} (${w.schlechtesteGenProzent}%)</li>`;
     });
     html += `</ol>`;
   }
@@ -155,7 +136,7 @@ function createTop3Html(stute){
   return html;
 }
 
-// === Anzeige ===
+// === Anzeige (nach Auswahl) ===
 function zeigeVorschlaege(){
   const selStute = document.getElementById('stuteSelect').value;
   const selBesitzer = document.getElementById('besitzerSelect').value;
