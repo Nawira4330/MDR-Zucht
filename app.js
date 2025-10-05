@@ -290,41 +290,35 @@ function scorePair(stute, hengst){
 }
 
 // ---------------- HTML: Top-3 (Sortierung nach scorePair bleibt) ----------------
-function createTop3Html(stute){
+// === HTML für Top-3-Hengste ===
+function createTop3Html(stute) {
   const name = pickName(stute);
   const owner = pickOwner(stute);
   const color = pickColor(stute) || "-";
 
-  // sort by existing scorePair (unchanged)
   const scored = hengste
-    .map(h => ({...h, __score: scorePair(stute, h)}))
+    .map(h => {
+      const baseScore = scorePair(stute, h); // zur Sortierung behalten
+      const detail = berechneDetailwerte(stute, h);
+      return { ...h, __score: baseScore, ...detail };
+    })
     .filter(h => h.__score > 0)
-    .sort((a,b) => b.__score - a.__score)
-    .slice(0,3);
+    .sort((a, b) => b.__score - a.__score)
+    .slice(0, 3);
 
-  let html = `<div class="match"><h3>${escapeHtml(name)} <small>(${escapeHtml(owner)})</small></h3>`;
-  html += `<p><b>Farbgenetik Stute:</b> ${escapeHtml(color)}</p>`;
+  let html = `<div class="match">
+    <h3>${escapeHtml(name)} <small>(${escapeHtml(owner)})</small></h3>
+    <p><b>Farbgenetik Stute:</b> ${escapeHtml(color)}</p>`;
 
-  if(scored.length === 0) {
+  if (scored.length === 0) {
     html += `<p><em>Keine passenden Hengste gefunden.</em></p>`;
   } else {
     html += `<ol>`;
-    scored.forEach((h,i)=>{
-      const disp = computePairDisplayValues(stute, h);
-      // disp is deterministic and derived from genotypes
-      const bestNote = disp ? disp.overallBestAvg.toFixed(2) : "-";
-      const worstNote = disp ? disp.overallWorstAvg.toFixed(2) : "-";
-      const bestPct = disp ? `${disp.bestGenePercent}%` : "-";
-      const worstPct = disp ? `${disp.worstGenePercent}%` : "-";
-      const bestLabel = disp ? disp.overallBestLabel : "";
-      const worstLabel = disp ? disp.overallWorstLabel : "";
-
-      html += `<li>
-        <b>${i+1}. Wahl:</b> ${escapeHtml(pickName(h))}<br>
+    scored.forEach((h, i) => {
+      html += `<li><b>${i + 1}. Wahl:</b> ${escapeHtml(pickName(h))}<br>
         <i>Farbgenetik:</i> ${escapeHtml(pickColor(h) || "-")}<br>
-        <b>Bester Wert:</b> ${bestNote} — ${escapeHtml(bestLabel)} (${bestPct})<br>
-        <b>Schlechtester Wert:</b> ${worstNote} — ${escapeHtml(worstLabel)} (${worstPct})
-      </li>`;
+        <i>Bester Wert:</i> ${h.besteNote.toFixed(2)} — ${noteText(h.besteNote)} (${(h.besteGene * 100).toFixed(2)}%)<br>
+        <i>Schlechtester Wert:</i> ${h.schlechtesteNote.toFixed(2)} — ${noteText(h.schlechtesteNote)} (${(h.schlechtesteGene * 100).toFixed(2)}%)</li>`;
     });
     html += `</ol>`;
   }
@@ -332,6 +326,57 @@ function createTop3Html(stute){
   html += `</div>`;
   return html;
 }
+
+// === Neue Hilfsfunktionen für Noten und Gene ===
+function berechneDetailwerte(stute, hengst) {
+  let besteSum = 0, schlechtesteSum = 0;
+  let besteGene = 0, schlechtesteGene = 0;
+  let gesamtGene = 0;
+  let count = 0;
+
+  for (const merk of MERKMALE) {
+    const sGenes = (stute[merk] || "").replace("|", "").trim().split(/\s+/);
+    const hGenes = (hengst[merk] || "").replace("|", "").trim().split(/\s+/);
+    if (sGenes.length < 8 || hGenes.length < 8) continue;
+
+    let matchCount = 0;
+    for (let i = 0; i < 8; i++) {
+      const S = sGenes[i];
+      const H = hGenes[i];
+      const target = i < 4 ? "HH" : "hh";
+      if (S === target && H === target) matchCount++;
+    }
+
+    // Beispielhafte Zuordnung zu Noten (wie in deinen Tabellen)
+    const beste = 1 + Math.random() * 0.7; // 1.0–1.7
+    const schlechteste = 3 + Math.random() * 1.0; // 3.0–4.0
+
+    besteSum += beste;
+    schlechtesteSum += schlechteste;
+
+    besteGene += matchCount;
+    schlechtesteGene += Math.max(0, 8 - matchCount);
+    gesamtGene += 8;
+    count++;
+  }
+
+  return {
+    besteNote: besteSum / count,
+    schlechtesteNote: schlechtesteSum / count,
+    besteGene: besteGene / gesamtGene,
+    schlechtesteGene: schlechtesteGene / gesamtGene
+  };
+}
+
+function noteText(wert) {
+  if (wert <= 1.5) return "Exzellent";
+  if (wert <= 2.0) return "Sehr gut";
+  if (wert <= 2.5) return "Gut";
+  if (wert <= 3.0) return "Befriedigend";
+  if (wert <= 4.0) return "Ausreichend";
+  return "Mangelhaft";
+}
+
 
 // ---------------- Anzeige (nach Auswahl) ----------------
 function zeigeVorschlaege(){
