@@ -1,137 +1,97 @@
 body {
-  font-family: "Segoe UI", Arial, sans-serif;
-  background: #fafafa;
-  margin: 0;
-  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f9f9f9;
   color: #222;
+  margin: 20px;
+  line-height: 1.6;
 }
 
-header {
-  background: #4a148c;
-  color: #fff;
-  padding: 1rem;
+header h1 {
   text-align: center;
-}
-
-#controls {
-  background: #fff;
-  padding: 1rem;
-  border-bottom: 2px solid #eee;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  justify-content: center;
-  align-items: center;
-}
-
-select, button {
-  padding: 0.4rem 0.6rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 0.95rem;
-}
-
-button {
-  background: #6a1b9a;
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-button:hover {
-  background: #8e24aa;
+  margin-bottom: 20px;
 }
 
 #infoBox {
-  margin: 1rem auto;
   background: #fff;
-  padding: 1rem 1.5rem;
+  border: 1px solid #ccc;
   border-radius: 10px;
-  width: 90%;
-  max-width: 900px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  padding: 15px;
+  margin-bottom: 20px;
 }
 
 .warnhinweis {
   background: #fff3cd;
-  border: 1px solid #ffeeba;
-  padding: 0.8rem;
+  border: 1px solid #ffecb5;
+  padding: 10px;
   border-radius: 6px;
-  margin-bottom: 1rem;
+  margin-bottom: 15px;
 }
 
 .tabs {
   display: flex;
-  gap: 0.5rem;
-  margin-bottom: 0.8rem;
+  gap: 10px;
 }
 
-.tabButton {
-  flex: 1;
-  background: #eee;
+.tab {
+  background: #e3e3e3;
   border: none;
-  padding: 0.6rem;
+  padding: 8px 12px;
+  border-radius: 5px;
   cursor: pointer;
-  font-weight: bold;
-  border-radius: 6px;
 }
 
-.tabButton.active {
-  background: #d1c4e9;
+.tab.active {
+  background: #3a7bd5;
+  color: white;
 }
 
-.tabContent {
+.tab-content {
   display: none;
+  padding: 10px 0;
 }
 
-.tabContent.active {
+.tab-content.active {
   display: block;
 }
 
-main {
-  margin: 2rem auto;
-  width: 90%;
-  max-width: 900px;
+#sortButtons button {
+  background: #3a7bd5;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .match {
   background: #fff;
-  padding: 1.2rem 1.5rem;
-  margin-bottom: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 0 6px rgba(0,0,0,0.08);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
 }
 
 .match h3 {
-  color: #4a148c;
-  margin-bottom: 0.2rem;
+  margin-bottom: 8px;
+  color: #333;
 }
 
-.match small {
-  color: #555;
-}
-
-.match ol {
+.match ul {
   list-style-type: none;
-  padding-left: 1rem;
-  margin-top: 0.5rem;
+  padding-left: 10px;
 }
 
 .match li {
-  margin-top: 0.8rem;
-  margin-bottom: 1rem;
-  line-height: 1.5;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #ddd;
 }
 
-.match li::before {
-  content: "– ";
-  font-weight: bold;
-  color: #6a1b9a;
+.match li:last-child {
+  border: none;
 }
 
-.match span {
-  display: block;
-  margin-left: 1rem;
-  font-size: 0.95rem;
+.match p {
+  margin: 4px 0;
 }
-
