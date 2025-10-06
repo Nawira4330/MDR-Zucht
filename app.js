@@ -107,7 +107,7 @@ function zeigeErgebnis(stute, ergebnisse, container = document.getElementById("e
   let html = `<h3>${stute.Name}</h3>
   <p><small>Farbgenetik Stute: ${stute.Farbgenetik}</small></p>
   <p><small>Besitzer: ${stute.Besitzer || "unbekannt"}</small></p>
-  <ol>`;
+  <ul>`;
 
   ergebnisse.forEach((r, i) => {
     html += `
@@ -119,7 +119,7 @@ function zeigeErgebnis(stute, ergebnisse, container = document.getElementById("e
       </li>`;
   });
 
-  html += `</ol>`;
+  html += `</ul>`;
   div.innerHTML = html;
   container.appendChild(div);
 }
