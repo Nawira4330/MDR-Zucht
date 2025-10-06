@@ -1,64 +1,65 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>MDR Zucht – Genetikbewertung</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Genetikrechner – Stuten & Hengste</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="container">
+    <h1>Genetikrechner</h1>
 
-  <header>
-    <h1>MDR Zucht – Genetische Anpaarung</h1>
-  </header>
+    <!-- Infofenster -->
+    <div class="info-container">
+      <div class="info-warning">
+        ⚠️ <b>Achtung:</b> Inzucht und die Möglichkeit der Doppelvererbung des Overo-Gens
+        werden in dieser Berechnung nicht berücksichtigt. Es handelt sich nur um eine Empfehlung.
+      </div>
 
-  <section id="infoBox">
-    <p class="warnhinweis">
-      ⚠️ Achtung: Inzucht und die Möglichkeit der Doppelvererbung des Overo-Gens
-      werden nicht berücksichtigt. Die Ergebnisse sind nur Empfehlungen.
-    </p>
-    <div class="tabs">
-      <button class="tab active" data-tab="auswahl">1️⃣ Auswahl der Hengste</button>
-      <button class="tab" data-tab="noten">2️⃣ Berechnung der Noten</button>
+      <div class="tabs">
+        <button class="tab-button active" data-tab="tab1">Hengstauswahl</button>
+        <button class="tab-button" data-tab="tab2">Bewertungssystem</button>
+      </div>
+
+      <div class="tab-content" id="tab1">
+        <p>
+          Die vorgeschlagenen Hengste werden anhand genetischer Kompatibilität mit der Stute ausgewählt.
+          Dabei werden Gene berücksichtigt, die für Exterieurmerkmale, Farbvererbung und Gesamtharmonie
+          relevant sind. Das Ziel ist es, gesunde, harmonische und genetisch vielfältige Nachkommen zu fördern.
+        </p>
+      </div>
+      <div class="tab-content hidden" id="tab2">
+        <p>
+          Die Noten basieren auf den vererbbaren Merkmalen (z. B. Kopf, Hals, Beine, Hufe etc.).
+          Für jedes Merkmal werden der beste und schlechteste mögliche Wert ermittelt.
+          Die Prozentzahl gibt an, wie groß der Anteil der günstigen Genkombinationen ist.
+          Ein niedrigerer Notenwert und eine hohe Prozentzahl deuten auf eine bessere Vererbungschance hin.
+        </p>
+      </div>
     </div>
-    <div class="tab-content active" id="tab-auswahl">
-      <p>Die Hengste werden auf Basis der genetischen Ausgleichsregeln ermittelt.
-      Ziel ist ein möglichst harmonisches Verhältnis von dominanten (HH) und
-      rezessiven (hh) Genen, mit Überkorrektur erlaubt.</p>
+
+    <!-- Auswahlmenü -->
+    <div class="controls">
+      <select id="stuteSelect"></select>
+      <select id="besitzerSelect"></select>
+      <button onclick="zeigeAlle()">Alle anzeigen</button>
     </div>
-    <div class="tab-content" id="tab-noten">
-      <p>Die Noten ergeben sich aus der Kombination der Genotypen. <br>
-      Beispiel: HH–HH = Note 1 (Exzellent), Hh–Hh = Note 2 (Sehr gut), hh–hh = Note 3 (Gut).
-      Aus diesen Werten wird die beste und schlechteste mögliche Note des Fohlens berechnet.</p>
+
+    <!-- Sortiermenü -->
+    <div class="sort-container">
+      <label for="sortDropdown">Sortieren nach:</label>
+      <select id="sortDropdown">
+        <option value="score">Gesamtscore</option>
+        <option value="best">Beste Note</option>
+        <option value="range">Kleinste Noten-Range</option>
+      </select>
     </div>
-  </section>
 
-  <section id="auswahl">
-    <label for="stuteSelect">Stute wählen:</label>
-    <select id="stuteSelect"></select>
-
-    <label for="besitzerSelect">Besitzer wählen:</label>
-    <select id="besitzerSelect"></select>
-
-    <div id="sortButtons">
-      <button id="sortScore">Nach Score</button>
-      <button id="sortBeste">Nach bester Note</button>
-      <button id="sortRange">Nach kleinster Range</button>
-    </div>
-  </section>
-
-  <section id="ergebnis"></section>
+    <!-- Ergebnisanzeige -->
+    <div id="ergebnis"></div>
+  </div>
 
   <script src="app.js"></script>
-  <script>
-    // Tabs aktivieren
-    document.querySelectorAll('.tab').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(tc=>tc.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
-      });
-    });
-  </script>
 </body>
 </html>
