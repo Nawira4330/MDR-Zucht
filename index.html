@@ -3,92 +3,83 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MDR-Zucht – Anpaarungsempfehlung</title>
+  <title>MDR-Zucht – Genetische Paarungsauswertung</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
   <header>
-    <h1>MDR-Zucht – Anpaarungsempfehlung</h1>
+    <h1>MDR-Zucht – Anpaarungsanalyse</h1>
   </header>
 
-  <!-- Infofenster -->
-  <section id="info-box" class="card">
-    <p class="warning">
-      ⚠️ Achtung: Inzucht und die Möglichkeit der Doppelvererbung des Overo-Gens werden in dieser Berechnung <b>nicht</b> berücksichtigt.  
-      Zudem handelt es sich nur um eine Empfehlung.
-    </p>
-    <div class="tabs">
-      <button class="tab-button active" data-tab="tab1">Erklärung der Auswahl</button>
-      <button class="tab-button" data-tab="tab2">Erklärung der Noten</button>
-    </div>
+  <section id="controls">
+    <label for="stuteSelect">Stute:</label>
+    <select id="stuteSelect">
+      <option value="">– Alle Stuten –</option>
+    </select>
 
-    <div id="tab1" class="tab-content active">
-      <p>Die Hengste werden anhand der genetischen Kompatibilität mit der ausgewählten Stute bewertet.  
-      Für jedes Exterieurmerkmal (z. B. Kopf, Hals, Hufe) wird analysiert, wie sich die Kombination der Gene
-      zwischen Stute und Hengst ausgleichen oder verbessern könnte.</p>
+    <label for="besitzerSelect">Besitzer:</label>
+    <select id="besitzerSelect">
+      <option value="">– Alle Besitzer –</option>
+    </select>
 
-      <p>Je besser die Kombination, desto höher fällt der Gesamtscore aus.  
-      Die Top-3-Hengste werden nach der gewählten Sortierlogik (beste Note, kleinste Range, bester Score) angezeigt.</p>
-    </div>
+    <label for="sortOption">Sortieren nach:</label>
+    <select id="sortOption">
+      <option value="beste">Beste Note</option>
+      <option value="range">Kleinste Range</option>
+      <option value="score">Bester Score</option>
+    </select>
 
-    <div id="tab2" class="tab-content">
-      <p>Für jedes Merkmal werden acht Genpositionen verglichen.  
-      Aus dem Verhältnis von stabilisierenden, ausgleichenden und neutralen Kombinationen
-      wird eine Durchschnittsnote im Schulnotensystem (1 = Exzellent – 6 = Schwach) berechnet.</p>
-
-      <p>Der „beste Wert“ steht für das mögliche Optimum der Vererbung,  
-      der „schlechteste Wert“ zeigt das mögliche Minimum.  
-      Der Prozentwert zeigt die relative genetische Stärke (100 % = optimal, 0 % = nicht kompatibel).</p>
-    </div>
-  </section>
-
-  <!-- Auswahlbereich -->
-  <section id="controls" class="card">
-    <div class="dropdowns">
-      <label>Stute:</label>
-      <select id="stuteSelect"></select>
-
-      <label>Besitzer:</label>
-      <select id="besitzerSelect"></select>
-    </div>
-
-    <div class="sortierung">
-      <label>Sortierung nach:</label>
-      <select id="sortOption">
-        <option value="beste">Beste Note</option>
-        <option value="range">Kleinste Range</option>
-        <option value="score">Bester Score</option>
-      </select>
-    </div>
-
-    <button onclick="zeigeVorschlaege()">Anzeigen</button>
+    <button onclick="zeigeVorschlaege()">Vorschläge anzeigen</button>
     <button onclick="zeigeAlle()">Alle anzeigen</button>
   </section>
 
-  <!-- Ergebnisbereich -->
-  <section id="ergebnis"></section>
+  <section id="infoBox">
+    <h2>ℹ️ Informationen</h2>
+    <p class="warnhinweis">
+      <strong>Achtung:</strong> Inzucht und die Möglichkeit der Doppelvererbung des Overo-Gens
+      werden in dieser Berechnung nicht berücksichtigt. Zudem handelt es sich nur um eine Empfehlung.
+    </p>
 
-  <footer>
-    <p>&copy; 2025 MDR-Zucht</p>
-  </footer>
+    <div class="tabs">
+      <button class="tabButton active" onclick="zeigeTab('tab1')">1️⃣ Erklärung der Hengstauswahl</button>
+      <button class="tabButton" onclick="zeigeTab('tab2')">2️⃣ Erklärung der Noten</button>
+    </div>
+
+    <div id="tab1" class="tabContent active">
+      <p>
+        Für jede Stute werden alle verfügbaren Hengste anhand der genetischen Übereinstimmung bewertet.
+        Ziel ist eine optimale Kombination der Genetik, um ausgeglichene Merkmalsverteilungen zu erreichen.
+        Dabei werden 14 Exterieur-Merkmale (z. B. Kopf, Hals, Hufe) berücksichtigt.
+      </p>
+      <p>
+        Jeder Hengst erhält einen <b>Score</b> sowie eine Bewertung der besten und schlechtesten möglichen
+        Noten, die sich aus der genetischen Kombination ergeben können. Die besten drei Hengste werden
+        als Empfehlung angezeigt.
+      </p>
+    </div>
+
+    <div id="tab2" class="tabContent">
+      <p>
+        Die Noten (1–6) bewerten die theoretische Qualität des möglichen Fohlens:
+      </p>
+      <ul>
+        <li>1.0–1.5: Exzellent</li>
+        <li>1.6–2.5: Sehr gut</li>
+        <li>2.6–3.5: Gut</li>
+        <li>3.6–4.5: Ausreichend</li>
+        <li>4.6–5.5: Mangelhaft</li>
+        <li>5.6–6.0: Schwach</li>
+      </ul>
+      <p>
+        Der Prozentwert zeigt, wie nah die Paarung an der optimalen Genetik liegt:
+        100 % = ideal, 0 % = ungünstig.
+      </p>
+    </div>
+  </section>
+
+  <main id="ergebnis"></main>
 
   <script src="app.js"></script>
-  <script>
-    // Tabs für das Infofenster aktivieren
-    document.addEventListener('DOMContentLoaded', () => {
-      const buttons = document.querySelectorAll('.tab-button');
-      const tabs = document.querySelectorAll('.tab-content');
-
-      buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          buttons.forEach(b => b.classList.remove('active'));
-          tabs.forEach(t => t.classList.remove('active'));
-
-          btn.classList.add('active');
-          document.getElementById(btn.dataset.tab).classList.add('active');
-        });
-      });
-    });
-  </script>
 </body>
 </html>
