@@ -3,62 +3,78 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Genetikrechner – Stuten & Hengste</title>
+  <title>Paarungsanalyse – Exterieur-Matching</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Genetikrechner</h1>
 
-    <!-- Infofenster -->
-    <div class="info-container">
-      <div class="info-warning">
-        ⚠️ <b>Achtung:</b> Inzucht und die Möglichkeit der Doppelvererbung des Overo-Gens
-        werden in dieser Berechnung nicht berücksichtigt. Es handelt sich nur um eine Empfehlung.
-      </div>
+  <header>
+    <h1>Paarungsanalyse – Exterieur-Matching</h1>
+    <p class="subtitle">Basierend auf genetischer Übereinstimmung und Merkmalnoten</p>
+  </header>
 
-      <div class="tabs">
-        <button class="tab-button active" data-tab="tab1">Hengstauswahl</button>
-        <button class="tab-button" data-tab="tab2">Bewertungssystem</button>
-      </div>
+  <section class="auswahl">
+    <label for="stuteSelect">Stute auswählen:</label>
+    <select id="stuteSelect"></select>
 
-      <div class="tab-content" id="tab1">
-        <p>
-          Die vorgeschlagenen Hengste werden anhand genetischer Kompatibilität mit der Stute ausgewählt.
-          Dabei werden Gene berücksichtigt, die für Exterieurmerkmale, Farbvererbung und Gesamtharmonie
-          relevant sind. Das Ziel ist es, gesunde, harmonische und genetisch vielfältige Nachkommen zu fördern.
-        </p>
-      </div>
-      <div class="tab-content hidden" id="tab2">
-        <p>
-          Die Noten basieren auf den vererbbaren Merkmalen (z. B. Kopf, Hals, Beine, Hufe etc.).
-          Für jedes Merkmal werden der beste und schlechteste mögliche Wert ermittelt.
-          Die Prozentzahl gibt an, wie groß der Anteil der günstigen Genkombinationen ist.
-          Ein niedrigerer Notenwert und eine hohe Prozentzahl deuten auf eine bessere Vererbungschance hin.
-        </p>
-      </div>
+    <label for="besitzerSelect">Besitzer auswählen:</label>
+    <select id="besitzerSelect"></select>
+
+    <label for="sortDropdown">Sortierung:</label>
+    <select id="sortDropdown">
+      <option value="avg">Nach bester Note</option>
+      <option value="score">Nach Genetik-Score</option>
+    </select>
+  </section>
+
+  <!-- Infofenster -->
+  <section class="infofenster">
+    <div class="warnung">
+      ⚠️ <b>Achtung:</b> Inzucht und die Möglichkeit der Doppelvererbung des Overo-Gens werden in dieser Berechnung nicht berücksichtigt.  
+      Es handelt sich ausschließlich um eine Empfehlung, nicht um eine Garantie.
     </div>
 
-    <!-- Auswahlmenü -->
-    <div class="controls">
-      <select id="stuteSelect"></select>
-      <select id="besitzerSelect"></select>
-      <button onclick="zeigeAlle()">Alle anzeigen</button>
+    <div class="tabs">
+      <button class="tab-button active" data-tab="tab1">Auswahlkriterien</button>
+      <button class="tab-button" data-tab="tab2">Noten & Prozentwerte</button>
     </div>
 
-    <!-- Sortiermenü -->
-    <div class="sort-container">
-      <label for="sortDropdown">Sortieren nach:</label>
-      <select id="sortDropdown">
-        <option value="score">Gesamtscore</option>
-        <option value="best">Beste Note</option>
-        <option value="range">Kleinste Noten-Range</option>
-      </select>
+    <div id="tab1" class="tab-content">
+      <h3>Wie die Hengste für eine Stute ausgewählt werden</h3>
+      <p>
+        Für jede Stute werden alle verfügbaren Hengste anhand ihrer genetischen Merkmale (Kopf, Hals, Kruppe, Hufe usw.)
+        verglichen. Je mehr genetische Übereinstimmungen ein Hengst mit der Stute aufweist, desto höher ist sein Genetik-Score.
+      </p>
+      <p>
+        Aus allen berechneten Paarungen werden die drei besten Kombinationen mit dem höchsten Score
+        und der besten Durchschnittsnote angezeigt. Diese stellen mögliche Empfehlungen dar.
+      </p>
     </div>
 
-    <!-- Ergebnisanzeige -->
-    <div id="ergebnis"></div>
-  </div>
+    <div id="tab2" class="tab-content hidden">
+      <h3>Wie sich die Noten und Prozentwerte zusammensetzen</h3>
+      <p>
+        Für jedes Merkmal (z. B. Kopf, Schulter, Beine usw.) werden die genetischen Codes von Stute und Hengst miteinander
+        verglichen. Je nach Anzahl der Abweichungen ergibt sich eine Note:
+      </p>
+      <ul>
+        <li><b>0 Fehler:</b> Note 1 – Exzellent</li>
+        <li><b>1 Fehler:</b> Note 2 – Sehr gut</li>
+        <li><b>2–3 Fehler:</b> Note 3 – Gut</li>
+        <li><b>4 oder mehr Fehler:</b> Note 5 – Ausreichend</li>
+      </ul>
+      <p>
+        Aus allen Merkmalen wird anschließend die Durchschnittsnote berechnet.  
+        Eine niedrigere Note steht für eine bessere genetische Übereinstimmung.
+      </p>
+    </div>
+  </section>
+
+  <main id="ergebnis"></main>
+
+  <footer>
+    <p>© 2025 Exterieur-Matching</p>
+  </footer>
 
   <script src="app.js"></script>
 </body>
