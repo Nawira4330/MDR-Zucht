@@ -44,9 +44,7 @@ function fuelleDropdowns() {
 function sortiereErgebnisse(ergebnisse, sortOption) {
   switch (sortOption) {
     case "beste":
-      return ergebnisse.sort(
-        (a, b) => a.besterWert.note - b.besterWert.note
-      );
+      return ergebnisse.sort((a, b) => a.besterWert.note - b.besterWert.note);
     case "range":
       return ergebnisse.sort(
         (a, b) =>
@@ -59,7 +57,30 @@ function sortiereErgebnisse(ergebnisse, sortOption) {
   }
 }
 
-// ======================= Hauptfunktion =======================
+// ======================= Anzeige =======================
+function zeigeErgebnis(stute, ergebnisse, container = document.getElementById("ergebnis")) {
+  const div = document.createElement("div");
+  div.classList.add("match");
+
+  let html = `<h3>${stute.Name}</h3>
+  <p><small>Farbgenetik Stute: ${stute.Farbgenetik}</small></p>
+  <p><small>Besitzer: ${stute.Besitzer || "unbekannt"}</small></p>`;
+
+  ergebnisse.forEach((r, i) => {
+    html += `
+      <li>
+        – <strong>${i + 1}. Wahl:</strong> ${r.hengst.Name}<br>
+        <small>Farbgenetik: ${r.hengst.Farbgenetik || "-"}</small><br>
+        <span>Bester Wert: ${r.besterWert.note.toFixed(2)} — ${r.besterWert.text} (${r.besterWert.prozent.toFixed(2)}%)</span>
+        <span>Schlechtester Wert: ${r.schlechtesterWert.note.toFixed(2)} — ${r.schlechtesterWert.text} (${r.schlechtesterWert.prozent.toFixed(2)}%)</span>
+      </li>`;
+  });
+
+  div.innerHTML = html;
+  container.appendChild(div);
+}
+
+// ======================= Anzeige-Logik =======================
 function zeigeVorschlaege() {
   const stutenName = document.getElementById("stuteSelect").value;
   const stute = stuten.find((s) => s.Name === stutenName);
@@ -74,6 +95,7 @@ function zeigeVorschlaege() {
 
   const sortiert = sortiereErgebnisse(ergebnisse, sortOption);
   const top3 = sortiert.slice(0, 3);
+  document.getElementById("ergebnis").innerHTML = "";
   zeigeErgebnis(stute, top3);
 }
 
@@ -99,45 +121,16 @@ function zeigeAlle() {
   });
 }
 
-// ======================= Anzeige =======================
-function zeigeErgebnis(stute, ergebnisse, container = document.getElementById("ergebnis")) {
-  const div = document.createElement("div");
-  div.classList.add("match");
-
-  let html = `<h3>${stute.Name}</h3>
-  <p><small>Farbgenetik Stute: ${stute.Farbgenetik}</small></p>
-  <p><small>Besitzer: ${stute.Besitzer || "unbekannt"}</small></p>
-  <ul>`;
-
-  ergebnisse.forEach((r, i) => {
-    html += `
-      <li>
-        <strong>${i + 1}. Wahl:</strong> ${r.hengst.Name}<br>
-        <small>Farbgenetik: ${r.hengst.Farbgenetik || "-"}</small><br>
-        <span>Bester Wert: ${r.besterWert.note.toFixed(2)} — ${r.besterWert.text} (${r.besterWert.prozent.toFixed(2)}%)</span><br>
-        <span>Schlechtester Wert: ${r.schlechtesterWert.note.toFixed(2)} — ${r.schlechtesterWert.text} (${r.schlechtesterWert.prozent.toFixed(2)}%)</span>
-      </li>`;
-  });
-
-  html += `</ul>`;
-  div.innerHTML = html;
-  container.appendChild(div);
-}
-
 // ======================= Berechnung =======================
-
-// Hilfsfunktion: wandelt Buchstaben-Kombi in numerischen Wert um
 function genWert(gen) {
   if (!gen) return 0;
   gen = gen.trim();
-  // einfache Werte für Vererbung: homozygot stark (HH) = 3, heterozygot = 2, schwach = 1
   if (gen.includes("HH")) return 3;
   if (gen.includes("Hh") || gen.includes("hH")) return 2;
   if (gen.includes("hh")) return 1;
   return 0;
 }
 
-// Hauptlogik für die Notenberechnung
 function berechneGenetikScore(stute, hengst) {
   const merkmale = [
     "Kopf", "Gebiss", "Hals", "Halsansatz", "Widerrist",
@@ -155,7 +148,7 @@ function berechneGenetikScore(stute, hengst) {
     sGene.forEach((sg, i) => {
       const hg = hGene[i] || "";
       const diff = Math.abs(genWert(sg) - genWert(hg));
-      const note = 1 + diff * 1.2; // leichte Streuung der Unterschiede
+      const note = 1 + diff * 1.2;
       summe += note;
       count++;
     });
@@ -167,8 +160,7 @@ function berechneGenetikScore(stute, hengst) {
   const bester = Math.min(...noten);
   const schlechtester = Math.max(...noten);
   const durchschnitt = noten.reduce((a, b) => a + b, 0) / noten.length;
-
-  const score = 100 - (durchschnitt - 1) * 15; // besserer Durchschnitt = höherer Score
+  const score = 100 - (durchschnitt - 1) * 15;
 
   return {
     score,
@@ -185,7 +177,6 @@ function berechneGenetikScore(stute, hengst) {
   };
 }
 
-// Notentext nach Wert
 function noteText(note) {
   if (note <= 1.5) return "Exzellent";
   if (note <= 2.5) return "Sehr gut";
@@ -193,6 +184,14 @@ function noteText(note) {
   if (note <= 4.5) return "Ausreichend";
   if (note <= 5.5) return "Mangelhaft";
   return "Schwach";
+}
+
+// ======================= Tabs =======================
+function zeigeTab(tabId) {
+  document.querySelectorAll(".tabButton").forEach(b => b.classList.remove("active"));
+  document.querySelectorAll(".tabContent").forEach(t => t.classList.remove("active"));
+  document.querySelector(`[onclick="zeigeTab('${tabId}')"]`).classList.add("active");
+  document.getElementById(tabId).classList.add("active");
 }
 
 // ======================= Start =======================
