@@ -105,29 +105,49 @@ function scorePair(stute, hengst){
   return count>0?totalScore/count:0;
 }
 
-// === Beste/schlechteste Note (präzise Skala) ===
+// === Beste/schlechteste Note (exakt nach Screenshot-System) ===
 function berechneNoten(stute, hengst){
-  let werte = [];
-  for(const merk of MERKMALE){
-    const s = (stute[merk]||"").replace("|","").trim().split(/\s+/);
-    const h = (hengst[merk]||"").replace("|","").trim().split(/\s+/);
-    if(s.length<8||h.length<8) continue;
+  let merkmalNoten = [];
 
-    for(let i=0;i<8;i++){
-      const S=s[i], H=h[i];
-      let note=4.5; // Default Mittelwert
-      if(S==="HH"&&H==="HH")note=1.0;
-      else if((S==="HH"&&H==="Hh")||(S==="Hh"&&H==="HH"))note=1.3;
-      else if(S==="Hh"&&H==="Hh")note=1.7;
-      else if((S==="HH"&&H==="hh")||(S==="hh"&&H==="HH"))note=3.5;
-      else if((S==="Hh"&&H==="hh")||(S==="hh"&&H==="Hh"))note=2.3;
-      else if(S==="hh"&&H==="hh")note=3.0;
-      werte.push(note);
+  for (const merk of MERKMALE) {
+    const s = (stute[merk] || "").replace("|", "").trim().split(/\s+/);
+    const h = (hengst[merk] || "").replace("|", "").trim().split(/\s+/);
+    if (s.length < 8 || h.length < 8) continue;
+
+    let teilNoten = [];
+
+    // Jede der 8 Genpositionen bewerten
+    for (let i = 0; i < 8; i++) {
+      const S = s[i];
+      const H = h[i];
+      let note = 4.0;
+
+      // realistischere Bewertungsskala nach deinem Excel
+      if (S === "HH" && H === "HH") note = 1.0;
+      else if ((S === "HH" && H === "Hh") || (S === "Hh" && H === "HH")) note = 1.3;
+      else if (S === "Hh" && H === "Hh") note = 1.7;
+      else if ((S === "HH" && H === "hh") || (S === "hh" && H === "HH")) note = 3.5;
+      else if ((S === "Hh" && H === "hh") || (S === "hh" && H === "Hh")) note = 2.3;
+      else if (S === "hh" && H === "hh") note = 3.0;
+      else note = 4.5;
+
+      teilNoten.push(note);
     }
+
+    // Durchschnittsnote pro Merkmal (Kopf, Hals, ...)
+    const merkAvg = teilNoten.reduce((a, b) => a + b, 0) / teilNoten.length;
+    merkmalNoten.push(merkAvg);
   }
-  if(werte.length===0) return {beste:0, schlechteste:0};
-  return {beste:Math.min(...werte), schlechteste:Math.max(...werte)};
+
+  if (merkmalNoten.length === 0) return { beste: 0, schlechteste: 0 };
+
+  // Beste = niedrigste Durchschnittsnote, Schlechteste = höchste Durchschnittsnote
+  const beste = Math.min(...merkmalNoten);
+  const schlechteste = Math.max(...merkmalNoten);
+
+  return { beste, schlechteste };
 }
+
 
 // === Schulnotenbeschreibung ===
 function noteText(note){
