@@ -2,84 +2,63 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MDR-Zucht – Genetische Paarungsauswertung</title>
+  <title>MDR Zucht – Genetikbewertung</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <header>
-    <h1>MDR-Zucht – Anpaarungsanalyse</h1>
+    <h1>MDR Zucht – Genetische Anpaarung</h1>
   </header>
 
-  <section id="controls">
-    <label for="stuteSelect">Stute:</label>
-    <select id="stuteSelect">
-      <option value="">– Alle Stuten –</option>
-    </select>
-
-    <label for="besitzerSelect">Besitzer:</label>
-    <select id="besitzerSelect">
-      <option value="">– Alle Besitzer –</option>
-    </select>
-
-    <label for="sortOption">Sortieren nach:</label>
-    <select id="sortOption">
-      <option value="beste">Beste Note</option>
-      <option value="range">Kleinste Range</option>
-      <option value="score">Bester Score</option>
-    </select>
-
-    <button onclick="zeigeVorschlaege()">Vorschläge anzeigen</button>
-    <button onclick="zeigeAlle()">Alle anzeigen</button>
-  </section>
-
   <section id="infoBox">
-    <h2>ℹ️ Informationen</h2>
     <p class="warnhinweis">
-      <strong>Achtung:</strong> Inzucht und die Möglichkeit der Doppelvererbung des Overo-Gens
-      werden in dieser Berechnung nicht berücksichtigt. Zudem handelt es sich nur um eine Empfehlung.
+      ⚠️ Achtung: Inzucht und die Möglichkeit der Doppelvererbung des Overo-Gens
+      werden nicht berücksichtigt. Die Ergebnisse sind nur Empfehlungen.
     </p>
-
     <div class="tabs">
-      <button class="tabButton active" onclick="zeigeTab('tab1')">1️⃣ Erklärung der Hengstauswahl</button>
-      <button class="tabButton" onclick="zeigeTab('tab2')">2️⃣ Erklärung der Noten</button>
+      <button class="tab active" data-tab="auswahl">1️⃣ Auswahl der Hengste</button>
+      <button class="tab" data-tab="noten">2️⃣ Berechnung der Noten</button>
     </div>
-
-    <div id="tab1" class="tabContent active">
-      <p>
-        Für jede Stute werden alle verfügbaren Hengste anhand der genetischen Übereinstimmung bewertet.
-        Ziel ist eine optimale Kombination der Genetik, um ausgeglichene Merkmalsverteilungen zu erreichen.
-        Dabei werden 14 Exterieur-Merkmale (z. B. Kopf, Hals, Hufe) berücksichtigt.
-      </p>
-      <p>
-        Jeder Hengst erhält einen <b>Score</b> sowie eine Bewertung der besten und schlechtesten möglichen
-        Noten, die sich aus der genetischen Kombination ergeben können. Die besten drei Hengste werden
-        als Empfehlung angezeigt.
-      </p>
+    <div class="tab-content active" id="tab-auswahl">
+      <p>Die Hengste werden auf Basis der genetischen Ausgleichsregeln ermittelt.
+      Ziel ist ein möglichst harmonisches Verhältnis von dominanten (HH) und
+      rezessiven (hh) Genen, mit Überkorrektur erlaubt.</p>
     </div>
-
-    <div id="tab2" class="tabContent">
-      <p>
-        Die Noten (1–6) bewerten die theoretische Qualität des möglichen Fohlens:
-      </p>
-      <ul>
-        <li>1.0–1.5: Exzellent</li>
-        <li>1.6–2.5: Sehr gut</li>
-        <li>2.6–3.5: Gut</li>
-        <li>3.6–4.5: Ausreichend</li>
-        <li>4.6–5.5: Mangelhaft</li>
-        <li>5.6–6.0: Schwach</li>
-      </ul>
-      <p>
-        Der Prozentwert zeigt, wie nah die Paarung an der optimalen Genetik liegt:
-        100 % = ideal, 0 % = ungünstig.
-      </p>
+    <div class="tab-content" id="tab-noten">
+      <p>Die Noten ergeben sich aus der Kombination der Genotypen. <br>
+      Beispiel: HH–HH = Note 1 (Exzellent), Hh–Hh = Note 2 (Sehr gut), hh–hh = Note 3 (Gut).
+      Aus diesen Werten wird die beste und schlechteste mögliche Note des Fohlens berechnet.</p>
     </div>
   </section>
 
-  <main id="ergebnis"></main>
+  <section id="auswahl">
+    <label for="stuteSelect">Stute wählen:</label>
+    <select id="stuteSelect"></select>
+
+    <label for="besitzerSelect">Besitzer wählen:</label>
+    <select id="besitzerSelect"></select>
+
+    <div id="sortButtons">
+      <button id="sortScore">Nach Score</button>
+      <button id="sortBeste">Nach bester Note</button>
+      <button id="sortRange">Nach kleinster Range</button>
+    </div>
+  </section>
+
+  <section id="ergebnis"></section>
 
   <script src="app.js"></script>
+  <script>
+    // Tabs aktivieren
+    document.querySelectorAll('.tab').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(tc=>tc.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+      });
+    });
+  </script>
 </body>
 </html>
