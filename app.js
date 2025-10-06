@@ -7,15 +7,14 @@ let stuten = [];
 let hengste = [];
 let sortierModus = "score"; // "score", "besteNote", "range"
 
-// mögliche Feldnamen (robust für verschiedene JSONs)
 const NAME_KEYS = ["Name", "Stutenname", "Stute", "name"];
 const OWNER_KEYS = ["Besitzer", "Owner", "besitzer", "owner"];
 const COLOR_KEYS = ["Farbgenetik", "Farbe", "FarbGenetik", "color", "Genetik"];
 
-// Exterieur-Merkmale
 const MERKMALE = [
-  "Kopf","Gebiss","Hals","Halsansatz","Widerrist","Schulter","Brust",
-  "Rückenlinie","Rückenlänge","Kruppe","Beinwinkelung","Beinstellung","Fesseln","Hufe"
+  "Kopf", "Gebiss", "Hals", "Halsansatz", "Widerrist",
+  "Schulter", "Brust", "Rückenlinie", "Rückenlänge",
+  "Kruppe", "Beinwinkelung", "Beinstellung", "Fesseln", "Hufe"
 ];
 
 // === Hilfsfunktionen ===
@@ -106,43 +105,46 @@ function scorePair(stute, hengst){
   return count>0?totalScore/count:0;
 }
 
-// === Beste/schlechteste Note berechnen ===
+// === Beste/schlechteste Note (präzise Skala) ===
 function berechneNoten(stute, hengst){
   let werte = [];
   for(const merk of MERKMALE){
     const s = (stute[merk]||"").replace("|","").trim().split(/\s+/);
     const h = (hengst[merk]||"").replace("|","").trim().split(/\s+/);
     if(s.length<8||h.length<8) continue;
+
     for(let i=0;i<8;i++){
       const S=s[i], H=h[i];
-      if(S==="HH"&&H==="HH")werte.push(1);
-      else if(S==="HH"||H==="HH")werte.push(1.5);
-      else if(S==="Hh"&&H==="Hh")werte.push(2);
-      else if(S==="Hh"||H==="Hh")werte.push(2.5);
-      else if(S==="hh"&&H==="hh")werte.push(3);
-      else werte.push(3.5);
+      let note=4.5; // Default Mittelwert
+      if(S==="HH"&&H==="HH")note=1.0;
+      else if((S==="HH"&&H==="Hh")||(S==="Hh"&&H==="HH"))note=1.3;
+      else if(S==="Hh"&&H==="Hh")note=1.7;
+      else if((S==="HH"&&H==="hh")||(S==="hh"&&H==="HH"))note=3.5;
+      else if((S==="Hh"&&H==="hh")||(S==="hh"&&H==="Hh"))note=2.3;
+      else if(S==="hh"&&H==="hh")note=3.0;
+      werte.push(note);
     }
   }
-  if(werte.length===0) return {beste:0,schlechteste:0};
+  if(werte.length===0) return {beste:0, schlechteste:0};
   return {beste:Math.min(...werte), schlechteste:Math.max(...werte)};
 }
 
 // === Schulnotenbeschreibung ===
 function noteText(note){
-  if(note<=1.3)return "Exzellent";
-  if(note<=2.3)return "Sehr gut";
-  if(note<=3.3)return "Gut";
-  if(note<=4.3)return "Befriedigend";
-  if(note<=5.3)return "Ausreichend";
+  if(note<=1.49)return "Exzellent";
+  if(note<=2.49)return "Sehr gut";
+  if(note<=3.49)return "Gut";
+  if(note<=4.49)return "Befriedigend";
+  if(note<=5.49)return "Ausreichend";
   return "Schwach";
 }
 
 // === Prozent aus Note ===
 function noteZuProzent(note){
-  return Math.max(0,Math.min(100,(6-note)*20));
+  return Math.max(0, Math.min(100, (6 - note) * 20));
 }
 
-// === Sortierlogik ===
+// === Sortierung ===
 function sortiereHengste(liste){
   if(sortierModus==="besteNote") return liste.sort((a,b)=>a.best-b.best);
   if(sortierModus==="range") return liste.sort((a,b)=>(a.worst-a.best)-(b.worst-b.best));
@@ -166,7 +168,7 @@ function createTop3Html(stute){
   let html=`<div class="match"><h3>${escapeHtml(name)}</h3>
   <p><b>Farbgenetik Stute:</b> ${escapeHtml(color)}</p>
   <p><b>Besitzer:</b> ${escapeHtml(owner)}</p>`;
-  
+
   if(scored.length===0){
     html+=`<p><em>Keine passenden Hengste gefunden.</em></p>`;
   }else{
