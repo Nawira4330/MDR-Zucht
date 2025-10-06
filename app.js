@@ -1,148 +1,224 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const MERKMALE = [
-    "Kopf","Gebiss","Hals","Halsansatz","Widerrist","Schulter","Brust",
-    "Rückenlinie","Rückenlänge","Kruppe","Beinwinkelung","Beinstellung","Fesseln","Hufe"
-  ];
+// app.js – Version mit Genetik-Scoring (Variante 3) & Notenlogik + Sortierung nach bester Note / Score / Range
 
-  const stuteSelect = document.getElementById("stuteSelect");
-  const besitzerSelect = document.getElementById("besitzerSelect");
-  const sortDropdown = document.getElementById("sortDropdown");
-  const ergebnis = document.getElementById("ergebnis");
+let stuten = [];
+let hengste = [];
 
-  let stuten = [];
-  let hengste = [];
+const NAME_KEYS = ["Name", "Stutenname", "Stute", "name"];
+const OWNER_KEYS = ["Besitzer", "Owner", "besitzer", "owner"];
+const COLOR_KEYS = ["Farbgenetik", "Farbe", "FarbGenetik", "color", "Genetik"];
+const MERKMALE = [
+  "Kopf","Gebiss","Hals","Halsansatz","Widerrist","Schulter","Brust",
+  "Rückenlinie","Rückenlänge","Kruppe","Beinwinkelung","Beinstellung","Fesseln","Hufe"
+];
 
-  // --- Daten laden ---
-  async function ladeDaten() {
-    try {
-      stuten = await fetch("data/stuten.json").then(r => r.json());
-      hengste = await fetch("data/hengste.json").then(r => r.json());
-      fuelleDropdowns();
-    } catch (err) {
-      console.error("Fehler beim Laden:", err);
+// === Hilfsfunktionen ===
+function pickField(obj, keys){
+  for(const k of keys)
+    if(obj && Object.prototype.hasOwnProperty.call(obj,k) && obj[k] !== undefined && obj[k] !== "")
+      return obj[k];
+  return "";
+}
+function pickName(obj){ return pickField(obj, NAME_KEYS) || "(ohne Name)"; }
+function pickOwner(obj){ return pickField(obj, OWNER_KEYS) || "(kein Besitzer)"; }
+function pickColor(obj){ return pickField(obj, COLOR_KEYS) || ""; }
+function escapeHtml(s){ return String(s).replace(/[&<>"'\/]/g, c => ({
+  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#47;'}[c])); }
+
+// === JSON-Daten laden ===
+async function ladeDaten(){
+  try{
+    const s = await fetch('data/stuten.json').then(r => r.json());
+    const h = await fetch('data/hengste.json').then(r => r.json());
+    stuten = Array.isArray(s) ? s : [];
+    hengste = Array.isArray(h) ? h : [];
+    hengste = hengste.filter(hg => MERKMALE.some(m => (hg[m] && String(hg[m]).trim() !== "")));
+    fuelleDropdowns();
+  }catch(e){
+    console.error("Fehler beim Laden:", e);
+    document.getElementById('ergebnis').innerHTML =
+      '<p style="color:red">Fehler beim Laden der Daten. Prüfe data/*.json.</p>';
+  }
+}
+
+// === Dropdowns befüllen ===
+function fuelleDropdowns(){
+  const selStute = document.getElementById('stuteSelect');
+  const selBesitzer = document.getElementById('besitzerSelect');
+  selStute.innerHTML = '<option value="">– Alle Stuten –</option>';
+  selBesitzer.innerHTML = '<option value="">– Alle Besitzer –</option>';
+  stuten.forEach((s, idx) => {
+    const opt = document.createElement('option');
+    opt.value = idx;
+    opt.textContent = pickName(s);
+    selStute.appendChild(opt);
+  });
+  const owners = [...new Set(stuten.map(s => pickOwner(s)))].filter(x => x && x !== "(kein Besitzer)");
+  owners.forEach(o => {
+    const opt = document.createElement('option');
+    opt.value = o;
+    opt.textContent = o;
+    selBesitzer.appendChild(opt);
+  });
+}
+
+// === Fehler -> Note ===
+function noteAusFehlern(fehler){
+  if(fehler===0) return 1;
+  if(fehler===1) return 2;
+  if(fehler<=3) return 3;
+  return 5;
+}
+
+// === Genetik-Score ===
+function scorePair(stute, hengst){
+  let totalScore = 0, count = 0;
+  for(const merk of MERKMALE){
+    const sGenes = (stute[merk] || "").replace("|", "").trim().split(/\s+/);
+    const hGenes = (hengst[merk] || "").replace("|", "").trim().split(/\s+/);
+    if(sGenes.length < 8 || hGenes.length < 8) continue;
+    let localScore = 0;
+    for(let i=0;i<8;i++) if(sGenes[i]===hGenes[i]) localScore++;
+    totalScore += localScore/8;
+    count++;
+  }
+  return count>0 ? totalScore/count : 0;
+}
+
+// === Beste & schlechteste Noten berechnen ===
+function berechneNoten(stute, hengst){
+  let noten = [];
+  for(const merk of MERKMALE){
+    const sGene = (stute[merk]||"").trim().split(/\s+/);
+    const hGene = (hengst[merk]||"").trim().split(/\s+/);
+    if(!sGene.length || !hGene.length) continue;
+    let fehler = 0;
+    for(let i=0;i<Math.min(sGene.length,hGene.length);i++){
+      if(sGene[i] !== hGene[i]) fehler++;
     }
+    noten.push(noteAusFehlern(fehler));
   }
+  if(noten.length === 0) return {best:0, worst:0, range:0};
+  const best = Math.min(...noten);
+  const worst = Math.max(...noten);
+  return {best, worst, range: worst - best};
+}
 
-  function pick(obj, key) {
-    return obj[key] || obj[key.toLowerCase()] || obj[key.toUpperCase()] || "";
-  }
+// === Note beschreiben ===
+function bewerteNote(wert){
+  if(wert <= 1.5) return "Exzellent";
+  if(wert <= 2.5) return "Sehr gut";
+  if(wert <= 3.5) return "Gut";
+  if(wert <= 4.5) return "Befriedigend";
+  return "Ausreichend";
+}
 
-  function fuelleDropdowns() {
-    stuteSelect.innerHTML = '<option value="">– Alle Stuten –</option>';
-    besitzerSelect.innerHTML = '<option value="">– Alle Besitzer –</option>';
+// === HTML-Ausgabe ===
+function createTop3Html(stute){
+  const name = pickName(stute);
+  const owner = pickOwner(stute);
+  const color = pickColor(stute) || "-";
 
-    stuten.forEach((s, i) => {
-      const opt = document.createElement("option");
-      opt.value = i;
-      opt.textContent = pick(s, "Name");
-      stuteSelect.appendChild(opt);
+  const scored = hengste
+    .map(h => {
+      const s = scorePair(stute, h);
+      const {best, worst, range} = berechneNoten(stute,h);
+      return {...h,__score:s,__best:best,__worst:worst,__range:range};
+    })
+    .filter(h => h.__score>0)
+    .sort((a,b)=>a.__best - b.__best)
+    .slice(0,3);
+
+  let html = `<div class="match">
+    <h3>${escapeHtml(name)}</h3>
+    <div class="owner-name">${escapeHtml(owner)}</div>
+    <p><b>Farbgenetik Stute:</b> ${escapeHtml(color)}</p>
+    <ul class="hengst-list">`;
+
+  if(scored.length===0){
+    html += `<li><em>Keine passenden Hengste gefunden.</em></li>`;
+  } else {
+    scored.forEach((h,i)=>{
+      html += `
+      <li class="hengst-card" 
+          data-best="${h.__best}" 
+          data-worst="${h.__worst}" 
+          data-range="${h.__range}" 
+          data-score="${h.__score}">
+        • <b>${escapeHtml(pickName(h))}</b><br>
+        <i>Farbgenetik:</i> ${escapeHtml(pickColor(h) || "-")}<br>
+        <i>Beste Note:</i> ${h.__best.toFixed(2)} — ${bewerteNote(h.__best)}<br>
+        <i>Schlechteste Note:</i> ${h.__worst.toFixed(2)} — ${bewerteNote(h.__worst)}<br>
+        <i>Range:</i> ${(h.__range).toFixed(2)} | <i>Score:</i> ${(h.__score*100).toFixed(1)}%
+      </li>`;
     });
+  }
 
-    const besitzer = [...new Set(stuten.map(s => pick(s, "Besitzer")))].filter(x => x);
-    besitzer.forEach(b => {
-      const opt = document.createElement("option");
-      opt.value = b;
-      opt.textContent = b;
-      besitzerSelect.appendChild(opt);
+  html += `</ul></div>`;
+  return html;
+}
+
+// === Anzeige (nach Auswahl) ===
+function zeigeVorschlaege(){
+  const selStute = document.getElementById('stuteSelect').value;
+  const selBesitzer = document.getElementById('besitzerSelect').value;
+  const out = document.getElementById('ergebnis');
+  out.innerHTML = '';
+
+  let toShow = [];
+  if(selStute !== ""){
+    const idx = parseInt(selStute, 10);
+    if(!Number.isNaN(idx) && stuten[idx]) toShow.push(stuten[idx]);
+  } else if(selBesitzer !== ""){
+    toShow = stuten.filter(s => pickOwner(s) === selBesitzer);
+  } else {
+    toShow = stuten;
+  }
+
+  if(toShow.length === 0){
+    out.innerHTML = '<p>Keine Stuten gefunden.</p>';
+    return;
+  }
+
+  out.innerHTML = toShow.map(s => createTop3Html(s)).join("");
+
+  // Sortierung anwenden
+  sortiereErgebnisse();
+}
+
+// === Sortierung ===
+function sortiereErgebnisse(){
+  const sortDropdown = document.getElementById('sortDropdown');
+  const selected = sortDropdown ? sortDropdown.value : 'best';
+  const lists = document.querySelectorAll('.hengst-list');
+
+  lists.forEach(list=>{
+    const cards = Array.from(list.children);
+    cards.sort((a,b)=>{
+      const bestA=parseFloat(a.dataset.best), bestB=parseFloat(b.dataset.best);
+      const rangeA=parseFloat(a.dataset.range), rangeB=parseFloat(b.dataset.range);
+      const scoreA=parseFloat(a.dataset.score), scoreB=parseFloat(b.dataset.score);
+      if(selected==='score') return scoreB - scoreA;
+      if(selected==='range') return rangeA - rangeB;
+      return bestA - bestB;
     });
-  }
+    list.innerHTML='';
+    cards.forEach(card=>list.appendChild(card));
+  });
+}
 
-  // --- Notenlogik ---
-  function noteAusFehlern(fehler) {
-    if (fehler === 0) return 1;
-    if (fehler === 1) return 2;
-    if (fehler <= 3) return 3;
-    return 5;
-  }
+// === Tabs für Infofenster & Initialisierung ===
+document.addEventListener('DOMContentLoaded', ()=>{
+  ladeDaten();
+  document.getElementById('stuteSelect').addEventListener('change', zeigeVorschlaege);
+  document.getElementById('besitzerSelect').addEventListener('change', zeigeVorschlaege);
+  document.getElementById('sortDropdown').addEventListener('change', sortiereErgebnisse);
 
-  function berechneDurchschnitt(stute, hengst) {
-    const noten = [];
-    for (const merk of MERKMALE) {
-      const s = (stute[merk] || "").split(/\s+/);
-      const h = (hengst[merk] || "").split(/\s+/);
-      if (s.length < 8 || h.length < 8) continue;
-      let fehler = 0;
-      for (let i = 0; i < 8; i++) if (s[i] !== h[i]) fehler++;
-      noten.push(noteAusFehlern(fehler));
-    }
-    if (!noten.length) return 0;
-    return noten.reduce((a,b)=>a+b,0)/noten.length;
-  }
-
-  function bewerteNote(wert) {
-    if (wert <= 1.5) return "Exzellent";
-    if (wert <= 2.5) return "Sehr gut";
-    if (wert <= 3.5) return "Gut";
-    if (wert <= 4.5) return "Befriedigend";
-    return "Ausreichend";
-  }
-
-  function scorePair(stute, hengst) {
-    let total = 0, count = 0;
-    for (const merk of MERKMALE) {
-      const s = (stute[merk] || "").split(/\s+/);
-      const h = (hengst[merk] || "").split(/\s+/);
-      if (s.length < 8 || h.length < 8) continue;
-      let treffer = 0;
-      for (let i = 0; i < 8; i++) if (s[i] === h[i]) treffer++;
-      total += treffer / 8;
-      count++;
-    }
-    return count ? total / count : 0;
-  }
-
-  // --- Ausgabe ---
-  function zeigeVorschlaege() {
-    const selStute = stuteSelect.value;
-    const selBesitzer = besitzerSelect.value;
-    ergebnis.innerHTML = "";
-
-    let stutenListe = [];
-    if (selStute) {
-      stutenListe.push(stuten[parseInt(selStute)]);
-    } else if (selBesitzer) {
-      stutenListe = stuten.filter(s => pick(s,"Besitzer") === selBesitzer);
-    } else {
-      stutenListe = stuten;
-    }
-
-    stutenListe.forEach(stute => {
-      const kombis = hengste.map(h => {
-        const avg = berechneDurchschnitt(stute, h);
-        const score = scorePair(stute, h);
-        return {...h, avg, score};
-      }).sort((a,b)=>a.avg-b.avg).slice(0,3);
-
-      let html = `<div class="match">
-        <h3>${pick(stute,"Name")}</h3>
-        <div class="owner-name">${pick(stute,"Besitzer")}</div>
-        <p><b>Farbgenetik Stute:</b> ${pick(stute,"Farbgenetik") || "-"}</p>
-        <ul class="hengst-list">`;
-
-      kombis.forEach(k => {
-        html += `<li class="hengst-card">
-          • <b>${pick(k,"Name")}</b><br>
-          <i>Farbgenetik:</i> ${pick(k,"Farbgenetik") || "-"}<br>
-          <i>Durchschnittsnote:</i> ${k.avg.toFixed(2)} — ${bewerteNote(k.avg)}
-        </li>`;
-      });
-      html += `</ul></div>`;
-      ergebnis.innerHTML += html;
-    });
-  }
-
-  stuteSelect.addEventListener("change", zeigeVorschlaege);
-  besitzerSelect.addEventListener("change", zeigeVorschlaege);
-  sortDropdown.addEventListener("change", zeigeVorschlaege);
-
-  document.querySelectorAll(".tab-button").forEach(btn => {
-    btn.addEventListener("click", () => {
-      document.querySelectorAll(".tab-button").forEach(b => b.classList.remove("active"));
-      document.querySelectorAll(".tab-content").forEach(c => c.classList.add("hidden"));
-      btn.classList.add("active");
-      document.getElementById(btn.dataset.tab).classList.remove("hidden");
+  document.querySelectorAll('.tab-button').forEach(button=>{
+    button.addEventListener('click',()=>{
+      document.querySelectorAll('.tab-button').forEach(btn=>btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(tab=>tab.classList.add('hidden'));
+      button.classList.add('active');
+      document.getElementById(button.dataset.tab).classList.remove('hidden');
     });
   });
-
-  ladeDaten();
 });
