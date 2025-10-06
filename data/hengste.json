@@ -682,5 +682,43 @@
     "Fesseln":"hH HH Hh Hh | hH hh hh hh",
     "Hufe":"hH hh hh hh | hh Hh hh HH",
     "Besitzer":null
+  },
+  {
+    "Name":"~B.H~ Old Bernsteinmeerengel",
+    "Farbgenetik":"Ch pl SBTO O",
+    "Kopf":"hh hh hH Hh | hh hh hh Hh",
+    "Gebiss":"hH hh Hh hh | hh hh hh hh",
+    "Hals":"hH Hh hH hh | Hh hH hh hh",
+    "Halsansatz":"hh hh hh HH | Hh Hh hh hh",
+    "Widerrist":"hh hH hH hH | hh hH HH hh",
+    "Schulter":"hH hh hh hh | hh hH hh hh",
+    "Brust":"hh hH HH Hh | Hh Hh hh hh",
+    "Rückenlinie":"hh hH hh HH | hH hH hh Hh",
+    "Rückenlänge":"HH Hh hH hH | HH hh hh hh",
+    "Kruppe":"hH hh Hh hH | Hh hh HH Hh",
+    "Beinwinkelung":"hH Hh hh hh | Hh hh hH hh",
+    "Beinstellung":"hh HH Hh HH | hh hh Hh hh",
+    "Fesseln":"Hh Hh hH hh | hh hH hh hh",
+    "Hufe":"hH Hh Hh hh | hh hH HH HH",
+    "Besitzer":null
+  },
+  {
+    "Name":"~~APH~~ Danny -Cookie-",
+    "Farbgenetik":"D Cr ",
+    "Kopf":"hh hH hH hH | hh hH hh hh",
+    "Gebiss":"hh HH hh Hh | hH hH hh hh",
+    "Hals":"hh Hh hh hh | Hh Hh hh hH",
+    "Halsansatz":"hh hh hH Hh | hH hh hh Hh",
+    "Widerrist":"hH Hh HH hh | Hh hH Hh hh",
+    "Schulter":"hH hH hH hh | hh hh hH hh",
+    "Brust":"hH Hh hH hH | hh hh hh hh",
+    "Rückenlinie":"Hh HH hh Hh | hh Hh hH hh",
+    "Rückenlänge":"hH hH hh hh | hh hH hh HH",
+    "Kruppe":"HH Hh Hh Hh | hh Hh hh hh",
+    "Beinwinkelung":"Hh HH hh hh | hH hh hh hh",
+    "Beinstellung":"Hh HH Hh hh | hh hH hh Hh",
+    "Fesseln":"HH hH hh Hh | hH Hh hh hh",
+    "Hufe":"hh hh Hh HH | hh hh hh HH",
+    "Besitzer":null
   }
 ]
