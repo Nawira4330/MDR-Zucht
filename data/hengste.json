@@ -663,5 +663,24 @@
     "Fesseln":"hh hH Hh hH | hh hh hh hh",
     "Hufe":"Hh hh hh hH | Hh HH hh hH",
     "Besitzer":null
+  },
+  {
+    "Name":"~~APH~~ Art Bela -Cookie-",
+    "Farbgenetik":"Sty, Rn",
+    "Kopf":"hh hH hH hH | hh hh hh hh",
+    "Gebiss":"HH Hh hh hh | HH hH hh hh",
+    "Hals":"hh Hh Hh hh | Hh hh hh HH",
+    "Halsansatz":"hh hH hH Hh | hH hh hh hh",
+    "Widerrist":"HH hh hH hh | hh hH hh hh",
+    "Schulter":"hH Hh hH hH | hh hh HH hh",
+    "Brust":"hH hh hH HH | hh Hh Hh hh",
+    "Rückenlinie":"HH HH hh Hh | hh hh hh hH",
+    "Rückenlänge":"hH HH hh hh | hh hh hh hh",
+    "Kruppe":"hH hH hh hh | Hh hh hh Hh",
+    "Beinwinkelung":"hh hH Hh hH | hh hh hH hH",
+    "Beinstellung":"Hh hH Hh HH | Hh hH Hh hh",
+    "Fesseln":"hH HH Hh Hh | hH hh hh hh",
+    "Hufe":"hH hh hh hh | hh Hh hh HH",
+    "Besitzer":null
   }
 ]
