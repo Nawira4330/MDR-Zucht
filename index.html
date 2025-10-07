@@ -1,52 +1,48 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Paarungsanalyse – Exterieur-Matching</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <title>Paarungsanalyse – Exterieur-Matching</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header>
+    <h1>HPaarungsanalyse – Exterieur-Matching</h1>
+  </header>
 
-<header>
-  <h1>Paarungsanalyse – Exterieur-Matching</h1>
-</header>
+  <section class="controls">
+    <label for="stuteSelect">Stute auswählen:</label>
+    <select id="stuteSelect"></select>
 
-<section class="controls">
-  <label for="stuteSelect">Stute auswählen:</label>
-  <select id="stuteSelect"></select>
+    <label for="besitzerSelect">Besitzer auswählen:</label>
+    <select id="besitzerSelect"></select>
 
-  <label for="besitzerSelect">Besitzer auswählen:</label>
-  <select id="besitzerSelect"></select>
+    <label for="sortDropdown">Sortieren nach:</label>
+    <select id="sortDropdown">
+      <option value="score">Score</option>
+      <option value="best">Beste Note</option>
+      <option value="range">Range zwischen bester & schlechtester Note</option>
+    </select>
+  </section>
 
-  <label for="sortDropdown">Sortieren nach:</label>
-  <select id="sortDropdown">
-    <option value="score">Score</option>
-    <option value="best">Beste Note</option>
-    <option value="range">Range</option>
-  </select>
-</section>
-
-<section class="info">
-  <p class="warning">
-    Achtung: Inzucht und Doppelvererbung des Overo-Gens wird nicht berücksichtigt. 
-    Die Empfehlungen dienen nur als Hinweis.
-  </p>
-
-  <div class="tabs">
-    <button class="tab-button active" data-tab="tab1">Hengste auswählen</button>
-    <button class="tab-button" data-tab="tab2">Notenberechnung</button>
-  </div>
-
-  <div id="tab1" class="tab-content">
-     <p>
+  <section class="info">
+    <p class="warning">
+      Achtung: Inzucht und die Möglichkeit der Doppelvererbung des Overo-Gens wird nicht berücksichtigt.  
+      Es handelt sich nur um eine Empfehlung.
+    </p>
+    <div class="tabs">
+      <button class="tab-button active" data-tab="tab1">Hengste Auswahl</button>
+      <button class="tab-button" data-tab="tab2">Notenberechnung</button>
+    </div>
+    <div id="tab1" class="tab-content">
+       <p>
         Die vorgeschlagenen Hengste werden anhand genetischer Übereinstimmungen mit der ausgewählten Stute berechnet. 
         Dabei fließen Merkmale wie Körperbau, Genetik und Struktur in die Bewertung ein. 
         Der Score ergibt sich aus der durchschnittlichen genetischen Kompatibilität.
       </p>
-  </div>
-  <div id="tab2" class="tab-content hidden">
-      <p>
+    </div>
+    <div id="tab2" class="tab-content hidden">
+        <p>
         Für jedes Merkmal wird eine Note auf Basis genetischer Differenzen vergeben:
       </p>
       <ul>
@@ -59,14 +55,12 @@
         Aus allen Merkmalen wird dann der Durchschnitt berechnet, um die beste und schlechteste 
         Note (Best Case / Worst Case) zu bestimmen. Diese bilden den finalen Mittelwert 
         für das mögliche Fohlen ab.
-      </p>>
-  </div>
-</section>
+      </p>
+    </div>
+  </section>
 
-<section id="ergebnis">
-  <!-- Ergebnisse werden hier angezeigt -->
-</section>
+  <section id="ergebnis"></section>
 
-<script src="app.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
