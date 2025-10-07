@@ -82,7 +82,7 @@ function berechneDurchschnitt(stute, hengst){
     else if(fehler >= 4) note = 5;
 
     bestNotes.push(note);
-    worstNotes.push(note + Math.random()); // leichte Variation
+    worstNotes.push(note + 0.0); // keine zufällige Variation mehr
   }
 
   const avgBest = bestNotes.length ? (bestNotes.reduce((a,b)=>a+b,0)/bestNotes.length) : 0;
@@ -117,7 +117,7 @@ function createTop3Html(stute){
     <h3>${escapeHtml(name)}</h3>
     <span class="owner-name">${escapeHtml(owner)}</span>
     <p><b>Farbgenetik Stute:</b> ${escapeHtml(color)}</p><br>
-    <ol class="hengst-list">`;
+    <ul class="hengst-list">`;
 
   scored.forEach(h=>{
     html += `
@@ -130,7 +130,7 @@ function createTop3Html(stute){
       </li>`;
   });
 
-  html += `</ol></div>`;
+  html += `</ul></div>`;
   return html;
 }
 
@@ -186,8 +186,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
         const bestA=parseFloat(a.dataset.best), bestB=parseFloat(b.dataset.best);
         const worstA=parseFloat(a.dataset.worst), worstB=parseFloat(b.dataset.worst);
         const scoreA=parseFloat(a.dataset.score), scoreB=parseFloat(b.dataset.score);
-        if(selected==='best')return bestA-bestB;
-        if(selected==='range')return (worstA-bestA)-(worstB-bestB);
+        if(selected==='best') return bestA-bestB;
+        if(selected==='range') return (worstA-bestA)-(worstB-bestB);
         return scoreB-scoreA;
       });
       list.innerHTML='';
