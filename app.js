@@ -59,78 +59,94 @@ function fuelleDropdowns(){
   });
 }
 
-// === Durchschnittsberechnung für Noten ===
-function berechneDurchschnitt(stute, hengst){
-  let bestNotes = [];
-  let worstNotes = [];
+// === Durchschnittsnoten berechnen (Best & Worst Case) ===
+function berechneNotenDurchschnitt(stute, hengst) {
+  const notenBest = [];
+  const notenWorst = [];
 
-  for(const merk of MERKMALE){
-    const sGene = (stute[merk]||"").trim().split(/\s+/);
-    const hGene = (hengst[merk]||"").trim().split(/\s+/);
-    if(!sGene.length || !hGene.length) continue;
+  for (const merk of MERKMALE) {
+    const sGene = (stute[merk] || "").split("|")[0]?.trim().split(/\s+/);
+    const hGene = (hengst[merk] || "").split("|")[1]?.trim().split(/\s+/);
+    if (!sGene || !hGene) continue;
 
-    let fehler = 0;
-    for(let i=0;i<Math.min(sGene.length,hGene.length);i++){
-      if(sGene[i] !== hGene[i]) fehler++;
+    let fehlerBest = 0;
+    let fehlerWorst = 0;
+
+    for (let i = 0; i < Math.min(sGene.length, hGene.length); i++) {
+      if (sGene[i] !== hGene[i]) {
+        fehlerBest++;
+        fehlerWorst += 2; // Simuliert größere Abweichung im Worst Case
+      }
     }
 
-    // Fehler -> Note
-    let note = 5;
-    if(fehler === 0) note = 1;
-    else if(fehler === 1) note = 2;
-    else if(fehler === 3) note = 3;
-    else if(fehler >= 4) note = 5;
-
-    bestNotes.push(note);
-    worstNotes.push(note + Math.random()); // leichte Variation
+    const noteBest = fehlerZuNote(fehlerBest);
+    const noteWorst = fehlerZuNote(fehlerWorst);
+    notenBest.push(noteBest);
+    notenWorst.push(noteWorst);
   }
 
-  const avgBest = bestNotes.length ? (bestNotes.reduce((a,b)=>a+b,0)/bestNotes.length) : 0;
-  const avgWorst = worstNotes.length ? (worstNotes.reduce((a,b)=>a+b,0)/worstNotes.length) : 0;
+  const avgBest = notenBest.length ? (notenBest.reduce((a,b)=>a+b,0)/notenBest.length) : 0;
+  const avgWorst = notenWorst.length ? (notenWorst.reduce((a,b)=>a+b,0)/notenWorst.length) : 0;
 
   return { best: avgBest, worst: avgWorst };
 }
 
-// === Notentext ===
-function noteText(note){
-  if(note<=1.5) return "Exzellent";
-  if(note<=2.5) return "Sehr gut";
-  if(note<=3.5) return "Gut";
-  if(note<=4.5) return "Befriedigend";
-  return "Ausreichend";
+// === Fehler in Noten umwandeln ===
+function fehlerZuNote(fehler) {
+  if (fehler === 0) return 1.0;
+  if (fehler === 1) return 2.0;
+  if (fehler === 2 || fehler === 3) return 3.0;
+  if (fehler >= 4) return 5.0;
+  return 4.0;
 }
 
-// === Vorschläge erstellen ===
+
+// === HTML-Ausgabe ===
 function createTop3Html(stute){
   const name = pickName(stute);
   const owner = pickOwner(stute);
   const color = pickColor(stute) || "-";
 
-  const scored = hengste.map(h=>{
-    const {best, worst} = berechneDurchschnitt(stute, h);
-    const range = Math.abs(best - worst).toFixed(2);
-    const score = ((1 / ((best + worst) / 2)) * 100 / 5).toFixed(1);
-    return {...h, __best:best, __worst:worst, __range:range, __score:score};
-  }).sort((a,b)=>b.__score - a.__score).slice(0,3);
+  const scored = hengste
+    .map(h => {
+      const s = scorePair(stute, h);
+      const {best, worst} = berechneNotenDurchschnitt(stute, h);
+      return {...h,__score:s,__best:best,__worst:worst};
+    })
+    .filter(h => h.__score > 0)
+    .sort((a,b) => b.__score - a.__score)
+    .slice(0, 3);
 
   let html = `<div class="match">
     <h3>${escapeHtml(name)}</h3>
     <span class="owner-name">${escapeHtml(owner)}</span>
-    <p><b>Farbgenetik Stute:</b> ${escapeHtml(color)}</p><br>
-    <ol class="hengst-list">`;
+    <p><b>Farbgenetik Stute:</b> ${escapeHtml(color)}</p>`;
 
-  scored.forEach(h=>{
-    html += `
-      <li class="hengst-card" data-best="${h.__best}" data-worst="${h.__worst}" data-score="${h.__score}">
-        • ${escapeHtml(pickName(h))}<br>
-        Farbgenetik: ${escapeHtml(pickColor(h) || "-")}<br>
-        Beste Note: ${h.__best.toFixed(2)} — ${noteText(h.__best)}<br>
-        Schlechteste Note: ${h.__worst.toFixed(2)} — ${noteText(h.__worst)}<br>
-        Range: ${h.__range} | Score: ${h.__score}%
-      </li>`;
-  });
+  if (scored.length === 0) {
+    html += `<p><em>Keine passenden Hengste gefunden.</em></p>`;
+  } else {
+    html += `<ul class="hengst-list">`;
+    scored.forEach((h) => {
+      const range = (h.__worst - h.__best).toFixed(2);
+      const bestStr = h.__best.toFixed(2);
+      const worstStr = h.__worst.toFixed(2);
+      const scorePct = (h.__score * 100).toFixed(1);
+      html += `
+        <li class="hengst-card" 
+            data-best="${h.__best}" 
+            data-worst="${h.__worst}" 
+            data-score="${h.__score}">
+          • <b>${escapeHtml(pickName(h))}</b><br>
+          <i>Farbgenetik:</i> ${escapeHtml(pickColor(h) || "-")}<br>
+          <i>Beste Note:</i> ${bestStr} — ${bewerteNote(h.__best)}<br>
+          <i>Schlechteste Note:</i> ${worstStr} — ${bewerteNote(h.__worst)}<br>
+          <i>Range:</i> ${range} | <i>Score:</i> ${scorePct}%
+        </li>`;
+    });
+    html += `</ul>`;
+  }
 
-  html += `</ol></div>`;
+  html += `</div>`;
   return html;
 }
 
