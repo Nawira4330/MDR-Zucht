@@ -1,5 +1,3 @@
-// === app.js – Version mit Durchschnittsnoten (2 Nachkommastellen) & Sortierung ===
-
 let stuten = [];
 let hengste = [];
 
@@ -11,7 +9,6 @@ const MERKMALE = [
   "Rückenlinie","Rückenlänge","Kruppe","Beinwinkelung","Beinstellung","Fesseln","Hufe"
 ];
 
-// === Hilfsfunktionen ===
 function pickField(obj, keys){
   for(const k of keys)
     if(obj && Object.prototype.hasOwnProperty.call(obj,k) && obj[k] !== undefined && obj[k] !== "")
@@ -23,7 +20,6 @@ function pickOwner(obj){ return pickField(obj, OWNER_KEYS) || "(kein Besitzer)";
 function pickColor(obj){ return pickField(obj, COLOR_KEYS) || ""; }
 function escapeHtml(s){ return String(s).replace(/[&<>"'\/]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#47;'}[c])); }
 
-// === JSON-Daten laden ===
 async function ladeDaten(){
   try{
     const s = await fetch('data/stuten.json').then(r => r.json());
@@ -38,7 +34,6 @@ async function ladeDaten(){
   }
 }
 
-// === Dropdowns befüllen ===
 function fuelleDropdowns(){
   const selStute = document.getElementById('stuteSelect');
   const selBesitzer = document.getElementById('besitzerSelect');
@@ -59,7 +54,6 @@ function fuelleDropdowns(){
   });
 }
 
-// === Durchschnittsberechnung für Noten ===
 function berechneDurchschnitt(stute, hengst){
   let bestNotes = [];
   let worstNotes = [];
@@ -74,7 +68,6 @@ function berechneDurchschnitt(stute, hengst){
       if(sGene[i] !== hGene[i]) fehler++;
     }
 
-    // Fehler -> Note
     let note = 5;
     if(fehler === 0) note = 1;
     else if(fehler === 1) note = 2;
@@ -82,7 +75,7 @@ function berechneDurchschnitt(stute, hengst){
     else if(fehler >= 4) note = 5;
 
     bestNotes.push(note);
-    worstNotes.push(note + 0.0); // keine zufällige Variation mehr
+    worstNotes.push(note);
   }
 
   const avgBest = bestNotes.length ? (bestNotes.reduce((a,b)=>a+b,0)/bestNotes.length) : 0;
@@ -91,7 +84,6 @@ function berechneDurchschnitt(stute, hengst){
   return { best: avgBest, worst: avgWorst };
 }
 
-// === Notentext ===
 function noteText(note){
   if(note<=1.5) return "Exzellent";
   if(note<=2.5) return "Sehr gut";
@@ -100,7 +92,6 @@ function noteText(note){
   return "Ausreichend";
 }
 
-// === Vorschläge erstellen ===
 function createTop3Html(stute){
   const name = pickName(stute);
   const owner = pickOwner(stute);
@@ -134,7 +125,6 @@ function createTop3Html(stute){
   return html;
 }
 
-// === Anzeige aktualisieren ===
 function zeigeVorschlaege(){
   const selStute = document.getElementById('stuteSelect').value;
   const selBesitzer = document.getElementById('besitzerSelect').value;
@@ -147,8 +137,6 @@ function zeigeVorschlaege(){
     if(!Number.isNaN(idx) && stuten[idx]) toShow.push(stuten[idx]);
   } else if(selBesitzer !== ""){
     toShow = stuten.filter(s => pickOwner(s) === selBesitzer);
-  } else {
-    toShow = stuten;
   }
 
   if(toShow.length === 0){
@@ -159,7 +147,6 @@ function zeigeVorschlaege(){
   out.innerHTML = toShow.map(s => createTop3Html(s)).join("");
 }
 
-// === Tabs & Sortierung ===
 document.addEventListener('DOMContentLoaded', ()=>{
   ladeDaten();
   document.getElementById('stuteSelect').addEventListener('change', zeigeVorschlaege);
