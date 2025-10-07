@@ -1,51 +1,77 @@
+/* Farbpalette: Grün #6b9d00, Hellblau #cce6ff */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f0f8ff;
+  background-color: #f4f8fb;
   color: #333;
-  margin: 20px;
+  margin: 0;
+  padding: 0;
 }
 
-h1 {
-  color: #6b9d00;
+header {
+  background-color: #6b9d00;
+  color: white;
+  padding: 1rem;
+  text-align: center;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: #cce6ff;
+  padding: 1rem;
+  justify-content: center;
 }
 
 .controls label {
-  margin-right: 15px;
+  margin-right: 0.3rem;
+  font-weight: bold;
 }
 
-.info-window {
+select {
+  padding: 0.3rem 0.5rem;
+  border-radius: 5px;
   border: 1px solid #6b9d00;
-  background-color: #e6f2ff;
-  padding: 10px;
-  margin-bottom: 20px;
+}
+
+.info {
+  background-color: #eaf4d1;
+  padding: 1rem;
+  margin: 1rem;
+  border-radius: 10px;
 }
 
 .warning {
-  color: #b22222;
+  color: #a50000;
   font-weight: bold;
-  margin-bottom: 10px;
+  margin-bottom: 0.5rem;
 }
 
 .tabs {
-  margin-bottom: 10px;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .tab-button {
-  background-color: #6b9d00;
-  color: white;
-  border: none;
-  padding: 5px 10px;
+  padding: 0.5rem 1rem;
+  background-color: #cce6ff;
+  border: 1px solid #6b9d00;
+  border-radius: 5px;
   cursor: pointer;
-  margin-right: 5px;
 }
 
 .tab-button.active {
-  background-color: #4d7400;
+  background-color: #6b9d00;
+  color: white;
 }
 
 .tab-content {
-  background-color: #e6f2ff;
-  padding: 10px;
+  padding: 0.5rem 1rem;
+  border: 1px solid #6b9d00;
+  border-radius: 5px;
+  background-color: #ffffff;
+  margin-bottom: 1rem;
 }
 
 .tab-content.hidden {
@@ -53,11 +79,17 @@ h1 {
 }
 
 .match {
-  margin-bottom: 20px;
-  padding: 10px;
+  background-color: #ffffff;
   border: 1px solid #6b9d00;
-  border-radius: 8px;
-  background-color: #f9fff0;
+  border-radius: 10px;
+  margin: 1rem;
+  padding: 1rem;
+}
+
+.owner-name {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-style: italic;
 }
 
 .hengst-list {
@@ -66,7 +98,8 @@ h1 {
 }
 
 .hengst-card {
-  margin-bottom: 15px;
-  padding: 5px 0;
-  border-bottom: 1px dashed #6b9d00;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  border-left: 3px solid #6b9d00;
+  background-color: #f0fff0;
 }
