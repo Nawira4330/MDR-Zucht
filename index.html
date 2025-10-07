@@ -1,48 +1,55 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Paarungsanalyse Genetik</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paarungsanalyse – Exterieur-Matching</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>🐴 Genetik-Paarungsanalyse</h1>
-  </header>
+<h1>Paarungsanalyse – Exterieur-Matching</h1>
 
-  <main>
-    <section id="filter">
-      <label for="sortSelect">Sortieren nach:</label>
-      <select id="sortSelect">
-        <option value="score">Nach Score</option>
-        <option value="beste">Nach bester Note</option>
-        <option value="range">Nach Range</option>
-      </select>
-    </section>
+<div class="controls">
+  <label>Stute: <select id="stuteSelect"></select></label>
+  <label>Besitzer: <select id="besitzerSelect"></select></label>
+  <label>Sortieren: 
+    <select id="sortDropdown">
+      <option value="score">Score</option>
+      <option value="best">Beste Note</option>
+      <option value="range">Range</option>
+    </select>
+  </label>
+</div>
 
-    <section id="tabs">
-      <div class="tab-bar">
-        <button class="tab-button active" data-tab="analyse">Analyse</button>
-        <button class="tab-button" data-tab="info">Info</button>
-      </div>
+<div class="info-window">
+  <p class="warning">⚠ Achtung: Inzucht und Doppelvererbung des Overo-Gens werden nicht berücksichtigt. Empfehlung!</p>
+  <div class="tabs">
+    <button class="tab-button active" data-tab="tab1">Hengst-Auswahl</button>
+    <button class="tab-button" data-tab="tab2">Noten-Berechnung</button>
+  </div>
+  <div id="tab1" class="tab-content"> <p>
+        Die vorgeschlagenen Hengste werden anhand genetischer Übereinstimmungen mit der ausgewählten Stute berechnet. 
+        Dabei fließen Merkmale wie Körperbau, Genetik und Struktur in die Bewertung ein. 
+        Der Score ergibt sich aus der durchschnittlichen genetischen Kompatibilität.
+      </p></div>
+  <div id="tab2" class="tab-content hidden">  <p>
+        Für jedes Merkmal wird eine Note auf Basis genetischer Differenzen vergeben:
+      </p>
+      <ul>
+        <li>0 Fehler = Note 1 (Exzellent)</li>
+        <li>1 Fehler = Note 2 (Sehr gut)</li>
+        <li>3 Fehler = Note 3 (Gut)</li>
+        <li>4+ Fehler = Note 5 (Ausreichend)</li>
+      </ul>
+      <p>
+        Aus allen Merkmalen wird dann der Durchschnitt berechnet, um die beste und schlechteste 
+        Note (Best Case / Worst Case) zu bestimmen. Diese bilden den finalen Mittelwert 
+        für das mögliche Fohlen ab.
+      </p></div>
+</div>
 
-      <div id="analyse" class="tab-content">
-        <div id="output"></div>
-      </div>
+<div id="ergebnis"></div>
 
-      <div id="info" class="tab-content hidden">
-        <h2>ℹ️ Informationen</h2>
-        <p>Hier kannst du Stuten und Hengste genetisch vergleichen.  
-        Das System berechnet Durchschnittsnoten im Best- und Worst-Case und zeigt die drei besten Hengste je Stute an.</p>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>© 2025 Genetik Analyzer</p>
-  </footer>
-
-  <script src="app.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
