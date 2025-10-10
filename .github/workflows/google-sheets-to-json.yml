@@ -2,8 +2,8 @@ name: Update JSON from Google Sheets
 
 on:
   schedule:
-    - cron: "0 */3 * * *" # Läuft alle 3 Stunden
-  workflow_dispatch: # Manuelles Starten möglich
+    - cron: "0 */3 * * *" # alle 3 Stunden
+  workflow_dispatch:
 
 jobs:
   update:
