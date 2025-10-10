@@ -1,66 +1,63 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Paarungsanalyse – Exterieur-Matching</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Paarungsanalyse – Genetik</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>HPaarungsanalyse – Exterieur-Matching</h1>
+    <h1>Paarungsanalyse — Stute ↔ Hengst</h1>
+    <p class="subtitle">Empfehlungen basierend auf Exterieur-Genen (Anzeige: Durchschnittsnoten & Score)</p>
   </header>
 
   <section class="controls">
-    <label for="stuteSelect">Stute auswählen:</label>
-    <select id="stuteSelect"></select>
+    <div class="control-item">
+      <label for="stuteSelect">Stute auswählen</label>
+      <select id="stuteSelect"></select>
+    </div>
 
-    <label for="besitzerSelect">Besitzer auswählen:</label>
-    <select id="besitzerSelect"></select>
+    <div class="control-item">
+      <label for="besitzerSelect">Besitzer</label>
+      <select id="besitzerSelect"></select>
+    </div>
 
-    <label for="sortDropdown">Sortieren nach:</label>
-    <select id="sortDropdown">
-      <option value="score">Score</option>
-      <option value="best">Beste Note</option>
-      <option value="range">Range zwischen bester & schlechtester Note</option>
-    </select>
+    <div class="control-item">
+      <label for="sortDropdown">Sortieren nach</label>
+      <select id="sortDropdown">
+        <option value="best">Beste Note (aufsteigend)</option>
+        <option value="score">Score (absteigend)</option>
+        <option value="range">Range (aufsteigend)</option>
+      </select>
+    </div>
   </section>
 
   <section class="info">
-    <p class="warning">
-      Achtung: Inzucht und die Möglichkeit der Doppelvererbung des Overo-Gens wird nicht berücksichtigt.  
-      Es handelt sich nur um eine Empfehlung.
-    </p>
+    <div class="warning">
+      ⚠️ Achtung: Inzucht und Doppelvererbung (z. B. Overo) werden NICHT berücksichtigt. Dies ist eine Empfehlung.
+    </div>
+
     <div class="tabs">
-      <button class="tab-button active" data-tab="tab1">Hengste Auswahl</button>
-      <button class="tab-button" data-tab="tab2">Notenberechnung</button>
+      <button class="tab-button active" data-tab="tab1">1. Wie Hengste gewählt werden</button>
+      <button class="tab-button" data-tab="tab2">2. Wie Noten & Prozent berechnet werden</button>
     </div>
+
     <div id="tab1" class="tab-content">
-       <p>
-        Die vorgeschlagenen Hengste werden anhand genetischer Übereinstimmungen mit der ausgewählten Stute berechnet. 
-        Dabei fließen Merkmale wie Körperbau, Genetik und Struktur in die Bewertung ein. 
-        Der Score ergibt sich aus der durchschnittlichen genetischen Kompatibilität.
-      </p>
+      <p>Hengste werden nach genetischer Kompatibilität mit der Stute bewertet. Der Genetik-Score misst, wie gut die Gene die gewünschten Zielwerte (vorn: HH, hinten: hh) stützen oder ausgleichen.</p>
     </div>
+
     <div id="tab2" class="tab-content hidden">
-        <p>
-        Für jedes Merkmal wird eine Note auf Basis genetischer Differenzen vergeben:
-      </p>
-      <ul>
-        <li>0 Fehler = Note 1 (Exzellent)</li>
-        <li>1 Fehler = Note 2 (Sehr gut)</li>
-        <li>3 Fehler = Note 3 (Gut)</li>
-        <li>4+ Fehler = Note 5 (Ausreichend)</li>
-      </ul>
-      <p>
-        Aus allen Merkmalen wird dann der Durchschnitt berechnet, um die beste und schlechteste 
-        Note (Best Case / Worst Case) zu bestimmen. Diese bilden den finalen Mittelwert 
-        für das mögliche Fohlen ab.
-      </p>
+      <p>Für jedes Merkmal werden Genpositionen verglichen. Fehler → Note: 0→1, 1→2, 2–3→3, 4+→5. Die <b>Beste</b> und <b>Schlechteste</b> Note sind die **Durchschnittsnoten** aller Merkmale (mit 2 Dezimalstellen). Range = Unterschied worst-best. Score bleibt pro Merkmal berechnet und als Prozent gezeigt.</p>
     </div>
   </section>
 
-  <section id="ergebnis"></section>
+  <main id="ergebnis" class="results"></main>
 
-  <script src="app.js"></script>
+  <footer>
+    <small>© 2025 Paarungsanalyse</small>
+  </footer>
+
+  <script src="app.js" defer></script>
 </body>
 </html>
