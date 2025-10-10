@@ -2,39 +2,32 @@ name: Update JSON from Google Sheets
 
 on:
   schedule:
-    - cron: "0 */3 * * *"  # alle 3 Stunden
-  workflow_dispatch:
+    - cron: "0 */3 * * *" # Läuft alle 3 Stunden
+  workflow_dispatch: # Manuelles Starten möglich
 
 jobs:
-  update-json:
+  update:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Repository auschecken
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Node.js einrichten
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "20"
 
-      - name: Install dependencies
-        run: npm install papaparse node-fetch@3
+      - name: Abhängigkeiten installieren
+        run: npm install node-fetch@3
 
-      - name: Convert Google Sheets to JSON
+      - name: Google Sheets in JSON umwandeln
         run: node scripts/convert-sheets-to-json.js
 
-      - name: Commit and Push Changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Änderungen committen und pushen
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add data/stuten.json data/hengste.json
-          git pull --rebase origin main || git rebase --skip
-          if git diff --cached --quiet; then
-            echo "Keine Änderungen – nichts zu committen."
-            exit 0
-          fi
-          git commit -m "Auto-Update JSON files from Google Sheets ($(date '+%Y-%m-%d %H:%M'))"
+          git add data/*.json
+          git commit -m "Update JSON from Google Sheets" || echo "Keine Änderungen"
           git push
