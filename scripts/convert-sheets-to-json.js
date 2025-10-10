@@ -2,15 +2,13 @@
 import fs from "fs";
 import fetch from "node-fetch";
 
-console.log("Lade Stuten und Hengste aus Google Sheets...");
+console.log("📥 Lade Stuten und Hengste aus Google Sheets...");
 
-// Sheet-IDs (bitte nicht verändern)
 const SHEETS = {
   stuten: "1Q3Kh2XjiMoIfU_rTSZqLzCzHQ50hQuFS",
   hengste: "1q3nkqzm67vOKxfeOX8hjaZaPBEzh2REI"
 };
 
-// Funktion: CSV -> JSON
 async function sheetToJson(sheetId) {
   const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
   const res = await fetch(url);
@@ -29,7 +27,6 @@ async function sheetToJson(sheetId) {
   });
 }
 
-// Hauptfunktion
 async function main() {
   try {
     const stuten = await sheetToJson(SHEETS.stuten);
@@ -39,9 +36,9 @@ async function main() {
     fs.writeFileSync("data/stuten.json", JSON.stringify(stuten, null, 2));
     fs.writeFileSync("data/hengste.json", JSON.stringify(hengste, null, 2));
 
-    console.log("JSON-Dateien erfolgreich aktualisiert.");
+    console.log("✅ JSON-Dateien erfolgreich aktualisiert.");
   } catch (err) {
-    console.error("Fehler beim Laden der Sheets:", err);
+    console.error("❌ Fehler beim Laden der Sheets:", err);
     process.exit(1);
   }
 }
