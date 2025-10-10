@@ -1,182 +1,32 @@
-// app.js – Version mit Durchschnittsnoten-Berechnung + Sortierung + Score
-
-let stuten = [];
-let hengste = [];
-
-// mögliche Feldnamen (robust für verschiedene JSONs)
-const NAME_KEYS = ["Name", "Stutenname", "Stute", "name"];
-const OWNER_KEYS = ["Besitzer", "Owner", "besitzer", "owner"];
-const COLOR_KEYS = ["Farbgenetik", "Farbe", "FarbGenetik", "color", "Genetik"];
-
-// Exterieur-Merkmale
-const MERKMALE = [
-  "Kopf","Gebiss","Hals","Halsansatz","Widerrist","Schulter","Brust",
-  "Rückenlinie","Rückenlänge","Kruppe","Beinwinkelung","Beinstellung","Fesseln","Hufe"
-];
-
-// === Hilfsfunktionen ===
-function pickField(obj, keys){
-  for(const k of keys)
-    if(obj && Object.prototype.hasOwnProperty.call(obj,k) && obj[k] !== undefined && obj[k] !== "")
-      return obj[k];
-  return "";
-}
-function pickName(obj){ return pickField(obj, NAME_KEYS) || "(ohne Name)"; }
-function pickOwner(obj){ return pickField(obj, OWNER_KEYS) || "(kein Besitzer)"; }
-function pickColor(obj){ return pickField(obj, COLOR_KEYS) || ""; }
-function escapeHtml(s){ return String(s).replace(/[&<>"'\/]/g, c => ({
-  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#47;'
-}[c])); }
-
-// === JSON-Daten laden ===
-async function ladeDaten(){
-  try{
-    const s = await fetch('data/stuten.json').then(r => r.json());
-    const h = await fetch('data/hengste.json').then(r => r.json());
-    stuten = Array.isArray(s) ? s : [];
-    hengste = Array.isArray(h) ? h : [];
-
-    fuelleDropdowns();
-  }catch(e){
-    console.error("Fehler beim Laden:", e);
-    document.getElementById('ergebnis').innerHTML =
-      '<p style="color:red">Fehler beim Laden der Daten. Prüfe data/*.json.</p>';
-  }
+async function loadData() {
+  const [stutenRes, hengsteRes] = await Promise.all([
+    fetch("data/stuten.json"),
+    fetch("data/hengste.json")
+  ]);
+  const stuten = await stutenRes.json();
+  const hengste = await hengsteRes.json();
+  return { stuten, hengste };
 }
 
-// === Dropdowns befüllen ===
-function fuelleDropdowns(){
-  const selStute = document.getElementById('stuteSelect');
-  const selBesitzer = document.getElementById('besitzerSelect');
-  selStute.innerHTML = '<option value="">– Alle Stuten –</option>';
-  selBesitzer.innerHTML = '<option value="">– Alle Besitzer –</option>';
-
-  stuten.forEach((s, idx) => {
-    const opt = document.createElement('option');
-    opt.value = idx;
-    opt.textContent = pickName(s);
-    selStute.appendChild(opt);
-  });
-
-  const owners = [...new Set(stuten.map(s => pickOwner(s)))].filter(x => x && x !== "(kein Besitzer)");
-  owners.forEach(o => {
-    const opt = document.createElement('option');
-    opt.value = o;
-    opt.textContent = o;
-    selBesitzer.appendChild(opt);
-  });
+function calcDurchschnitt(noten) {
+  const werte = noten.map(parseFloat).filter(n => !isNaN(n));
+  if (werte.length === 0) return 0;
+  const sum = werte.reduce((a, b) => a + b, 0);
+  return (sum / werte.length).toFixed(2);
 }
 
-// === NOTENBERECHNUNG ===
-// Umwandlung: Fehler → Note
-function fehlerZuNote(fehler) {
-  if (fehler <= 0) return 1;
-  if (fehler === 1) return 2;
-  if (fehler === 3) return 3;
-  if (fehler >= 4) return 5;
-  return 4;
+function calcRange(noten) {
+  const werte = noten.map(parseFloat).filter(n => !isNaN(n));
+  if (werte.length === 0) return 0;
+  return (Math.max(...werte) - Math.min(...werte)).toFixed(2);
 }
 
-// Durchschnittsnote aus allen 14 Merkmalen
-function berechneDurchschnitt(stute, hengst) {
-  let noten = [];
-
-  for (const merkmal of MERKMALE) {
-    const sWert = parseFloat(stute[merkmal]);
-    const hWert = parseFloat(hengst[merkmal]);
-    if (!isNaN(sWert) && !isNaN(hWert)) {
-      const fehler = Math.abs(sWert - hWert);
-      noten.push(fehlerZuNote(fehler));
-    }
-  }
-
-  if (noten.length === 0) return null;
-  const durchschnitt = noten.reduce((a, b) => a + b, 0) / noten.length;
-  return parseFloat(durchschnitt.toFixed(2)); // auf 2 Nachkommastellen gerundet
+function calcScore(noten) {
+  const avg = parseFloat(calcDurchschnitt(noten));
+  return (100 - ((avg - 1) / 4) * 100).toFixed(1);
 }
 
-// === GENETISCHES SCORING ===
-function scorePair(stute, hengst){
-  let totalScore = 0;
-  let count = 0;
-
-  for(const merk of MERKMALE){
-    const sGenes = (stute[merk] || "").replace("|", "").trim().split(/\s+/);
-    const hGenes = (hengst[merk] || "").replace("|", "").trim().split(/\s+/);
-    if(sGenes.length < 8 || hGenes.length < 8) continue;
-
-    let localScore = 0;
-
-    for(let i=0; i<8; i++){
-      const S = sGenes[i];
-      const H = hGenes[i];
-      const target = i < 4 ? "HH" : "hh";
-      let score = 0;
-      if(target === "HH"){
-        if(S === "hh" && (H === "HH" || H === "Hh")) score = 1;
-        else if(S === "Hh" && (H === "HH" || H === "Hh")) score = 1;
-        else if(S === "HH" && (H === "HH" || H === "Hh")) score = 1;
-        else if(S === "HH" && H === "hh") score = 0;
-        else score = 0.3;
-      } else {
-        if(S === "HH" && (H === "hh" || H === "Hh")) score = 1;
-        else if(S === "Hh" && (H === "hh" || H === "Hh")) score = 1;
-        else if(S === "hh" && (H === "hh" || H === "Hh")) score = 1;
-        else if(S === "hh" && H === "HH") score = 0;
-        else score = 0.3;
-      }
-      localScore += score;
-    }
-    totalScore += localScore / 8;
-    count++;
-  }
-  return count > 0 ? totalScore / count : 0;
-}
-
-// === HTML für Top-3-Hengste ===
-function createTop3Html(stute){
-  const name = pickName(stute);
-  const owner = pickOwner(stute);
-  const color = pickColor(stute) || "-";
-
-  // Bewertung jedes Hengstes
-  const scored = hengste
-    .map(h => {
-      const score = scorePair(stute, h);
-      const note = berechneDurchschnitt(stute, h);
-      return { ...h, __score: score, __note: note };
-    })
-    .filter(h => h.__score > 0 && h.__note !== null);
-
-  if (scored.length === 0)
-    return `<div class="match"><h3>${escapeHtml(name)} <small>(${escapeHtml(owner)})</small></h3><p><b>Farbgenetik Stute:</b> ${escapeHtml(color)}</p><p><em>Keine passenden Hengste gefunden.</em></p></div>`;
-
-  const besteNote = Math.min(...scored.map(h => h.__note));
-  const schlechtesteNote = Math.max(...scored.map(h => h.__note));
-  const range = (schlechtesteNote - besteNote).toFixed(2);
-
-  // Top-3 nach Score sortiert
-  const top3 = scored.sort((a,b) => b.__score - a.__score).slice(0,3);
-
-  let html = `<div class="match"><h3>${escapeHtml(name)} <small>(${escapeHtml(owner)})</small></h3>`;
-  html += `<p><b>Farbgenetik Stute:</b> ${escapeHtml(color)}</p>`;
-
-  top3.forEach((h,i)=>{
-    html += `
-      <div class="hengst">
-        • <b>${escapeHtml(pickName(h))}</b><br>
-        Farbgenetik: ${escapeHtml(pickColor(h) || "-")}<br>
-        Beste Note: ${besteNote.toFixed(2)} — ${noteText(besteNote)}<br>
-        Schlechteste Note: ${schlechtesteNote.toFixed(2)} — ${noteText(schlechtesteNote)}<br>
-        Range: ${range} | Score: ${(h.__score*100).toFixed(1)}%
-      </div>`;
-  });
-
-  html += `</div>`;
-  return html;
-}
-
-function noteText(note) {
+function getBewertungText(note) {
   if (note <= 1.5) return "Exzellent";
   if (note <= 2.5) return "Sehr gut";
   if (note <= 3.5) return "Gut";
@@ -184,34 +34,109 @@ function noteText(note) {
   return "Ausreichend";
 }
 
-// === Anzeige (nach Auswahl) ===
-function zeigeVorschlaege(){
-  const selStute = document.getElementById('stuteSelect').value;
-  const selBesitzer = document.getElementById('besitzerSelect').value;
-  const out = document.getElementById('ergebnis');
-  out.innerHTML = '';
+function renderInfoBox(stute, resultData) {
+  const infoBox = document.getElementById("infoBox");
+  const stuteNoten = Object.values(stute)
+    .map(parseFloat)
+    .filter(v => !isNaN(v));
 
-  let toShow = [];
-  if(selStute !== ""){
-    const idx = parseInt(selStute, 10);
-    if(!Number.isNaN(idx) && stuten[idx]) toShow.push(stuten[idx]);
-  } else if(selBesitzer !== ""){
-    toShow = stuten.filter(s => pickOwner(s) === selBesitzer);
-  } else {
-    toShow = stuten;
-  }
+  const stuteAvg = calcDurchschnitt(stuteNoten);
+  const bestHengst = resultData[0];
+  const worstHengst = resultData[resultData.length - 1];
 
-  if(toShow.length === 0){
-    out.innerHTML = '<p>Keine Stuten gefunden.</p>';
-    return;
-  }
-
-  out.innerHTML = toShow.map(s => createTop3Html(s)).join("");
+  infoBox.innerHTML = `
+    <h3>Informationen zur Stute</h3>
+    <p><strong>Name:</strong> ${stute.Name}</p>
+    <p><strong>Farbgenetik:</strong> ${stute.Farbgenetik || "-"}</p>
+    <p><strong>Durchschnittsnote:</strong> ${stuteAvg}</p>
+    <hr>
+    <p><strong>Bester Hengst:</strong> ${bestHengst.name} (${bestHengst.durchschnitt.toFixed(2)})</p>
+    <p><strong>Schlechtester Hengst:</strong> ${worstHengst.name} (${worstHengst.durchschnitt.toFixed(2)})</p>
+  `;
 }
 
-// === Initialisierung ===
-window.addEventListener('DOMContentLoaded', () => {
-  ladeDaten();
-  document.getElementById('stuteSelect').addEventListener('change', zeigeVorschlaege);
-  document.getElementById('besitzerSelect').addEventListener('change', zeigeVorschlaege);
-});
+function renderResults(stute, hengste, sortType) {
+  const container = document.getElementById("results");
+  container.innerHTML = "";
+
+  let resultData = hengste.map(h => {
+    const noten = Object.values(h)
+      .map(v => parseFloat(v))
+      .filter(v => !isNaN(v));
+
+    const avg = parseFloat(calcDurchschnitt(noten));
+    const range = parseFloat(calcRange(noten));
+    const score = parseFloat(calcScore(noten));
+
+    return {
+      name: h.Name || "Unbekannter Hengst",
+      farbgenetik: h.Farbgenetik || "-",
+      durchschnitt: avg,
+      range,
+      score
+    };
+  });
+
+  if (sortType === "note") resultData.sort((a, b) => a.durchschnitt - b.durchschnitt);
+  else if (sortType === "range") resultData.sort((a, b) => a.range - b.range);
+  else if (sortType === "score") resultData.sort((a, b) => b.score - a.score);
+
+  renderInfoBox(stute, resultData);
+
+  resultData.forEach(h => {
+    const div = document.createElement("div");
+    div.className = "card";
+    div.innerHTML = `
+      <h3>${h.name}</h3>
+      <p>Farbgenetik: ${h.farbgenetik}</p>
+      <p>Durchschnittsnote: ${h.durchschnitt.toFixed(2)} — ${getBewertungText(h.durchschnitt)}</p>
+      <p>Range: ${h.range.toFixed(2)}</p>
+      <p>Score: ${h.score.toFixed(1)}%</p>
+    `;
+    container.appendChild(div);
+  });
+}
+
+async function init() {
+  const { stuten, hengste } = await loadData();
+  const stuteSelect = document.getElementById("stuteSelect");
+  const besitzerSelect = document.getElementById("besitzerSelect");
+  const sortSelect = document.getElementById("sortSelect");
+
+  const besitzerList = [...new Set(stuten.map(s => s.Besitzer))];
+  besitzerList.forEach(b => {
+    const opt = document.createElement("option");
+    opt.value = b;
+    opt.textContent = b;
+    besitzerSelect.appendChild(opt);
+  });
+
+  function updateStuten() {
+    const selectedBesitzer = besitzerSelect.value;
+    const filtered = stuten.filter(s => s.Besitzer === selectedBesitzer);
+    stuteSelect.innerHTML = "";
+    filtered.forEach(s => {
+      const opt = document.createElement("option");
+      opt.value = s.Name;
+      opt.textContent = s.Name;
+      stuteSelect.appendChild(opt);
+    });
+  }
+
+  function updateResults() {
+    const selectedStute = stuten.find(s => s.Name === stuteSelect.value);
+    if (selectedStute) renderResults(selectedStute, hengste, sortSelect.value);
+  }
+
+  besitzerSelect.addEventListener("change", () => {
+    updateStuten();
+    updateResults();
+  });
+  stuteSelect.addEventListener("change", updateResults);
+  sortSelect.addEventListener("change", updateResults);
+
+  updateStuten();
+  updateResults();
+}
+
+init();
