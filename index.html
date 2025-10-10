@@ -1,63 +1,35 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Paarungsanalyse – Genetik</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDR Zuchtbewertung</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Paarungsanalyse — Stute ↔ Hengst</h1>
-    <p class="subtitle">Empfehlungen basierend auf Exterieur-Genen (Anzeige: Durchschnittsnoten & Score)</p>
-  </header>
+  <div class="container">
+    <h1>MDR Zuchtbewertung</h1>
 
-  <section class="controls">
-    <div class="control-item">
-      <label for="stuteSelect">Stute auswählen</label>
-      <select id="stuteSelect"></select>
-    </div>
-
-    <div class="control-item">
-      <label for="besitzerSelect">Besitzer</label>
+    <div class="selection">
+      <label for="besitzerSelect">Besitzer:</label>
       <select id="besitzerSelect"></select>
-    </div>
 
-    <div class="control-item">
-      <label for="sortDropdown">Sortieren nach</label>
-      <select id="sortDropdown">
-        <option value="best">Beste Note (aufsteigend)</option>
-        <option value="score">Score (absteigend)</option>
-        <option value="range">Range (aufsteigend)</option>
+      <label for="stuteSelect">Stute:</label>
+      <select id="stuteSelect"></select>
+
+      <label for="sortSelect">Sortierung:</label>
+      <select id="sortSelect">
+        <option value="note">Beste Durchschnittsnote</option>
+        <option value="range">Kleinste Range</option>
+        <option value="score">Höchster Score</option>
       </select>
     </div>
-  </section>
 
-  <section class="info">
-    <div class="warning">
-      ⚠️ Achtung: Inzucht und Doppelvererbung (z. B. Overo) werden NICHT berücksichtigt. Dies ist eine Empfehlung.
-    </div>
+    <div id="infoBox" class="info-box"></div>
 
-    <div class="tabs">
-      <button class="tab-button active" data-tab="tab1">1. Wie Hengste gewählt werden</button>
-      <button class="tab-button" data-tab="tab2">2. Wie Noten & Prozent berechnet werden</button>
-    </div>
+    <div id="results"></div>
+  </div>
 
-    <div id="tab1" class="tab-content">
-      <p>Hengste werden nach genetischer Kompatibilität mit der Stute bewertet. Der Genetik-Score misst, wie gut die Gene die gewünschten Zielwerte (vorn: HH, hinten: hh) stützen oder ausgleichen.</p>
-    </div>
-
-    <div id="tab2" class="tab-content hidden">
-      <p>Für jedes Merkmal werden Genpositionen verglichen. Fehler → Note: 0→1, 1→2, 2–3→3, 4+→5. Die <b>Beste</b> und <b>Schlechteste</b> Note sind die **Durchschnittsnoten** aller Merkmale (mit 2 Dezimalstellen). Range = Unterschied worst-best. Score bleibt pro Merkmal berechnet und als Prozent gezeigt.</p>
-    </div>
-  </section>
-
-  <main id="ergebnis" class="results"></main>
-
-  <footer>
-    <small>© 2025 Paarungsanalyse</small>
-  </footer>
-
-  <script src="app.js" defer></script>
+  <script src="app.js"></script>
 </body>
 </html>
