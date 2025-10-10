@@ -2,51 +2,59 @@ name: Update JSON from Google Sheets
 
 on:
   schedule:
-    - cron: "0 * * * *"   # Läuft stündlich
-  workflow_dispatch:       # Manuell auslösbar
+    - cron: '0 */3 * * *' # alle 3 Stunden
+  workflow_dispatch:       # manuell startbar
 
 jobs:
-  convert:
+  update-json:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # Wichtig für rebase
+          fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: "3.x"
+          node-version: 20
 
       - name: Install dependencies
-        run: pip install pandas requests openpyxl
+        run: npm ci || npm install
 
-      - name: Download Stuten CSV
-        run: |
-          curl -L "https://docs.google.com/spreadsheets/d/e/2PACX-1vQUZE4HXc1di-ym2n79-_9Rc-vxHbMMniRXmgq1woBSha0MjvANgvYFoqH4w7E2LA/pub?output=csv" -o data/stuten.csv
+      - name: Run conversion script
+        env:
+          GOOGLE_CLIENT_EMAIL: ${{ secrets.GOOGLE_CLIENT_EMAIL }}
+          GOOGLE_PRIVATE_KEY: ${{ secrets.GOOGLE_PRIVATE_KEY }}
+          HENGSTE_SHEET_ID: "1q3nkqzm67vOKxfeOX8hjaZaPBEzh2REI"
+          STUTEN_SHEET_ID: "1Q3Kh2XjiMoIfU_rTSZqLzCzHQ50hQuFS"
+        run: node scripts/convert-sheets-to-json.js
 
-      - name: Download Hengste CSV
-        run: |
-          curl -L "https://docs.google.com/spreadsheets/d/e/2PACX-1vRvyxHFLsRMdLYcZR6VhzhDDHJX46TLp3WMUslb53ij2zzAY7R2o9rZjVHpani0cA/pub?output=csv" -o data/hengste.csv
-
-      - name: Convert CSV to JSON
-        run: |
-          python - <<'EOF'
-          import pandas as pd
-          stuten = pd.read_csv("data/stuten.csv")
-          hengste = pd.read_csv("data/hengste.csv")
-
-          stuten.to_json("data/stuten.json", orient="records", force_ascii=False, indent=2)
-          hengste.to_json("data/hengste.json", orient="records", force_ascii=False, indent=2)
-          EOF
-
-      - name: Commit and push changes
+      - name: Configure Git
         run: |
           git config user.name "github-actions"
           git config user.email "actions@github.com"
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code || echo "changes=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push (safe update branch)
+        if: steps.git-check.outputs.changes == 'true'
+        run: |
+          git checkout -B update-json
           git add data/*.json
-          git commit -m "Update JSON from Google Sheets" || echo "No changes to commit"
-          git pull --rebase origin main
-          git push origin main
+          git commit -m "🔄 Auto-update JSON from Google Sheets ($(date +'%Y-%m-%d %H:%M'))"
+          git push origin update-json --force
+
+      - name: Create Pull Request
+        if: steps.git-check.outputs.changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: update-json
+          base: main
+          title: "🔄 Auto-Update JSON from Google Sheets"
+          body: "Automatisch generierte Aktualisierung der Daten aus Google Sheets."
