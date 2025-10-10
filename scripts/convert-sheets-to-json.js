@@ -1,31 +1,49 @@
 // scripts/convert-sheets-to-json.js
 import fs from "fs";
 import fetch from "node-fetch";
-import Papa from "papaparse";
 
-console.log("📥 Lade Stuten und Hengste aus Google Sheets...");
+console.log("Lade Stuten und Hengste aus Google Sheets...");
 
-const sheets = {
-  stuten: "https://docs.google.com/spreadsheets/d/1Q3Kh2XjiMoIfU_rTSZqLzCzHQ50hQuFS/export?format=csv",
-  hengste: "https://docs.google.com/spreadsheets/d/1q3nkqzm67vOKxfeOX8hjaZaPBEzh2REI/export?format=csv"
+// Sheet-IDs (bitte nicht verändern)
+const SHEETS = {
+  stuten: "1Q3Kh2XjiMoIfU_rTSZqLzCzHQ50hQuFS",
+  hengste: "1q3nkqzm67vOKxfeOX8hjaZaPBEzh2REI"
 };
 
-async function fetchSheet(name, url) {
+// Funktion: CSV -> JSON
+async function sheetToJson(sheetId) {
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
   const res = await fetch(url);
-  if (!res.ok) throw new Error(`Fehler beim Abrufen der ${name}: ${res.statusText}`);
+  if (!res.ok) throw new Error(`Fehler beim Laden des Sheets: ${res.statusText}`);
   const csv = await res.text();
-  const parsed = Papa.parse(csv, { header: true });
-  const json = parsed.data.filter(r => Object.values(r).some(v => v !== ""));
-  fs.writeFileSync(`data/${name}.json`, JSON.stringify(json, null, 2));
-  console.log(`✅ ${name}.json erfolgreich gespeichert (${json.length} Einträge)`);
+
+  const lines = csv.trim().split("\n");
+  const headers = lines[0].split(",").map(h => h.trim());
+  const rows = lines.slice(1);
+
+  return rows.map(line => {
+    const cols = line.split(",").map(c => c.trim());
+    const obj = {};
+    headers.forEach((h, i) => (obj[h] = cols[i] ?? ""));
+    return obj;
+  });
 }
 
-(async () => {
+// Hauptfunktion
+async function main() {
   try {
-    await fetchSheet("stuten", sheets.stuten);
-    await fetchSheet("hengste", sheets.hengste);
+    const stuten = await sheetToJson(SHEETS.stuten);
+    const hengste = await sheetToJson(SHEETS.hengste);
+
+    fs.mkdirSync("data", { recursive: true });
+    fs.writeFileSync("data/stuten.json", JSON.stringify(stuten, null, 2));
+    fs.writeFileSync("data/hengste.json", JSON.stringify(hengste, null, 2));
+
+    console.log("JSON-Dateien erfolgreich aktualisiert.");
   } catch (err) {
-    console.error("❌ Fehler beim Laden der Sheets:", err);
+    console.error("Fehler beim Laden der Sheets:", err);
     process.exit(1);
   }
-})();
+}
+
+main();
