@@ -1,44 +1,60 @@
-// scripts/convert-sheets-to-json.js
+/**
+ * Lädt öffentliche Google Sheets (Stuten + Hengste)
+ * und speichert sie als JSON-Dateien in /data.
+ *
+ * Dieses Skript wird automatisch über den GitHub Action Workflow
+ * "google-sheets-to-json.yml" alle 3 Stunden ausgeführt.
+ */
+
 import fs from "fs";
 import fetch from "node-fetch";
 
-console.log("📥 Lade Stuten und Hengste aus Google Sheets...");
+// === Sheet-URLs (CSV-Export) ===
+const STUTEN_URL =
+  "https://docs.google.com/spreadsheets/d/1Q3Kh2XjiMoIfU_rTSZqLzCzHQ50hQuFS/export?format=csv";
+const HENGSTE_URL =
+  "https://docs.google.com/spreadsheets/d/1q3nkqzm67vOKxfeOX8hjaZaPBEzh2REI/export?format=csv";
 
-const SHEETS = {
-  stuten: "1Q3Kh2XjiMoIfU_rTSZqLzCzHQ50hQuFS",
-  hengste: "1q3nkqzm67vOKxfeOX8hjaZaPBEzh2REI"
-};
-
-async function sheetToJson(sheetId) {
-  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`Fehler beim Laden des Sheets: ${res.statusText}`);
-  const csv = await res.text();
-
-  const lines = csv.trim().split("\n");
-  const headers = lines[0].split(",").map(h => h.trim());
-  const rows = lines.slice(1);
-
-  return rows.map(line => {
-    const cols = line.split(",").map(c => c.trim());
+// === CSV → JSON Konvertierung ===
+function csvToJson(csv) {
+  const lines = csv.split("\n").filter((l) => l.trim() !== "");
+  const headers = lines[0].split(",").map((h) => h.trim());
+  return lines.slice(1).map((line) => {
+    const values = line.split(",");
     const obj = {};
-    headers.forEach((h, i) => (obj[h] = cols[i] ?? ""));
+    headers.forEach((header, i) => {
+      obj[header] = values[i] ? values[i].trim() : "";
+    });
     return obj;
   });
 }
 
+// === Hauptfunktion ===
 async function main() {
+  const outDir = "./data";
+  if (!fs.existsSync(outDir)) fs.mkdirSync(outDir);
+
+  console.log("🚀 Lade öffentliche Google Sheets...");
+
   try {
-    const stuten = await sheetToJson(SHEETS.stuten);
-    const hengste = await sheetToJson(SHEETS.hengste);
+    const [stutenCsv, hengsteCsv] = await Promise.all([
+      fetch(STUTEN_URL).then((r) => r.text()),
+      fetch(HENGSTE_URL).then((r) => r.text()),
+    ]);
 
-    fs.mkdirSync("data", { recursive: true });
-    fs.writeFileSync("data/stuten.json", JSON.stringify(stuten, null, 2));
-    fs.writeFileSync("data/hengste.json", JSON.stringify(hengste, null, 2));
+    console.log("✅ Sheets erfolgreich geladen");
 
-    console.log("✅ JSON-Dateien erfolgreich aktualisiert.");
+    const stuten = csvToJson(stutenCsv);
+    const hengste = csvToJson(hengsteCsv);
+
+    fs.writeFileSync(`${outDir}/stuten.json`, JSON.stringify(stuten, null, 2));
+    fs.writeFileSync(`${outDir}/hengste.json`, JSON.stringify(hengste, null, 2));
+
+    console.log("💾 JSON-Dateien gespeichert:");
+    console.log(" - data/stuten.json");
+    console.log(" - data/hengste.json");
   } catch (err) {
-    console.error("❌ Fehler beim Laden der Sheets:", err);
+    console.error("❌ Fehler beim Konvertieren:", err);
     process.exit(1);
   }
 }
