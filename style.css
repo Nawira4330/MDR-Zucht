@@ -1,39 +1,33 @@
-/* === Allgemeine Einstellungen === */
 :root {
-  --primary: #6b9d00;       /* Hauptfarbe (dunkles Blau) */
-  --primary-light: #5c6bc0;
-  --accent: #f0f8ff;        /* Akzent (Türkisgrün) */
-  --bg: #f5f7fb;
-  --text: #222;
-  --text-muted: #666;
+  --green: #6b9d00;
+  --blue: #3ca9e2;
+  --bg: #f4f8fb;
+  --text: #1e1e1e;
+  --muted: #666;
   --card-bg: #fff;
-  --border: #e0e3ea;
+  --border: #dfe5eb;
   --radius: 12px;
   --shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
 }
 
 body {
-  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
-  background-color: var(--bg);
+  font-family: "Inter", "Segoe UI", sans-serif;
+  background: var(--bg);
   color: var(--text);
   margin: 0;
-  padding: 0;
   line-height: 1.6;
 }
 
-/* === Kopfbereich === */
+/* ===== HEADER ===== */
 header {
-  background: var(--primary);
-  color: white;
-  padding: 1rem 2rem;
+  background: linear-gradient(135deg, var(--green), var(--blue));
+  color: #fff;
+  padding: 1.5rem 1rem;
   text-align: center;
-  font-size: 1.6rem;
-  font-weight: 600;
-  letter-spacing: 0.3px;
   box-shadow: var(--shadow);
 }
 
-/* === Hauptinhalt === */
+/* ===== MAIN ===== */
 main {
   max-width: 1100px;
   margin: 2rem auto;
@@ -43,7 +37,30 @@ main {
   box-shadow: var(--shadow);
 }
 
-/* === Filterbereich === */
+/* ===== INFOBOX ===== */
+.info {
+  background: #e8f5e9;
+  border-left: 6px solid var(--green);
+  padding: 1rem 1.4rem;
+  border-radius: var(--radius);
+  margin-bottom: 1.5rem;
+}
+
+.info h2 {
+  margin-top: 0;
+  color: var(--green);
+}
+
+.warnbox {
+  background: #fff9e6;
+  border-left: 6px solid #ffb300;
+  padding: 0.8rem 1rem;
+  margin-top: 1rem;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+}
+
+/* ===== FILTER ===== */
 .filters {
   display: flex;
   flex-wrap: wrap;
@@ -54,118 +71,89 @@ main {
 
 .filters label {
   font-weight: 600;
-  color: var(--text);
 }
 
-select {
+select, button {
   padding: 0.5rem 0.7rem;
   border-radius: var(--radius);
   border: 1px solid var(--border);
   background: white;
   font-size: 1rem;
-  min-width: 180px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-select:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(57, 73, 171, 0.25);
-  outline: none;
 }
 
 button {
-  background: var(--accent);
+  background: var(--blue);
   color: white;
   border: none;
-  border-radius: var(--radius);
-  padding: 0.55rem 1rem;
-  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s, transform 0.1s;
+  transition: 0.2s;
 }
 
 button:hover {
-  background: #00a890;
+  background: #2a96cc;
   transform: translateY(-1px);
 }
 
-/* === Ergebnisbereich === */
+/* ===== ERGEBNIS ===== */
 #ergebnis {
   margin-top: 2rem;
 }
 
 .match {
-  background: #fafbff;
+  background: #fdfefe;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1.2rem 1.4rem;
+  padding: 1.2rem 1.5rem;
   margin-bottom: 1.5rem;
   box-shadow: var(--shadow);
 }
 
 .match h3 {
   margin-top: 0;
-  color: var(--primary);
-  font-size: 1.2rem;
-  font-weight: 600;
+  color: var(--green);
 }
 
 .match p {
   margin: 0.3rem 0;
-}
-
-.match p strong {
   color: var(--text);
 }
 
 .match ol {
-  margin: 0.6rem 0 0 1.2rem;
-  padding: 0;
+  list-style-type: none;
+  padding-left: 1rem;
+  margin: 0.8rem 0;
 }
 
 .match li {
-  margin-bottom: 0.4rem;
-  background: #ffffff;
-  border-left: 4px solid var(--primary-light);
-  padding: 0.4rem 0.6rem;
+  position: relative;
+  margin-bottom: 0.5rem;
+  background: #f1faff;
+  border-left: 4px solid var(--blue);
+  padding: 0.5rem 0.8rem;
   border-radius: 6px;
-  transition: background 0.2s;
 }
 
-.match li:hover {
-  background: #eef1ff;
+.match li::before {
+  content: "• ";
+  color: var(--blue);
+  font-weight: bold;
 }
 
 .match li strong {
-  color: var(--primary);
+  color: var(--green);
 }
 
-/* === Fußzeile === */
+/* ===== FOOTER ===== */
 .footer {
   text-align: center;
-  margin-top: 2rem;
-  color: var(--text-muted);
+  color: var(--muted);
   font-size: 0.9rem;
+  margin-top: 2rem;
 }
 
-/* === Responsiv === */
+/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
-  main {
-    padding: 1rem;
-    margin: 1rem;
-  }
-
-  .filters {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  select, button {
-    width: 100%;
-  }
-
-  .match {
-    padding: 1rem;
-  }
+  main { padding: 1rem; margin: 1rem; }
+  .filters { flex-direction: column; align-items: stretch; }
+  select, button { width: 100%; }
 }
-st
