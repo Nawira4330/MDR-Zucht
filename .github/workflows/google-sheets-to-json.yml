@@ -2,7 +2,7 @@ name: Update JSON from Google Sheets
 
 on:
   schedule:
-    - cron: "0 */3 * * *"  # alle 3 Stunden
+    - cron: "0 */3 * * *" # alle 3 Stunden
   workflow_dispatch:
 
 jobs:
@@ -15,9 +15,10 @@ jobs:
 
       - name: Sheets in JSON konvertieren
         run: |
+          mkdir -p data
           curl -L "https://docs.google.com/spreadsheets/d/1q3nkqzm67vOKxfeOX8hjaZaPBEzh2REI/gviz/tq?tqx=out:json" \
           | sed '1s/^[^(]*(//' | sed '$s/);$//' > ./data/hengste.json
-          
+
           curl -L "https://docs.google.com/spreadsheets/d/1Q3Kh2XjiMoIfU_rTSZqLzCzHQ50hQuFS/gviz/tq?tqx=out:json" \
           | sed '1s/^[^(]*(//' | sed '$s/);$//' > ./data/stuten.json
 
@@ -26,5 +27,5 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
           git add ./data/*.json
-          git commit -m "Automatisches Update der JSON-Daten"
+          git commit -m "Automatisches Update der JSON-Daten" || echo "Keine Änderungen"
           git push
