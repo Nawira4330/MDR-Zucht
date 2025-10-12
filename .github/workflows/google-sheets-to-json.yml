@@ -1,9 +1,9 @@
-name: Update JSON from Google Sheets
+name: Google Sheets to JSON
 
 on:
   schedule:
-    - cron: "0 */3 * * *" # alle 3 Stunden
-  workflow_dispatch:
+    - cron: "0 * * * *"  # Läuft jede Stunde
+  workflow_dispatch:      # Manuelles Starten möglich
 
 jobs:
   update-json:
@@ -11,21 +11,35 @@ jobs:
 
     steps:
       - name: Repository auschecken
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Sheets in JSON konvertieren
-        run: |
-          mkdir -p data
-          curl -L "https://docs.google.com/spreadsheets/d/1q3nkqzm67vOKxfeOX8hjaZaPBEzh2REI/gviz/tq?tqx=out:json" \
-          | sed '1s/^[^(]*(//' | sed '$s/);$//' > ./data/hengste.json
+      - name: Node.js einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
 
-          curl -L "https://docs.google.com/spreadsheets/d/1Q3Kh2XjiMoIfU_rTSZqLzCzHQ50hQuFS/gviz/tq?tqx=out:json" \
-          | sed '1s/^[^(]*(//' | sed '$s/);$//' > ./data/stuten.json
+      - name: Abhängigkeiten installieren
+        run: npm ci
 
-      - name: Änderungen committen
+      - name: Google Sheets zu JSON exportieren
+        env:
+          GOOGLE_SERVICE_ACCOUNT_EMAIL: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_EMAIL }}
+          GOOGLE_SERVICE_ACCOUNT_KEY: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_KEY }}
+          SHEET_ID_STUTEN: ${{ secrets.SHEET_ID_STUTEN }}
+          SHEET_ID_HENGSTE: ${{ secrets.SHEET_ID_HENGSTE }}
+        run: node ./scripts/google-sheets-to-json.mjs
+
+      - name: Änderungen prüfen und ggf. committen
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
           git add ./data/*.json
-          git commit -m "Automatisches Update der JSON-Daten" || echo "Keine Änderungen"
-          git push
+
+          # Nur committen, wenn Änderungen vorhanden sind
+          if git diff --quiet; then
+            echo "Keine Änderungen – kein Commit nötig."
+          else
+            git commit -m "Automatisches Update der JSON-Daten"
+            git push
+            echo "Änderungen wurden erfolgreich gepusht."
+          fi
