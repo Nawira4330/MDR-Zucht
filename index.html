@@ -1,59 +1,32 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pferdeverpaarung — Exterieuranalyse</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pferdezucht Matcher</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Pferdeverpaarung — Exterieuranalyse</h1>
+  <header><h1>Pferdezucht Matcher</h1></header>
+
+  <main class="container">
     <div class="controls">
-      <label for="stuteSelect">Stute:</label>
-      <select id="stuteSelect"></select>
+      <label for="stuteSelect">Stute auswählen</label>
+      <select id="stuteSelect" onchange="zeigeVorschlaege()">
+        <option value="">-- bitte wählen --</option>
+      </select>
 
-      <label for="besitzerSelect">Besitzer:</label>
-      <select id="besitzerSelect"></select>
+      <label for="besitzerSelect">Besitzer auswählen</label>
+      <select id="besitzerSelect" onchange="zeigeVorschlaege()">
+        <option value="">-- bitte wählen --</option>
+      </select>
 
-      <button id="alleBtn">Alle anzeigen</button>
+      <div class="buttons">
+        <button id="btnShowAll" onclick="zeigeAlle()">Alle Anpaarungsvorschläge anzeigen</button>
+      </div>
     </div>
-  </header>
 
-  <main>
-    <section id="infoBox" class="info">
-      <h2>Informationen zur Berechnung</h2>
-      <p>
-        Die Bewertung basiert auf der genetischen Zusammensetzung des
-        <b>Exterieurs</b>. Jedes Merkmal (z.&nbsp;B. Kopf, Hals, Schulter)
-        besteht aus 8&nbsp;Genen. Die vorderen vier Gene sollten
-        <b>H</b>/<b>Hh</b> enthalten, die hinteren vier <b>h</b>.
-        Ideal ist also:
-        <br /><b>HH&nbsp;HH&nbsp;HH&nbsp;HH&nbsp;hh&nbsp;hh&nbsp;hh&nbsp;hh</b>
-        → Exzellent.
-      </p>
-      <p>
-        Je nach Abweichung gilt:
-        <br />0&nbsp;Fehler&nbsp;=&nbsp;Exzellent
-        <br />1&nbsp;Fehler&nbsp;=&nbsp;Gut
-        <br />2&nbsp;Fehler&nbsp;=&nbsp;Passabel
-        <br />3&nbsp;Fehler&nbsp;=&nbsp;Schlecht
-        <br />4&nbsp;Fehler&nbsp;=&nbsp;Sehr&nbsp;schlecht
-      </p>
-      <p>
-        Der <b>Score</b> beschreibt, wie gut der Hengst die Gene der Stute
-        optimiert, um ein möglichst ideales Exterieur zu erzeugen.
-      </p>
-      <p class="warning">
-        Achtung: Inzucht und die Möglichkeit der Doppelvererbung des
-        Overo-Gens werden in dieser Berechnung nicht berücksichtigt.
-      </p>
-    </section>
-
-    <section id="resultContainer">
-      <h2>Top&nbsp;3&nbsp;Hengste</h2>
-      <div id="ergebnis"></div>
-    </section>
+    <section id="ergebnis" class="ergebnis"></section>
   </main>
 
   <script src="app.js"></script>
