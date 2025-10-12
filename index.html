@@ -14,16 +14,23 @@
   <main>
     <section class="info">
       <h2>Informationen zur Berechnung</h2>
-      <p>
-        Diese Anwendung analysiert die genetischen Werte der Stuten und Hengste, um 
-        die besten Anpaarungen vorzuschlagen. Ziel ist es, bei den Fohlen möglichst 
-        den genetischen Idealwert <strong>HH HH HH HH hh hh hh hh</strong> zu erreichen.
-      </p>
-      <p>
-        Dabei werden Stärken und Schwächen der Stuten berücksichtigt. Überkorrekturen
-        sind erlaubt, da doppelte dominante Gene (HH & HH) keine negativen Effekte
-        verursachen.
-      </p>
+ <p>
+  Jede Stute und jeder Hengst haben genetische Merkmale (z. B. Kopf, Hals, Rücken usw.), 
+  die mit <strong>HH</strong>, <strong>Hh</strong> oder <strong>hh</strong> angegeben werden. 
+  Ziel ist eine gesunde, ausgewogene Kombination für das Fohlen: 
+  <strong>HH HH HH HH hh hh hh hh</strong>.
+</p>
+<p>
+  Für jedes Merkmal werden Punkte vergeben:
+</p>
+<ul>
+  <li><strong>3 Punkte</strong> → stabil (HH=HH, hh=hh oder Hh=Hh)</li>
+  <li><strong>2 Punkte</strong> → guter Ausgleich (z. B. HH + hh oder Hh + HH)</li>
+  <li><strong>0 Punkte</strong> → kein verwertbarer Abgleich</li>
+</ul>
+<p>
+  Die Summe ergibt den <strong>Gesamtscore</strong>. Je höher der Score, desto besser passt der Hengst zur Stute.
+</p>
       <div class="warnbox">
         <strong>Wichtiger Hinweis:</strong> 
         Diese Berechnung berücksichtigt weder Inzucht noch Doppelvererbung 
