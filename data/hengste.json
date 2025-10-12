@@ -1,7 +1,7 @@
 [
   {
     "Name":"(E) Diablo von Sora",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"HH HH hH hH | hh HH hh hh",
     "Gebiss":"HH Hh Hh hh | hh hh hh HH",
     "Hals":"hh hH hh Hh | hH HH hh Hh",
@@ -16,11 +16,11 @@
     "Beinstellung":"hh HH HH Hh | Hh hh hH hh",
     "Fesseln":"Hh Hh hh HH | hh HH hH hh",
     "Hufe":"HH hh hH hh | hH hh hh hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"(E) Horizon Bear von Sora",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"Hh hh hH Hh | HH HH Hh hh",
     "Gebiss":"Hh hH Hh hh | hh hh hh hh",
     "Hals":"hh hh hH hH | hH hh hh Hh",
@@ -35,11 +35,11 @@
     "Beinstellung":"hH HH hh hH | hh hH hh hH",
     "Fesseln":"hh Hh Hh hH | hh hH hH hh",
     "Hufe":"HH hh Hh hh | hh hh Hh Hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"(E) Valentino von Sora",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"hh Hh Hh hh | hh hh hh hh",
     "Gebiss":"hh Hh hh HH | hh Hh HH hh",
     "Hals":"hh hH HH Hh | hh hh hH Hh",
@@ -54,11 +54,11 @@
     "Beinstellung":"Hh hH HH Hh | hh Hh Hh hh",
     "Fesseln":"Hh hh Hh hH | hh HH Hh hH",
     "Hufe":"HH hh hh Hh | hH Hh hH hH",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"*Iced* Archer ~W~",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"Hh hh hH HH | hH hh hh Hh",
     "Gebiss":"hh hH Hh Hh | hh hh Hh hh",
     "Hals":"hh Hh hh hh | hH hh hh Hh",
@@ -73,11 +73,11 @@
     "Beinstellung":"hh hh Hh Hh | hh hh Hh hh",
     "Fesseln":"hh Hh HH hh | hh hh hh Hh",
     "Hufe":"hh hh hh Hh | Hh hH hh hH",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"*Iced* Cool Code ~W~",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"hh hH Hh Hh | hh Hh hh Hh",
     "Gebiss":"Hh hH Hh Hh | hh Hh hh hh",
     "Hals":"hh hh Hh hh | Hh hh Hh Hh",
@@ -92,11 +92,11 @@
     "Beinstellung":"hH HH hh Hh | hh hh hh hh",
     "Fesseln":"hH hh Hh Hh | hh hh hh hh",
     "Hufe":"Hh Hh HH hh | hH hH hh hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"*Iced* Honey Day ~W~",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"HH hh Hh Hh | Hh hh hh Hh",
     "Gebiss":"hH hh hH hH | Hh hH hh hH",
     "Hals":"hh Hh hh Hh | Hh hH Hh hH",
@@ -111,11 +111,11 @@
     "Beinstellung":"hh hh HH HH | hh hh hh hh",
     "Fesseln":"hh hH hh hh | hh hh hh HH",
     "Hufe":"Hh hH HH hH | hH HH Hh Hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"*Iced* Otherwise ZD ~W~",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"Hh Hh Hh hh | hh hh hH Hh",
     "Gebiss":"HH hH hh hh | hh hH Hh hh",
     "Hals":"Hh Hh Hh Hh | hh hh HH hh",
@@ -130,7 +130,7 @@
     "Beinstellung":"hH hh HH Hh | Hh hh hh hh",
     "Fesseln":"hH HH hh hh | hh hh hh hh",
     "Hufe":"Hh HH hh hH | hh Hh hh hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"*Iced* Vallari ~W~",
@@ -149,7 +149,7 @@
     "Beinstellung":"Hh hh Hh Hh | hh hh hh hH",
     "Fesseln":"hh hH Hh hh | hH hh hh hH",
     "Hufe":"HH hh hH hH | hH hH hh hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"~~APH~~ Daily Mirrow -Cookie-",
@@ -168,30 +168,30 @@
     "Beinstellung":"hH Hh hH HH | hH hh hh hh",
     "Fesseln":"Hh HH hH HH | hh hh Hh hh",
     "Hufe":"Hh hh hh hH | hh hh hh hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
-    "Name":"",
-    "Farbgenetik":"",
-    "Kopf":"",
-    "Gebiss":"",
-    "Hals":"",
-    "Halsansatz":"",
-    "Widerrist":"",
-    "Schulter":"",
-    "Brust":"",
-    "Rückenlinie":"",
-    "Rückenlänge":"",
-    "Kruppe":"",
-    "Beinwinkelung":"",
-    "Beinstellung":"",
-    "Fesseln":"",
-    "Hufe":"",
-    "Besitzer":""
+    "Name":null,
+    "Farbgenetik":null,
+    "Kopf":null,
+    "Gebiss":null,
+    "Hals":null,
+    "Halsansatz":null,
+    "Widerrist":null,
+    "Schulter":null,
+    "Brust":null,
+    "Rückenlinie":null,
+    "Rückenlänge":null,
+    "Kruppe":null,
+    "Beinwinkelung":null,
+    "Beinstellung":null,
+    "Fesseln":null,
+    "Hufe":null,
+    "Besitzer":null
   },
   {
     "Name":"Amanyar~ Celeborn Eldaliéva",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"Hh hH hH hh | hh HH hh hh",
     "Gebiss":"hH HH Hh hh | hh Hh hh HH",
     "Hals":"hh Hh HH Hh | hh hh Hh hH",
@@ -206,11 +206,11 @@
     "Beinstellung":"hh hH hh hh | Hh Hh hh hh",
     "Fesseln":"Hh Hh hh Hh | hh hh hh hh",
     "Hufe":"hh hh hh hh | hH hh hh hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"Amanyar~ Vanion Eldaliéva",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"hh Hh hH hh | hh Hh hH hh",
     "Gebiss":"Hh HH hH hH | hh Hh hh HH",
     "Hals":"Hh hH hH hh | hH HH hh Hh",
@@ -225,11 +225,11 @@
     "Beinstellung":"hH hh Hh Hh | hH hH hH hh",
     "Fesseln":"hH hh hh HH | Hh hH hh hh",
     "Hufe":"HH hH hh hH | hh hh hh hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"Amaretto °16.4° ~VL~",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"hh hh hH hh | hh Hh hh HH",
     "Gebiss":"hh hh hh hH | hh hh hh hh",
     "Hals":"hh hH HH Hh | hh hh hH Hh",
@@ -244,11 +244,11 @@
     "Beinstellung":"Hh hH hH hH | hh hh hh Hh",
     "Fesseln":"HH Hh Hh Hh | Hh hh hh Hh",
     "Hufe":"hH hH hh HH | hH hh hH hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"APHs Aladin ~Lii~",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"Hh hH hh hh | hh hH hh HH",
     "Gebiss":"Hh Hh hh hh | hh hh hh hh",
     "Hals":"hh hh hH hH | hh Hh hh hH",
@@ -263,11 +263,11 @@
     "Beinstellung":"hH hh Hh Hh | hh hh hh hH",
     "Fesseln":"Hh HH Hh Hh | Hh hH hH hH",
     "Hufe":"Hh hh hh Hh | hh hh hH hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"APHs Honey Bear ~Lii~",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"Hh hh hH Hh | Hh Hh Hh hH",
     "Gebiss":"Hh Hh Hh hH | hH hh hh hh",
     "Hals":"hh Hh hh hH | hH hh Hh Hh",
@@ -282,11 +282,11 @@
     "Beinstellung":"hh Hh hH Hh | hh hh hH hH",
     "Fesseln":"Hh hH Hh hH | Hh hh hh Hh",
     "Hufe":"Hh Hh Hh hh | Hh Hh Hh hH",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"APHs Miraculous ~Lii~",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"Hh Hh hh Hh | hH hh Hh Hh",
     "Gebiss":"Hh HH hH Hh | hh hh Hh hh",
     "Hals":"hh Hh hH hh | hh HH Hh hh",
@@ -301,30 +301,30 @@
     "Beinstellung":"hH HH hh Hh | hh Hh hh hh",
     "Fesseln":"hh hH hh hh | hh hh Hh hh",
     "Hufe":"Hh hH Hh HH | hH hh hh hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"Armando °16.4° ~VL~",
-    "Farbgenetik":"",
-    "Kopf":"",
-    "Gebiss":"",
-    "Hals":"",
-    "Halsansatz":"",
-    "Widerrist":"",
-    "Schulter":"",
-    "Brust":"",
-    "Rückenlinie":"",
-    "Rückenlänge":"",
-    "Kruppe":"",
-    "Beinwinkelung":"",
-    "Beinstellung":"",
-    "Fesseln":"",
-    "Hufe":"",
-    "Besitzer":""
+    "Farbgenetik":null,
+    "Kopf":null,
+    "Gebiss":null,
+    "Hals":null,
+    "Halsansatz":null,
+    "Widerrist":null,
+    "Schulter":null,
+    "Brust":null,
+    "Rückenlinie":null,
+    "Rückenlänge":null,
+    "Kruppe":null,
+    "Beinwinkelung":null,
+    "Beinstellung":null,
+    "Fesseln":null,
+    "Hufe":null,
+    "Besitzer":null
   },
   {
     "Name":"Atlantis '368 Van Het Dok ",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"hh HH hh hH | hh Hh hh hH",
     "Gebiss":"hh hH hH hh | HH hh HH hh",
     "Hals":"HH HH hh hh | hh hH Hh hH",
@@ -339,45 +339,45 @@
     "Beinstellung":"hH hh hh Hh | hh hh HH hh",
     "Fesseln":"hh hh hh Hh | hh Hh hh hh",
     "Hufe":"hh HH hH hh | hh hh hH hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"Cuando °16.4° ~VL~",
-    "Farbgenetik":"",
-    "Kopf":"",
-    "Gebiss":"",
-    "Hals":"",
-    "Halsansatz":"",
-    "Widerrist":"",
-    "Schulter":"",
-    "Brust":"",
-    "Rückenlinie":"",
-    "Rückenlänge":"",
-    "Kruppe":"",
-    "Beinwinkelung":"",
-    "Beinstellung":"",
-    "Fesseln":"",
-    "Hufe":"",
-    "Besitzer":""
+    "Farbgenetik":null,
+    "Kopf":null,
+    "Gebiss":null,
+    "Hals":null,
+    "Halsansatz":null,
+    "Widerrist":null,
+    "Schulter":null,
+    "Brust":null,
+    "Rückenlinie":null,
+    "Rückenlänge":null,
+    "Kruppe":null,
+    "Beinwinkelung":null,
+    "Beinstellung":null,
+    "Fesseln":null,
+    "Hufe":null,
+    "Besitzer":null
   },
   {
     "Name":"Dakito °16.4° ~VL~",
-    "Farbgenetik":"",
-    "Kopf":"",
-    "Gebiss":"",
-    "Hals":"",
-    "Halsansatz":"",
-    "Widerrist":"",
-    "Schulter":"",
-    "Brust":"",
-    "Rückenlinie":"",
-    "Rückenlänge":"",
-    "Kruppe":"",
-    "Beinwinkelung":"",
-    "Beinstellung":"",
-    "Fesseln":"",
-    "Hufe":"",
-    "Besitzer":""
+    "Farbgenetik":null,
+    "Kopf":null,
+    "Gebiss":null,
+    "Hals":null,
+    "Halsansatz":null,
+    "Widerrist":null,
+    "Schulter":null,
+    "Brust":null,
+    "Rückenlinie":null,
+    "Rückenlänge":null,
+    "Kruppe":null,
+    "Beinwinkelung":null,
+    "Beinstellung":null,
+    "Fesseln":null,
+    "Hufe":null,
+    "Besitzer":null
   },
   {
     "Name":"Dallas °16.4° ~VL~",
@@ -396,7 +396,7 @@
     "Beinstellung":"hH Hh hh Hh | hh hH hh hh",
     "Fesseln":"hH hh HH HH | hh hH hh hh",
     "Hufe":"HH HH hH hh | hh HH hh hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"Disney °16.4° ~VL~",
@@ -415,83 +415,83 @@
     "Beinstellung":"Hh HH hh hh | hh hH Hh Hh",
     "Fesseln":"HH Hh hh hH | hh Hh hh hh",
     "Hufe":"hh hH HH hH | HH hh hh hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"Enzo Ferrari °16.4° ~VL~",
-    "Farbgenetik":"",
-    "Kopf":"",
-    "Gebiss":"",
-    "Hals":"",
-    "Halsansatz":"",
-    "Widerrist":"",
-    "Schulter":"",
-    "Brust":"",
-    "Rückenlinie":"",
-    "Rückenlänge":"",
-    "Kruppe":"",
-    "Beinwinkelung":"",
-    "Beinstellung":"",
-    "Fesseln":"",
-    "Hufe":"",
-    "Besitzer":""
+    "Farbgenetik":null,
+    "Kopf":null,
+    "Gebiss":null,
+    "Hals":null,
+    "Halsansatz":null,
+    "Widerrist":null,
+    "Schulter":null,
+    "Brust":null,
+    "Rückenlinie":null,
+    "Rückenlänge":null,
+    "Kruppe":null,
+    "Beinwinkelung":null,
+    "Beinstellung":null,
+    "Fesseln":null,
+    "Hufe":null,
+    "Besitzer":null
   },
   {
     "Name":"Havanero °16.4° ~VL~",
-    "Farbgenetik":"",
-    "Kopf":"",
-    "Gebiss":"",
-    "Hals":"",
-    "Halsansatz":"",
-    "Widerrist":"",
-    "Schulter":"",
-    "Brust":"",
-    "Rückenlinie":"",
-    "Rückenlänge":"",
-    "Kruppe":"",
-    "Beinwinkelung":"",
-    "Beinstellung":"",
-    "Fesseln":"",
-    "Hufe":"",
-    "Besitzer":""
+    "Farbgenetik":null,
+    "Kopf":null,
+    "Gebiss":null,
+    "Hals":null,
+    "Halsansatz":null,
+    "Widerrist":null,
+    "Schulter":null,
+    "Brust":null,
+    "Rückenlinie":null,
+    "Rückenlänge":null,
+    "Kruppe":null,
+    "Beinwinkelung":null,
+    "Beinstellung":null,
+    "Fesseln":null,
+    "Hufe":null,
+    "Besitzer":null
   },
   {
     "Name":"Kiran °16.4° ~VL~",
-    "Farbgenetik":"",
-    "Kopf":"",
-    "Gebiss":"",
-    "Hals":"",
-    "Halsansatz":"",
-    "Widerrist":"",
-    "Schulter":"",
-    "Brust":"",
-    "Rückenlinie":"",
-    "Rückenlänge":"",
-    "Kruppe":"",
-    "Beinwinkelung":"",
-    "Beinstellung":"",
-    "Fesseln":"",
-    "Hufe":"",
-    "Besitzer":""
+    "Farbgenetik":null,
+    "Kopf":null,
+    "Gebiss":null,
+    "Hals":null,
+    "Halsansatz":null,
+    "Widerrist":null,
+    "Schulter":null,
+    "Brust":null,
+    "Rückenlinie":null,
+    "Rückenlänge":null,
+    "Kruppe":null,
+    "Beinwinkelung":null,
+    "Beinstellung":null,
+    "Fesseln":null,
+    "Hufe":null,
+    "Besitzer":null
   },
   {
     "Name":"LN~ Anton",
-    "Farbgenetik":"",
-    "Kopf":"",
-    "Gebiss":"",
-    "Hals":"",
-    "Halsansatz":"",
-    "Widerrist":"",
-    "Schulter":"",
-    "Brust":"",
-    "Rückenlinie":"",
-    "Rückenlänge":"",
-    "Kruppe":"",
-    "Beinwinkelung":"",
-    "Beinstellung":"",
-    "Fesseln":"",
-    "Hufe":"",
-    "Besitzer":""
+    "Farbgenetik":null,
+    "Kopf":null,
+    "Gebiss":null,
+    "Hals":null,
+    "Halsansatz":null,
+    "Widerrist":null,
+    "Schulter":null,
+    "Brust":null,
+    "Rückenlinie":null,
+    "Rückenlänge":null,
+    "Kruppe":null,
+    "Beinwinkelung":null,
+    "Beinstellung":null,
+    "Fesseln":null,
+    "Hufe":null,
+    "Besitzer":null
   },
   {
     "Name":"Luca °Sol°",
@@ -510,68 +510,68 @@
     "Beinstellung":"hh Hh hh hh | hH hh hh hh",
     "Fesseln":"HH Hh Hh Hh | hh hh hH hh",
     "Hufe":"hh hh hh hH | Hh hh hH HH",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"Mirow °16.4° ~VL~",
-    "Farbgenetik":"",
-    "Kopf":"",
-    "Gebiss":"",
-    "Hals":"",
-    "Halsansatz":"",
-    "Widerrist":"",
-    "Schulter":"",
-    "Brust":"",
-    "Rückenlinie":"",
-    "Rückenlänge":"",
-    "Kruppe":"",
-    "Beinwinkelung":"",
-    "Beinstellung":"",
-    "Fesseln":"",
-    "Hufe":"",
-    "Besitzer":""
+    "Farbgenetik":null,
+    "Kopf":null,
+    "Gebiss":null,
+    "Hals":null,
+    "Halsansatz":null,
+    "Widerrist":null,
+    "Schulter":null,
+    "Brust":null,
+    "Rückenlinie":null,
+    "Rückenlänge":null,
+    "Kruppe":null,
+    "Beinwinkelung":null,
+    "Beinstellung":null,
+    "Fesseln":null,
+    "Hufe":null,
+    "Besitzer":null
   },
   {
     "Name":"Point of me ~*Star*~",
-    "Farbgenetik":"",
-    "Kopf":"",
-    "Gebiss":"",
-    "Hals":"",
-    "Halsansatz":"",
-    "Widerrist":"",
-    "Schulter":"",
-    "Brust":"",
-    "Rückenlinie":"",
-    "Rückenlänge":"",
-    "Kruppe":"",
-    "Beinwinkelung":"",
-    "Beinstellung":"",
-    "Fesseln":"",
-    "Hufe":"",
-    "Besitzer":""
+    "Farbgenetik":null,
+    "Kopf":null,
+    "Gebiss":null,
+    "Hals":null,
+    "Halsansatz":null,
+    "Widerrist":null,
+    "Schulter":null,
+    "Brust":null,
+    "Rückenlinie":null,
+    "Rückenlänge":null,
+    "Kruppe":null,
+    "Beinwinkelung":null,
+    "Beinstellung":null,
+    "Fesseln":null,
+    "Hufe":null,
+    "Besitzer":null
   },
   {
     "Name":"Tariro °16.4° ~VL~",
-    "Farbgenetik":"",
-    "Kopf":"",
-    "Gebiss":"",
-    "Hals":"",
-    "Halsansatz":"",
-    "Widerrist":"",
-    "Schulter":"",
-    "Brust":"",
-    "Rückenlinie":"",
-    "Rückenlänge":"",
-    "Kruppe":"",
-    "Beinwinkelung":"",
-    "Beinstellung":"",
-    "Fesseln":"",
-    "Hufe":"",
-    "Besitzer":""
+    "Farbgenetik":null,
+    "Kopf":null,
+    "Gebiss":null,
+    "Hals":null,
+    "Halsansatz":null,
+    "Widerrist":null,
+    "Schulter":null,
+    "Brust":null,
+    "Rückenlinie":null,
+    "Rückenlänge":null,
+    "Kruppe":null,
+    "Beinwinkelung":null,
+    "Beinstellung":null,
+    "Fesseln":null,
+    "Hufe":null,
+    "Besitzer":null
   },
   {
     "Name":"YY Moonshine °Sol°",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"Hh Hh hh hh | hh hH HH Hh",
     "Gebiss":"hH Hh Hh Hh | hH hh Hh hh",
     "Hals":"hh hh Hh hH | hh Hh hh hh",
@@ -586,11 +586,11 @@
     "Beinstellung":"hH HH hH hh | hh hh hh hh",
     "Fesseln":"hh HH hH hh | hh hh Hh hh",
     "Hufe":"hH hh hH HH | hh hh hh hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"YY Quantum Leap °Sol°",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"hh HH hH hh | hh Hh hh hh",
     "Gebiss":"hH hh hH hh | hh hh HH hh",
     "Hals":"Hh HH hH hh | Hh hh hH HH",
@@ -605,11 +605,11 @@
     "Beinstellung":"HH HH HH Hh | hh hh hh hh",
     "Fesseln":"hh Hh Hh hH | hh hh hH Hh",
     "Hufe":"hh HH hh hH | Hh hH hh hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"YY Spaceman °Sol°",
-    "Farbgenetik":"",
+    "Farbgenetik":null,
     "Kopf":"Hh Hh hH hh | hh hH hh hh",
     "Gebiss":"Hh Hh hH Hh | HH Hh hh hh",
     "Hals":"Hh Hh hh hh | hh hh hh HH",
@@ -624,7 +624,7 @@
     "Beinstellung":"hh HH hh hH | Hh hh hh hh",
     "Fesseln":"hH HH hH HH | hh hh hh Hh",
     "Hufe":"Hh hh hh hh | hh hh hh hH",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"YY Winterfell °Sol°",
@@ -643,7 +643,7 @@
     "Beinstellung":"hh hh HH Hh | Hh hh hh hH",
     "Fesseln":"HH hh HH hH | hh hh hH hh",
     "Hufe":"hH hh hH HH | hH hh Hh hh",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"~~APH~~ Art Mirow -Cookie-",
@@ -662,7 +662,7 @@
     "Beinstellung":"Hh hh HH HH | HH hh hH hH",
     "Fesseln":"hh hH Hh hH | hh hh hh hh",
     "Hufe":"Hh hh hh hH | Hh HH hh hH",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"~~APH~~ Art Bela -Cookie-",
@@ -681,7 +681,7 @@
     "Beinstellung":"Hh hH Hh HH | Hh hH Hh hh",
     "Fesseln":"hH HH Hh Hh | hH hh hh hh",
     "Hufe":"hH hh hh hh | hh Hh hh HH",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"~B.H~ Old Bernsteinmeerengel",
@@ -700,7 +700,7 @@
     "Beinstellung":"hh HH Hh HH | hh hh Hh hh",
     "Fesseln":"Hh Hh hH hh | hh hH hh hh",
     "Hufe":"hH Hh Hh hh | hh hH HH HH",
-    "Besitzer":""
+    "Besitzer":null
   },
   {
     "Name":"~~APH~~ Danny -Cookie-",
@@ -719,6 +719,6 @@
     "Beinstellung":"Hh HH Hh hh | hh hH hh Hh",
     "Fesseln":"HH hH hh Hh | hH Hh hh hh",
     "Hufe":"hh hh Hh HH | hh hh hh HH",
-    "Besitzer":""
+    "Besitzer":null
   }
 ]
