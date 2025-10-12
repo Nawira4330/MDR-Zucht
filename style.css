@@ -1,78 +1,171 @@
+/* === Allgemeine Einstellungen === */
+:root {
+  --primary: #6b9d00;       /* Hauptfarbe (dunkles Blau) */
+  --primary-light: #5c6bc0;
+  --accent: #f0f8ff;        /* Akzent (Türkisgrün) */
+  --bg: #f5f7fb;
+  --text: #222;
+  --text-muted: #666;
+  --card-bg: #fff;
+  --border: #e0e3ea;
+  --radius: 12px;
+  --shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background: #f7f7f7;
+  font-family: "Inter", "Segoe UI", Roboto, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
   margin: 0;
   padding: 0;
-  color: #333;
+  line-height: 1.6;
 }
 
+/* === Kopfbereich === */
 header {
-  background: #2b3a55;
+  background: var(--primary);
   color: white;
-  padding: 1rem;
+  padding: 1rem 2rem;
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  box-shadow: var(--shadow);
 }
 
-h1 {
-  margin: 0 0 0.5rem 0;
+/* === Hauptinhalt === */
+main {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
 }
 
-.controls {
+/* === Filterbereich === */
+.filters {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.8rem;
   align-items: center;
-}
-
-select,
-button {
-  padding: 0.4rem 0.6rem;
-  border-radius: 5px;
-  border: none;
-}
-
-button {
-  background: #4b8bbe;
-  color: white;
-  cursor: pointer;
-}
-button:hover {
-  background: #3a6fa1;
-}
-
-main {
-  padding: 1rem 1.5rem;
-}
-
-.info {
-  background: #fff;
-  border-left: 5px solid #4b8bbe;
-  padding: 1rem;
+  gap: 1rem;
   margin-bottom: 1.5rem;
-  border-radius: 8px;
-  line-height: 1.5;
 }
 
-.warning {
-  color: #b60000;
-  font-weight: bold;
+.filters label {
+  font-weight: 600;
+  color: var(--text);
 }
 
-#ergebnis .match {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1rem;
-  padding: 1rem;
+select {
+  padding: 0.5rem 0.7rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: white;
+  font-size: 1rem;
+  min-width: 180px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(57, 73, 171, 0.25);
+  outline: none;
+}
+
+button {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  padding: 0.55rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+button:hover {
+  background: #00a890;
+  transform: translateY(-1px);
+}
+
+/* === Ergebnisbereich === */
+#ergebnis {
+  margin-top: 2rem;
+}
+
+.match {
+  background: #fafbff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow);
 }
 
 .match h3 {
-  margin: 0;
+  margin-top: 0;
+  color: var(--primary);
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.match p {
+  margin: 0.3rem 0;
+}
+
+.match p strong {
+  color: var(--text);
 }
 
 .match ol {
-  padding-left: 1.2rem;
+  margin: 0.6rem 0 0 1.2rem;
+  padding: 0;
 }
 
 .match li {
-  margin: 0.3rem 0;
+  margin-bottom: 0.4rem;
+  background: #ffffff;
+  border-left: 4px solid var(--primary-light);
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  transition: background 0.2s;
 }
+
+.match li:hover {
+  background: #eef1ff;
+}
+
+.match li strong {
+  color: var(--primary);
+}
+
+/* === Fußzeile === */
+.footer {
+  text-align: center;
+  margin-top: 2rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* === Responsiv === */
+@media (max-width: 768px) {
+  main {
+    padding: 1rem;
+    margin: 1rem;
+  }
+
+  .filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  select, button {
+    width: 100%;
+  }
+
+  .match {
+    padding: 1rem;
+  }
+}
+st
