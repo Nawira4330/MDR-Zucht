@@ -1,63 +1,78 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
-    color: #333;
-    margin: 0;
-    padding: 0;
+  font-family: Arial, sans-serif;
+  background: #f7f7f7;
+  margin: 0;
+  padding: 0;
+  color: #333;
 }
 
 header {
-    background-color: #2b3a55;
-    color: white;
-    padding: 1rem;
+  background: #2b3a55;
+  color: white;
+  padding: 1rem;
 }
 
 h1 {
-    margin: 0 0 10px 0;
+  margin: 0 0 0.5rem 0;
 }
 
 .controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: center;
 }
 
-select {
-    padding: 5px;
-    border-radius: 5px;
+select,
+button {
+  padding: 0.4rem 0.6rem;
+  border-radius: 5px;
+  border: none;
+}
+
+button {
+  background: #4b8bbe;
+  color: white;
+  cursor: pointer;
+}
+button:hover {
+  background: #3a6fa1;
 }
 
 main {
-    padding: 1.5rem;
+  padding: 1rem 1.5rem;
 }
 
 .info {
-    background: #ffffff;
-    border-left: 5px solid #4b8bbe;
-    padding: 1rem;
-    margin-bottom: 2rem;
-    border-radius: 8px;
-    line-height: 1.5;
+  background: #fff;
+  border-left: 5px solid #4b8bbe;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  line-height: 1.5;
 }
 
 .warning {
-    color: #b60000;
-    font-weight: bold;
+  color: #b60000;
+  font-weight: bold;
 }
 
-#hengstList {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
+#ergebnis .match {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+  padding: 1rem;
 }
 
-.hengst-card {
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+.match h3 {
+  margin: 0;
 }
 
-.hengst-card h3 {
-    margin-top: 0;
+.match ol {
+  padding-left: 1.2rem;
+}
+
+.match li {
+  margin: 0.3rem 0;
 }
