@@ -720,5 +720,24 @@
     "Fesseln":"HH hH hh Hh | hH Hh hh hh",
     "Hufe":"hh hh Hh HH | hh hh hh HH",
     "Besitzer":null
+  },
+  {
+    "Name":"YY Jupiter °Sol°",
+    "Farbgenetik":"pl, Ch, SBTO, Z",
+    "Kopf":"HH hh Hh Hh | Hh HH hh hh",
+    "Gebiss":"hH hh HH hH | Hh Hh Hh hh         ",
+    "Hals":"hh hH Hh Hh | hh hh HH hh",
+    "Halsansatz":"hh hh hh hH | hh hH Hh hh",
+    "Widerrist":"Hh hH HH HH | Hh hh Hh hh",
+    "Schulter":"hH hH HH HH | hh hh hh hh",
+    "Brust":"hH hH hH Hh | Hh Hh Hh hh",
+    "Rückenlinie":"hH hh hh HH | hh hh hh hH",
+    "Rückenlänge":"hh Hh hh Hh | HH hh hh hH",
+    "Kruppe":"hH hh hH hh | hh hh hh Hh",
+    "Beinwinkelung":"hH hh hh Hh | hh hh hh hH",
+    "Beinstellung":"hh Hh hh Hh | hH hH Hh hH",
+    "Fesseln":"hh hh hH hH | hh Hh Hh hh",
+    "Hufe":"hh hh hh hh | hH hh hh hh",
+    "Besitzer":"Solari"
   }
 ]
