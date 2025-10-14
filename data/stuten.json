@@ -187,7 +187,7 @@
     "Beinstellung":"hh Hh HH HH | hh hH hh hH",
     "Fesseln":"hH HH hh Hh | hh hh Hh hH",
     "Hufe":"Hh hH HH hh | Hh hh hh hh",
-    "Besitzer":"Nawira13"
+    "Besitzer":"ElitaOne"
   },
   {
     "Name":"Fauxpas ~*Star*~",
@@ -283,5 +283,24 @@
     "Fesseln":"hh hh Hh hH | Hh Hh hh hh",
     "Hufe":"Hh Hh Hh hH | hh hh hh hh",
     "Besitzer":"MaikiTaiki "
+  },
+  {
+    "Name":"APHs Tahnee ~Lii~",
+    "Farbgenetik":null,
+    "Kopf":"HH hH Hh Hh | Hh HH HH hh",
+    "Gebiss":"hh Hh hH hH | hH hh hh hh",
+    "Hals":"hh hh hh hh | Hh hh HH HH",
+    "Halsansatz":"Hh Hh hh hh | Hh hh hh hh",
+    "Widerrist":"HH hh Hh HH | hh hh hh Hh",
+    "Schulter":"HH hh hH hH | hh hH HH hh",
+    "Brust":"hH hh Hh Hh | Hh Hh hH hH",
+    "Rückenlinie":"\thh hH hh HH | hh hh hh hH",
+    "Rückenlänge":"\thh HH HH hh | hH Hh hh hh",
+    "Kruppe":"HH hH HH Hh | hh hh Hh Hh",
+    "Beinwinkelung":"hh Hh hH Hh | Hh hh hh hh",
+    "Beinstellung":"\thh HH Hh hh | hh hh hh hh",
+    "Fesseln":"Hh hH Hh Hh | hh hH hH hh",
+    "Hufe":"\thh hh hH hH | hH HH hh hh",
+    "Besitzer":"ElitaOne"
   }
 ]
