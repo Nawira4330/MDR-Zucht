@@ -54,37 +54,70 @@ function fuelleDropdowns(){
   });
 }
 
-// 🧬 Scoring nach perfekter Logik
+// ------------------------------------------------------
+// 🧬 Berechnet den genetischen Score für eine Stute/Hengst-Kombination
+// ------------------------------------------------------
 function scorePair(stute, hengst) {
-  const vorne = ["Kopf", "Gebiss", "Hals", "Halsansatz"];
-  const hinten = [
-    "Widerrist","Schulter","Brust","Rückenlinie","Rückenlänge",
-    "Kruppe","Beinwinkelung","Beinstellung","Fesseln","Hufe"
-  ];
+  let totalScore = 0;
 
-  function punkte(sVal, hVal, istVorne) {
-    if(!sVal || !hVal) return 0;
-    sVal = sVal.trim(); hVal = hVal.trim();
-    const key = sVal + hVal;
+  for (const merkmal of MERKMALE) {
+    const sGen = (stute[merkmal] || "").trim();
+    const hGen = (hengst[merkmal] || "").trim();
+    if (!sGen || !hGen) continue;
 
-    const matrixVorne = {
-      "HHHH":4, "HHHh":3, "HHhh":2,
-      "HhHH":3, "HhHh":2, "Hhhh":1,
-      "hhHH":2, "hhHh":1, "hhhh":0
-    };
-    const matrixHinten = {
-      "HHHH":0, "HHHh":1, "HHhh":2,
-      "HhHH":1, "HhHh":2, "Hhhh":3,
-      "hhHH":2, "hhHh":3, "hhhh":4
-    };
-    return istVorne ? (matrixVorne[key] ?? 0) : (matrixHinten[key] ?? 0);
+    const [sVorneStr, sHintenStr] = sGen.split('|').map(x => x.trim());
+    const [hVorneStr, hHintenStr] = hGen.split('|').map(x => x.trim());
+
+    const sVorne = sVorneStr ? sVorneStr.split(/\s+/) : [];
+    const sHinten = sHintenStr ? sHintenStr.split(/\s+/) : [];
+    const hVorne = hVorneStr ? hVorneStr.split(/\s+/) : [];
+    const hHinten = hHintenStr ? hHintenStr.split(/\s+/) : [];
+
+    // Für jede Position vorne (HH-Ziel)
+    for (let i = 0; i < sVorne.length; i++) {
+      totalScore += getFrontScore(cleanGenValue(sVorne[i]), cleanGenValue(hVorne[i]));
+    }
+
+    // Für jede Position hinten (hh-Ziel)
+    for (let i = 0; i < sHinten.length; i++) {
+      totalScore += getBackScore(cleanGenValue(sHinten[i]), cleanGenValue(hHinten[i]));
+    }
   }
 
-  let score = 0;
-  vorne.forEach(m => score += punkte(stute[m], hengst[m], true));
-  hinten.forEach(m => score += punkte(stute[m], hengst[m], false));
-  return score;
+  return totalScore;
 }
+
+// ------------------------------------------------------
+// Scoring-Regeln laut deiner Tabelle
+// ------------------------------------------------------
+function getFrontScore(s, h) {
+  const combos = {
+    "HHHH": 4, "HHHh": 3, "HHhh": 2,
+    "HhHH": 3, "HhHh": 2, "Hhhh": 1,
+    "hhHH": 2, "hhHh": 1, "hhhh": 0
+  };
+  return combos[s + h] ?? 0;
+}
+
+function getBackScore(s, h) {
+  const combos = {
+    "HHHH": 0, "HHHh": 1, "HHhh": 2,
+    "HhHH": 1, "HhHh": 2, "Hhhh": 3,
+    "hhHH": 2, "hhHh": 3, "hhhh": 4
+  };
+  return combos[s + h] ?? 0;
+}
+
+// Hilfsfunktion: Normalisiert Schreibweise (Hh, hH → Hh)
+function cleanGenValue(v) {
+  if (!v) return "";
+  const sorted = v.split("").sort().join("");
+  if (sorted === "HH") return "HH";
+  if (sorted === "Hh") return "Hh";
+  if (sorted === "hh") return "hh";
+  return v;
+}
+
 
 function createTop3Html(stute){
   const name = pickName(stute);
