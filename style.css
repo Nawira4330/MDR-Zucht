@@ -11,18 +11,6 @@ header {
   color: white;
   padding: 15px;
   text-align: center;
-  position: relative;
-}
-
-#infoButton {
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  font-size: 22px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: white;
 }
 
 main {
@@ -31,6 +19,7 @@ main {
   padding: 10px;
 }
 
+/* Filter */
 .filter {
   display: flex;
   flex-wrap: wrap;
@@ -52,55 +41,9 @@ button {
   cursor: pointer;
   transition: 0.2s;
 }
+button:hover { background: #558000; }
 
-button:hover {
-  background: #558000;
-}
-
-.match {
-  background: white;
-  border: 1px solid #6b9d00;
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.match h3 {
-  color: #6b9d00;
-}
-
-.match ol {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-.match li::before {
-  content: "• ";
-  color: #6b9d00;
-  font-weight: bold;
-}
-
-/* Debug */
-.debug-icon {
-  float: right;
-  cursor: pointer;
-  color: #99ccff;
-  font-size: 18px;
-}
-.debug-content {
-  display: none;
-  background: #eef9ff;
-  border: 1px dashed #99ccff;
-  margin-top: 10px;
-  padding: 8px;
-  font-size: 13px;
-}
-.debug-content.show {
-  display: block;
-}
-
-/* Tabs */
+/* Infofenster */
 .info-tabs {
   background: #f8fcff;
   border: 2px solid #6b9d00;
@@ -110,14 +53,11 @@ button:hover {
   max-width: 900px;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
-.hidden { display: none; }
-
 .tab-buttons {
   display: flex;
   gap: 10px;
   margin-bottom: 10px;
 }
-
 .tab-button {
   flex: 1;
   background-color: #d0ecff;
@@ -128,12 +68,10 @@ button:hover {
   font-weight: bold;
   color: #004c70;
 }
-
 .tab-button.active {
   background-color: #6b9d00;
   color: white;
 }
-
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
@@ -145,6 +83,41 @@ button:hover {
   margin-top: 10px;
   border-radius: 6px;
 }
+
+/* Ergebnis */
+.match {
+  background: white;
+  border: 1px solid #6b9d00;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.match h3 { color: #6b9d00; }
+
+.match ol { list-style: none; padding: 0; }
+
+.match li {
+  padding: 5px 0;
+  border-bottom: 1px dashed #ccc;
+}
+
+.info-icon {
+  color: #6b9d00;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.debug-content {
+  display: none;
+  background: #eef9ff;
+  border: 1px dashed #99ccff;
+  margin-top: 5px;
+  padding: 8px;
+  font-size: 13px;
+  border-radius: 6px;
+}
+.debug-content.show { display: block; }
 
 .score-table {
   width: 100%;
