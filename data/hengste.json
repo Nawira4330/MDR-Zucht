@@ -1,7 +1,7 @@
 [
   {
     "Name":"(E) Diablo von Sora",
-    "Farbgenetik":null,
+    "Farbgenetik":"D RnSPL Sty",
     "Kopf":"HH HH hH hH | hh HH hh hh",
     "Gebiss":"HH Hh Hh hh | hh hh hh HH",
     "Hals":"hh hH hh Hh | hH HH hh Hh",
@@ -16,7 +16,7 @@
     "Beinstellung":"hh HH HH Hh | Hh hh hH hh",
     "Fesseln":"Hh Hh hh HH | hh HH hH hh",
     "Hufe":"HH hh hH hh | hH hh hh hh",
-    "Besitzer":null
+    "Besitzer":"Ice"
   },
   {
     "Name":"Mexico °16.4° ~VL~",
@@ -58,7 +58,7 @@
   },
   {
     "Name":"*Iced* Archer ~W~",
-    "Farbgenetik":null,
+    "Farbgenetik":"D pl TOSB",
     "Kopf":"Hh hh hH HH | hH hh hh Hh",
     "Gebiss":"hh hH Hh Hh | hh hh Hh hh",
     "Hals":"hh Hh hh hh | hH hh hh Hh",
@@ -73,11 +73,11 @@
     "Beinstellung":"hh hh Hh Hh | hh hh Hh hh",
     "Fesseln":"hh Hh HH hh | hh hh hh Hh",
     "Hufe":"hh hh hh Hh | Hh hH hh hH",
-    "Besitzer":null
+    "Besitzer":"Ice"
   },
   {
     "Name":"*Iced* Cool Code ~W~",
-    "Farbgenetik":null,
+    "Farbgenetik":"pl SPL fl",
     "Kopf":"hh hH Hh Hh | hh Hh hh Hh",
     "Gebiss":"Hh hH Hh Hh | hh Hh hh hh",
     "Hals":"hh hh Hh hh | Hh hh Hh Hh",
@@ -92,11 +92,11 @@
     "Beinstellung":"hH HH hh Hh | hh hh hh hh",
     "Fesseln":"hH hh Hh Hh | hh hh hh hh",
     "Hufe":"Hh Hh HH hh | hH hH hh hh",
-    "Besitzer":null
+    "Besitzer":"Ice"
   },
   {
     "Name":"*Iced* Honey Day ~W~",
-    "Farbgenetik":null,
+    "Farbgenetik":"pl TO flfl",
     "Kopf":"HH hh Hh Hh | Hh hh hh Hh",
     "Gebiss":"hH hh hH hH | Hh hH hh hH",
     "Hals":"hh Hh hh Hh | Hh hH Hh hH",
@@ -111,11 +111,11 @@
     "Beinstellung":"hh hh HH HH | hh hh hh hh",
     "Fesseln":"hh hH hh hh | hh hh hh HH",
     "Hufe":"Hh hH HH hH | hH HH Hh Hh",
-    "Besitzer":null
+    "Besitzer":"Ice"
   },
   {
     "Name":"*Iced* Otherwise ZD ~W~",
-    "Farbgenetik":null,
+    "Farbgenetik":"DD SB Ra ZZ",
     "Kopf":"Hh Hh Hh hh | hh hh hH Hh",
     "Gebiss":"HH hH hh hh | hh hH Hh hh",
     "Hals":"Hh Hh Hh Hh | hh hh HH hh",
@@ -130,7 +130,7 @@
     "Beinstellung":"hH hh HH Hh | Hh hh hh hh",
     "Fesseln":"hH HH hh hh | hh hh hh hh",
     "Hufe":"Hh HH hh hH | hh Hh hh hh",
-    "Besitzer":null
+    "Besitzer":"Ice"
   },
   {
     "Name":"*Iced* Vallari ~W~",
@@ -853,5 +853,24 @@
     "Fesseln":"Hh HH HH HH | HH hh hh Hh",
     "Hufe":"hH hh hh hh | hh hh HH hH",
     "Besitzer":"Victoria Leclerc"
+  },
+  {
+    "Name":"*Iced* Dynfaxi ~W~",
+    "Farbgenetik":"Cr RnSB Z Sty",
+    "Kopf":null,
+    "Gebiss":null,
+    "Hals":null,
+    "Halsansatz":null,
+    "Widerrist":null,
+    "Schulter":null,
+    "Brust":null,
+    "Rückenlinie":null,
+    "Rückenlänge":null,
+    "Kruppe":null,
+    "Beinwinkelung":null,
+    "Beinstellung":null,
+    "Fesseln":null,
+    "Hufe":null,
+    "Besitzer":null
   }
 ]
