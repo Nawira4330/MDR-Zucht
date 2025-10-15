@@ -34,9 +34,12 @@ function fuelleDropdowns(){
     const opt=document.createElement('option');
     opt.value=o; opt.textContent=o; selB.appendChild(opt);
   });
+
+  // automatische Anzeige bei Auswahl
+  selS.addEventListener('change',zeigeVorschlaege);
+  selB.addEventListener('change',zeigeVorschlaege);
 }
 
-// --- genetisches Scoring ---
 function parseGene(str){
   return str.split("|").map(x=>x.trim().split(" "));
 }
@@ -72,14 +75,22 @@ function createTop3Html(stute){
     return {...h,score:sc.score,details:sc.details};
   }).sort((a,b)=>b.score-a.score).slice(0,3);
 
-  let html=`<div class="match"><h3>${name} — Besitzer: ${owner}<span class="debug-icon" onclick="this.nextElementSibling.classList.toggle('show')">🔍</span></h3>
+  let html=`<div class="match"><h3>${name} — Besitzer: ${owner}</h3>
   <p>Farbgenetik Stute: ${color}</p><ol>`;
   result.forEach((r,i)=>{
-    html+=`<li>${i+1}. Wahl: <b>${pickName(r)}</b> | Farbe: ${pickColor(r)} | Score: ${r.score}</li>`;
-    html+=`<div class="debug-content">${r.details.join("<br>")}</div>`;
+    const id=`debug-${name.replace(/\s/g,'')}-${i}`;
+    html+=`
+      <li>${i+1}. Wahl: <b>${pickName(r)}</b> | Farbe: ${pickColor(r)} | Score: ${r.score}
+        <span class="info-icon" title="Details anzeigen" onclick="toggleDebug('${id}')">ℹ️</span>
+      </li>
+      <div id="${id}" class="debug-content">${r.details.join("<br>")}</div>`;
   });
   html+=`</ol></div>`;
   return html;
+}
+
+function toggleDebug(id){
+  document.getElementById(id).classList.toggle('show');
 }
 
 function zeigeVorschlaege(){
@@ -98,13 +109,12 @@ function zeigeAlle(){
   zeigeVorschlaege();
 }
 
-// Tabs + Infofenster
+// Tabs
 function openTab(evt,id){
   document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
   document.querySelectorAll('.tab-button').forEach(b=>b.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   evt.currentTarget.classList.add('active');
 }
-document.getElementById('infoButton').addEventListener('click',()=>document.getElementById('infoBox').classList.toggle('hidden'));
 
 window.addEventListener('DOMContentLoaded',ladeDaten);
