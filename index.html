@@ -9,18 +9,17 @@
 <body>
   <header>
     <h1>Paarungsanalyse – Exterieur-Matching</h1>
-    <button id="infoButton" title="Infos anzeigen">ℹ️</button>
   </header>
 
-  <!-- Infofenster mit Tabs -->
-  <div id="infoBox" class="info-tabs hidden">
+  <!-- Infofenster IMMER SICHTBAR -->
+  <div id="infoBox" class="info-tabs">
     <div class="tab-buttons">
-      <button class="tab-button active" onclick="openTab(event, 'berechnung')">Hengst-Berechnung</button>
-      <button class="tab-button" onclick="openTab(event, 'score')">Score-Erklärung</button>
+      <button class="tab-button active" onclick="openTab(event, 'berechnung')">Berechnung</button>
+      <button class="tab-button" onclick="openTab(event, 'score')">Score</button>
     </div>
 
     <div id="berechnung" class="tab-content active">
-      <h3>🧬Berechnung des passenden Hengstes</h3>
+      <h3>Berechnung des passenden Hengstes</h3>
       <p>
         Für jede Stute werden die genetischen Werte mit denen aller Hengste verglichen.
         Ziel ist ein Fohlen mit dem Idealprofil:
@@ -29,10 +28,9 @@
       <p>
         Die vorderen vier Genpaare („vorne“) sollen möglichst <strong>HH</strong> ergeben,
         die hinteren vier („hinten“) möglichst <strong>hh</strong>.
-        So werden die Stärken der Stute unterstützt und die Schwächen ausgeglichen.
       </p>
       <div class="warning">
-        ⚠️ Hinweis: Inzucht und doppelte Vererbung des Overo-Gens werden aktuell <strong>nicht</strong> berücksichtigt!
+        Hinweis: Inzucht und doppelte Vererbung des Overo-Gens werden aktuell <strong>nicht</strong> berücksichtigt!
       </div>
     </div>
 
@@ -40,7 +38,7 @@
       <h3>Erklärung des Scores</h3>
       <p>
         Jede Anpaarung erhält einen <strong>Score</strong>, der zeigt, wie gut Hengst und Stute genetisch harmonieren.
-        Der Wert ergibt sich aus den Gen-Kombinationen in 14 Merkmalen:
+        Der Wert ergibt sich aus 14 Merkmalen:
       </p>
 
       <table class="score-table">
@@ -63,10 +61,7 @@
         </tbody>
       </table>
 
-      <p>
-        Pro Merkmal sind bis zu <strong>32 Punkte</strong> möglich (8 Paare × 4 Punkte).  
-        Bei 14 Merkmalen beträgt der <strong>Maximal-Score 448</strong>.
-      </p>
+      <p>Maximaler Gesamtscore: <strong>448 Punkte</strong>.</p>
     </div>
   </div>
 
@@ -78,7 +73,6 @@
       <label>Besitzer:</label>
       <select id="besitzerSelect"></select>
 
-      <button onclick="zeigeVorschlaege()">🔍 Anzeigen</button>
       <button onclick="zeigeAlle()">📋 Alle</button>
     </section>
 
@@ -86,7 +80,7 @@
   </main>
 
   <footer>
-    <p>©  2025 MDR-Zucht | Entwickelt mit ❤️ für die Zuchtplanung<</p>
+    <p>© 2025 MDR-Zucht | Entwickelt mit ❤️ für die Zuchtplanung<</p>
   </footer>
 </body>
 </html>
