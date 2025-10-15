@@ -2,63 +2,91 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Paarungsanalyse – Exterieur-Matching</title>
   <link rel="stylesheet" href="style.css">
+  <script defer src="app.js"></script>
 </head>
 <body>
   <header>
     <h1>Paarungsanalyse – Exterieur-Matching</h1>
-    <p>Wähle eine Stute oder einen Besitzer, um passende Hengste zu finden.</p>
+    <button id="infoButton" title="Infos anzeigen">ℹ️</button>
   </header>
 
-  <section id="auswahl">
-    <div class="select-container">
-      <label for="stuteSelect">Stute:</label>
-      <select id="stuteSelect">
-        <option value="">-- bitte wählen --</option>
-      </select>
+  <!-- Infofenster mit Tabs -->
+  <div id="infoBox" class="info-tabs hidden">
+    <div class="tab-buttons">
+      <button class="tab-button active" onclick="openTab(event, 'berechnung')">Hengst-Berechnung</button>
+      <button class="tab-button" onclick="openTab(event, 'score')">Score-Erklärung</button>
     </div>
-    <div class="select-container">
-      <label for="besitzerSelect">Besitzer:</label>
-      <select id="besitzerSelect">
-        <option value="">-- bitte wählen --</option>
-      </select>
-    </div>
-    <button onclick="zeigeVorschlaege()">Vorschläge anzeigen</button>
-    <button onclick="zeigeAlle()">Alle anzeigen</button>
-  </section>
 
-  <section id="infoBox">
-    <h2>ℹ️ Wie wird der beste Hengst berechnet?</h2>
-    <p>Das Ziel ist ein Fohlen mit der idealen genetischen Kombination:</p>
-    <p class="ideal">HH HH HH HH hh hh hh hh</p>
-    <p>
-      Die vorderen Merkmale (Kopf bis Halsansatz) sollen <strong>stark (HH)</strong> bleiben oder verbessert werden,
-      die hinteren Merkmale (Widerrist bis Hufe) sollen <strong>weich (hh)</strong> unterstützt werden.
-    </p>
-    <h3>Beispiel:</h3>
-    <table>
-      <tr><th>Merkmal</th><th>Stute</th><th>Hengst</th><th>Bewertung</th><th>Punkte</th></tr>
-      <tr><td>Kopf (vorne)</td><td>HH</td><td>HH</td><td>unterstützt Stärke</td><td>4</td></tr>
-      <tr><td>Hals</td><td>Hh</td><td>HH</td><td>stärkt Richtung Ideal</td><td>3</td></tr>
-      <tr><td>Rückenlinie</td><td>Hh</td><td>hh</td><td>balanciert gut aus</td><td>3</td></tr>
-      <tr><td>Hufe</td><td>hh</td><td>hh</td><td>perfekt</td><td>4</td></tr>
-    </table>
-    <p><strong>Je höher der Score (maximalwert ≈ 56), desto besser passt der Hengst.</strong></p>
-    <div class="warnung">
-      ⚠️ Wichtiger Hinweis: Diese Berechnung berücksichtigt weder mögliche Inzucht
-      noch doppelte Vererbung des <strong>Overo-Gens</strong>.
-      Bitte prüfe genetische Risiken immer separat!
+    <div id="berechnung" class="tab-content active">
+      <h3>🧬Berechnung des passenden Hengstes</h3>
+      <p>
+        Für jede Stute werden die genetischen Werte mit denen aller Hengste verglichen.
+        Ziel ist ein Fohlen mit dem Idealprofil:
+        <strong>HH HH HH HH hh hh hh hh</strong>.
+      </p>
+      <p>
+        Die vorderen vier Genpaare („vorne“) sollen möglichst <strong>HH</strong> ergeben,
+        die hinteren vier („hinten“) möglichst <strong>hh</strong>.
+        So werden die Stärken der Stute unterstützt und die Schwächen ausgeglichen.
+      </p>
+      <div class="warning">
+        ⚠️ Hinweis: Inzucht und doppelte Vererbung des Overo-Gens werden aktuell <strong>nicht</strong> berücksichtigt!
+      </div>
     </div>
-  </section>
 
-  <main id="ergebnis"></main>
+    <div id="score" class="tab-content">
+      <h3>Erklärung des Scores</h3>
+      <p>
+        Jede Anpaarung erhält einen <strong>Score</strong>, der zeigt, wie gut Hengst und Stute genetisch harmonieren.
+        Der Wert ergibt sich aus den Gen-Kombinationen in 14 Merkmalen:
+      </p>
+
+      <table class="score-table">
+        <thead>
+          <tr>
+            <th>Kombination (vorne)</th><th>Punkte</th>
+            <th>Kombination (hinten)</th><th>Punkte</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>HH × HH</td><td>4</td><td>hh × hh</td><td>4</td></tr>
+          <tr><td>HH × Hh</td><td>3</td><td>hh × Hh</td><td>3</td></tr>
+          <tr><td>HH × hh</td><td>2</td><td>hh × HH</td><td>2</td></tr>
+          <tr><td>Hh × HH</td><td>3</td><td>Hh × hh</td><td>3</td></tr>
+          <tr><td>Hh × Hh</td><td>2</td><td>Hh × Hh</td><td>2</td></tr>
+          <tr><td>Hh × hh</td><td>1</td><td>Hh × HH</td><td>1</td></tr>
+          <tr><td>hh × HH</td><td>2</td><td>HH × hh</td><td>2</td></tr>
+          <tr><td>hh × Hh</td><td>1</td><td>HH × Hh</td><td>1</td></tr>
+          <tr><td>hh × hh</td><td>0</td><td>HH × HH</td><td>0</td></tr>
+        </tbody>
+      </table>
+
+      <p>
+        Pro Merkmal sind bis zu <strong>32 Punkte</strong> möglich (8 Paare × 4 Punkte).  
+        Bei 14 Merkmalen beträgt der <strong>Maximal-Score 448</strong>.
+      </p>
+    </div>
+  </div>
+
+  <main>
+    <section class="filter">
+      <label>Stute:</label>
+      <select id="stuteSelect"></select>
+
+      <label>Besitzer:</label>
+      <select id="besitzerSelect"></select>
+
+      <button onclick="zeigeVorschlaege()">🔍 Anzeigen</button>
+      <button onclick="zeigeAlle()">📋 Alle</button>
+    </section>
+
+    <section id="ergebnis"></section>
+  </main>
 
   <footer>
     <p>©  2025 MDR-Zucht | Entwickelt mit ❤️ für die Zuchtplanung<</p>
   </footer>
-
-  <script src="app.js"></script>
 </body>
 </html>
