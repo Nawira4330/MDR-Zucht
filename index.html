@@ -3,60 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MDR-Zucht – Anpaarungsvorschläge</title>
+  <title>Paarungsanalyse – Exterieur-Matching</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>MDR-Zucht – Anpaarungsvorschläge</h1>
+    <h1>Paarungsanalyse – Exterieur-Matching</h1>
+    <p>Wähle eine Stute oder einen Besitzer, um passende Hengste zu finden.</p>
   </header>
 
-  <main>
-    <section class="info">
-      <h2>Informationen zur Berechnung</h2>
- <p>
-  Jede Stute und jeder Hengst haben genetische Merkmale (z. B. Kopf, Hals, Rücken usw.), 
-  die mit <strong>HH</strong>, <strong>Hh</strong> oder <strong>hh</strong> angegeben werden. 
-  Ziel ist eine gesunde, ausgewogene Kombination für das Fohlen: 
-  <strong>HH HH HH HH hh hh hh hh</strong>.
-</p>
-<p>
-  Für jedes Merkmal werden Punkte vergeben:
-</p>
-<ul>
-  <li><strong>3 Punkte</strong> → stabil (HH=HH, hh=hh oder Hh=Hh)</li>
-  <li><strong>2 Punkte</strong> → guter Ausgleich (z. B. HH + hh oder Hh + HH)</li>
-  <li><strong>0 Punkte</strong> → kein verwertbarer Abgleich</li>
-</ul>
-<p>
-  Die Summe ergibt den <strong>Gesamtscore</strong>. Je höher der Score, desto besser passt der Hengst zur Stute.
-</p>
-      <div class="warnbox">
-        <strong>Wichtiger Hinweis:</strong> 
-        Diese Berechnung berücksichtigt weder Inzucht noch Doppelvererbung 
-        des Overo-Gens. Diese genetischen Risiken müssen bei der Zuchtentscheidung 
-        zusätzlich beachtet werden.
-      </div>
-    </section>
+  <section id="auswahl">
+    <div class="select-container">
+      <label for="stuteSelect">Stute:</label>
+      <select id="stuteSelect">
+        <option value="">-- bitte wählen --</option>
+      </select>
+    </div>
+    <div class="select-container">
+      <label for="besitzerSelect">Besitzer:</label>
+      <select id="besitzerSelect">
+        <option value="">-- bitte wählen --</option>
+      </select>
+    </div>
+    <button onclick="zeigeVorschlaege()">Vorschläge anzeigen</button>
+    <button onclick="zeigeAlle()">Alle anzeigen</button>
+  </section>
 
-    <section class="filters">
-      <label for="stuteSelect">Stute wählen:</label>
-      <select id="stuteSelect"></select>
+  <section id="infoBox">
+    <h2>ℹ️ Wie wird der beste Hengst berechnet?</h2>
+    <p>Das Ziel ist ein Fohlen mit der idealen genetischen Kombination:</p>
+    <p class="ideal">HH HH HH HH hh hh hh hh</p>
+    <p>
+      Die vorderen Merkmale (Kopf bis Halsansatz) sollen <strong>stark (HH)</strong> bleiben oder verbessert werden,
+      die hinteren Merkmale (Widerrist bis Hufe) sollen <strong>weich (hh)</strong> unterstützt werden.
+    </p>
+    <h3>Beispiel:</h3>
+    <table>
+      <tr><th>Merkmal</th><th>Stute</th><th>Hengst</th><th>Bewertung</th><th>Punkte</th></tr>
+      <tr><td>Kopf (vorne)</td><td>HH</td><td>HH</td><td>unterstützt Stärke</td><td>4</td></tr>
+      <tr><td>Hals</td><td>Hh</td><td>HH</td><td>stärkt Richtung Ideal</td><td>3</td></tr>
+      <tr><td>Rückenlinie</td><td>Hh</td><td>hh</td><td>balanciert gut aus</td><td>3</td></tr>
+      <tr><td>Hufe</td><td>hh</td><td>hh</td><td>perfekt</td><td>4</td></tr>
+    </table>
+    <p><strong>Je höher der Score (maximalwert ≈ 56), desto besser passt der Hengst.</strong></p>
+    <div class="warnung">
+      ⚠️ Wichtiger Hinweis: Diese Berechnung berücksichtigt weder mögliche Inzucht
+      noch doppelte Vererbung des <strong>Overo-Gens</strong>.
+      Bitte prüfe genetische Risiken immer separat!
+    </div>
+  </section>
 
-      <label for="besitzerSelect">Besitzer wählen:</label>
-      <select id="besitzerSelect"></select>
+  <main id="ergebnis"></main>
 
-      <button onclick="zeigeVorschlaege()">Vorschläge anzeigen</button>
-      <button onclick="zeigeAlle()">Alle anzeigen</button>
-    </section>
-
-    <section id="ergebnis">
-      <p>Bitte eine Stute oder einen Besitzer auswählen, um passende Hengste zu sehen.</p>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <p>&copy; 2025 MDR-Zucht | Entwickelt mit ❤️ für die Zuchtplanung</p>
+  <footer>
+    <p>©  2025 MDR-Zucht | Entwickelt mit ❤️ für die Zuchtplanung<</p>
   </footer>
 
   <script src="app.js"></script>
