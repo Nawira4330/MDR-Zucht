@@ -1,241 +1,110 @@
 let stuten = [];
 let hengste = [];
 
-const NAME_KEYS = ["Name", "Stutenname", "Stute", "name"];
-const OWNER_KEYS = ["Besitzer", "Owner", "besitzer", "owner"];
-const COLOR_KEYS = ["Farbgenetik", "Farbe", "FarbGenetik", "color", "Genetik"];
+const NAME_KEYS = ["Name","Stutenname","Stute","name"];
+const OWNER_KEYS = ["Besitzer","Owner","besitzer","owner"];
+const COLOR_KEYS = ["Farbgenetik","Farbe","color","Genetik"];
+const MERKMALE = ["Kopf","Gebiss","Hals","Halsansatz","Widerrist","Schulter","Brust",
+  "Rückenlinie","Rückenlänge","Kruppe","Beinwinkelung","Beinstellung","Fesseln","Hufe"];
 
-const MERKMALE = [
-  "Kopf","Gebiss","Hals","Halsansatz",
-  "Widerrist","Schulter","Brust","Rückenlinie",
-  "Rückenlänge","Kruppe","Beinwinkelung","Beinstellung","Fesseln","Hufe"
-];
-
-function pickField(obj, keys){
-  for(const k of keys) if(obj && k in obj && obj[k] !== "") return obj[k];
-  return "";
-}
-function pickName(obj){ return pickField(obj, NAME_KEYS) || "(ohne Name)"; }
-function pickOwner(obj){ return pickField(obj, OWNER_KEYS) || "(kein Besitzer)"; }
-function pickColor(obj){ return pickField(obj, COLOR_KEYS) || ""; }
+function pickField(o,keys){ for(const k of keys) if(o[k]) return o[k]; return ""; }
+function pickName(o){ return pickField(o,NAME_KEYS)||"(ohne Name)"; }
+function pickOwner(o){ return pickField(o,OWNER_KEYS)||"(kein Besitzer)"; }
+function pickColor(o){ return pickField(o,COLOR_KEYS)||""; }
 
 async function ladeDaten(){
-  try {
-    const s = await fetch('data/stuten.json').then(r => r.json());
-    const h = await fetch('data/hengste.json').then(r => r.json());
-    stuten = Array.isArray(s) ? s : [];
-    hengste = Array.isArray(h) ? h : [];
+  try{
+    const s = await fetch('data/stuten.json').then(r=>r.json());
+    const h = await fetch('data/hengste.json').then(r=>r.json());
+    stuten = s; hengste = h;
     fuelleDropdowns();
-  } catch(e){
-    console.error("Fehler beim Laden:", e);
-    document.getElementById('ergebnis').innerHTML = `<p style="color:red">Fehler beim Laden der Daten.</p>`;
-  }
+  }catch(e){ console.error(e); }
 }
 
 function fuelleDropdowns(){
-  const stuteSel = document.getElementById('stuteSelect');
-  const besitzerSel = document.getElementById('besitzerSelect');
-  stuteSel.innerHTML = '<option value="">-- bitte wählen --</option>';
-  besitzerSel.innerHTML = '<option value="">-- bitte wählen --</option>';
-
-  stuten.forEach((s, i) => {
-    const opt = document.createElement('option');
-    opt.value = i;
-    opt.textContent = pickName(s);
-    stuteSel.appendChild(opt);
+  const selS=document.getElementById('stuteSelect');
+  const selB=document.getElementById('besitzerSelect');
+  selS.innerHTML='<option value="">-- bitte wählen --</option>';
+  selB.innerHTML='<option value="">-- bitte wählen --</option>';
+  stuten.forEach((s,i)=>{
+    const opt=document.createElement('option');
+    opt.value=i; opt.textContent=pickName(s); selS.appendChild(opt);
   });
-
-  const owners = [...new Set(stuten.map(s => pickOwner(s)))].filter(o => o && o !== "(kein Besitzer)");
-  owners.forEach(o => {
-    const opt = document.createElement('option');
-    opt.value = o;
-    opt.textContent = o;
-    besitzerSel.appendChild(opt);
+  [...new Set(stuten.map(s=>pickOwner(s)))].forEach(o=>{
+    const opt=document.createElement('option');
+    opt.value=o; opt.textContent=o; selB.appendChild(opt);
   });
 }
 
-// ------------------------------------------------------
-// 🧬 Berechnet den genetischen Score für eine Stute/Hengst-Kombination
-//     und liefert zusätzlich eine Debug-Ausgabe pro Merkmal.
-// ------------------------------------------------------
-function scorePair(stute, hengst) {
-  let totalScore = 0;
-  let debug = [];
+// --- genetisches Scoring ---
+function parseGene(str){
+  return str.split("|").map(x=>x.trim().split(" "));
+}
 
-  for (const merkmal of MERKMALE) {
-    const sGen = (stute[merkmal] || "").trim();
-    const hGen = (hengst[merkmal] || "").trim();
-    if (!sGen || !hGen) continue;
+function bewertung(vorne,hinten){
+  const mapV={ "HHHH":4,"HHHh":3,"HHhh":2,"HhHH":3,"HhHh":2,"Hhhh":1,"hhHH":2,"hhHh":1,"hhhh":0 };
+  const mapH={ "HHHH":0,"HHHh":1,"HHhh":2,"HhHH":1,"HhHh":2,"Hhhh":3,"hhHH":2,"hhHh":3,"hhhh":4 };
+  let s=0;
+  for(let i=0;i<4;i++) s+= mapV[vorne[i]+hinten[i]]||0;
+  for(let i=4;i<8;i++) s+= mapH[vorne[i-4]+hinten[i-4]]||0;
+  return s;
+}
 
-    const [sVorneStr, sHintenStr] = sGen.split('|').map(x => x.trim());
-    const [hVorneStr, hHintenStr] = hGen.split('|').map(x => x.trim());
-
-    // vordere vier Gen-Paare
-    const sVorne = sVorneStr ? sVorneStr.split(/\s+/).slice(0,4) : [];
-    const hVorne = hVorneStr ? hVorneStr.split(/\s+/).slice(0,4) : [];
-
-    // hintere vier Gen-Paare
-    const sHinten = sHintenStr ? sHintenStr.split(/\s+/).slice(0,4) : [];
-    const hHinten = hHintenStr ? hHintenStr.split(/\s+/).slice(0,4) : [];
-
-    let merkmalScore = 0;
-    let details = [];
-
-    // vorne bewerten (HH-Ziel)
-    for (let i = 0; i < 4; i++) {
-      const sVal = cleanGenValue(sVorne[i]);
-      const hVal = cleanGenValue(hVorne[i]);
-      const sc = getFrontScore(sVal, hVal);
-      merkmalScore += sc;
-      details.push(`V${i+1}:${sVal}-${hVal}(${sc})`);
-    }
-
-    // hinten bewerten (hh-Ziel)
-    for (let i = 0; i < 4; i++) {
-      const sVal = cleanGenValue(sHinten[i]);
-      const hVal = cleanGenValue(hHinten[i]);
-      const sc = getBackScore(sVal, hVal);
-      merkmalScore += sc;
-      details.push(`H${i+1}:${sVal}-${hVal}(${sc})`);
-    }
-
-    debug.push({
-      merkmal,
-      details: details.join(', '),
-      score: merkmalScore
-    });
-
-    totalScore += merkmalScore;
+function scorePair(stute,hengst){
+  let score=0,details=[];
+  for(const m of MERKMALE){
+    const sv=String(stute[m]||"").trim(), hv=String(hengst[m]||"").trim();
+    if(!sv||!hv) continue;
+    const [svF,svH]=parseGene(sv); const [hvF,hvH]=parseGene(hv);
+    let s=0;
+    for(let i=0;i<4;i++) s+=bewertung([svF[i]],[hvF[i]]);
+    for(let i=0;i<4;i++) s+=bewertung([svH[i]],[hvH[i]]);
+    details.push(`${m}: ${s} Punkte`);
+    score+=s;
   }
-
-  return { totalScore, debug };
+  return {score,details};
 }
-
-// ------------------------------------------------------
-// Scoring-Regeln laut deiner Tabelle
-// ------------------------------------------------------
-function getFrontScore(s, h) {
-  const combos = {
-    "HHHH": 4, "HHHh": 3, "HHhh": 2,
-    "HhHH": 3, "HhHh": 2, "Hhhh": 1,
-    "hhHH": 2, "hhHh": 1, "hhhh": 0
-  };
-  return combos[s + h] ?? 0;
-}
-
-function getBackScore(s, h) {
-  const combos = {
-    "HHHH": 0, "HHHh": 1, "HHhh": 2,
-    "HhHH": 1, "HhHh": 2, "Hhhh": 3,
-    "hhHH": 2, "hhHh": 3, "hhhh": 4
-  };
-  return combos[s + h] ?? 0;
-}
-
-// Hilfsfunktion: Normalisiert Schreibweise (Hh, hH → Hh)
-function cleanGenValue(v) {
-  if (!v) return "";
-  const sorted = v.split("").sort().join("");
-  if (sorted === "HH") return "HH";
-  if (sorted === "Hh") return "Hh";
-  if (sorted === "hh") return "hh";
-  return v;
-}
-
-// ------------------------------------------------------
-// Scoring-Regeln laut deiner Tabelle
-// ------------------------------------------------------
-function getFrontScore(s, h) {
-  const combos = {
-    "HHHH": 4, "HHHh": 3, "HHhh": 2,
-    "HhHH": 3, "HhHh": 2, "Hhhh": 1,
-    "hhHH": 2, "hhHh": 1, "hhhh": 0
-  };
-  return combos[s + h] ?? 0;
-}
-
-function getBackScore(s, h) {
-  const combos = {
-    "HHHH": 0, "HHHh": 1, "HHhh": 2,
-    "HhHH": 1, "HhHh": 2, "Hhhh": 3,
-    "hhHH": 2, "hhHh": 3, "hhhh": 4
-  };
-  return combos[s + h] ?? 0;
-}
-
-// Hilfsfunktion: Normalisiert Schreibweise (Hh, hH → Hh)
-function cleanGenValue(v) {
-  if (!v) return "";
-  const sorted = v.split("").sort().join("");
-  if (sorted === "HH") return "HH";
-  if (sorted === "Hh") return "Hh";
-  if (sorted === "hh") return "hh";
-  return v;
-}
-
 
 function createTop3Html(stute){
-  const name = pickName(stute);
-  const owner = pickOwner(stute);
-  const color = pickColor(stute) || "-";
+  const name=pickName(stute), owner=pickOwner(stute), color=pickColor(stute);
+  const result=hengste.map(h=>{
+    const sc=scorePair(stute,h);
+    return {...h,score:sc.score,details:sc.details};
+  }).sort((a,b)=>b.score-a.score).slice(0,3);
 
-  const scored = hengste.map(h => {
-    const { totalScore, debug } = scorePair(stute, h);
-    return { ...h, __score: totalScore, __debug: debug };
-  }).sort((a,b) => b.__score - a.__score).slice(0,3);
-
-  let html = `<div class="match">
-    <h3>${escapeHtml(name)} — Besitzer: ${escapeHtml(owner)}</h3>
-    <p>Farbgenetik Stute: ${escapeHtml(color)}</p>`;
-
-  if(scored.length === 0){
-    html += `<p><em>Keine passenden Hengste gefunden.</em></p>`;
-  } else {
-    html += `<ol>`;
-    scored.forEach((h, i) => {
-      html += `<li><strong>.${i+1} Wahl:</strong> ${escapeHtml(pickName(h))} — Farbe: ${escapeHtml(pickColor(h) || "-")} (Score: ${h.__score})</li>`;
-      // Debug-Fenster
-      html += `<details><summary>Debug: ${escapeHtml(pickName(h))}</summary><ul>`;
-      h.__debug.forEach(d => {
-        html += `<li><strong>${d.merkmal}:</strong> ${escapeHtml(d.details)} = ${d.score}</li>`;
-      });
-      html += `</ul></details>`;
-    });
-    html += `</ol>`;
-  }
-  html += `</div>`;
+  let html=`<div class="match"><h3>${name} — Besitzer: ${owner}<span class="debug-icon" onclick="this.nextElementSibling.classList.toggle('show')">🔍</span></h3>
+  <p>Farbgenetik Stute: ${color}</p><ol>`;
+  result.forEach((r,i)=>{
+    html+=`<li>${i+1}. Wahl: <b>${pickName(r)}</b> | Farbe: ${pickColor(r)} | Score: ${r.score}</li>`;
+    html+=`<div class="debug-content">${r.details.join("<br>")}</div>`;
+  });
+  html+=`</ol></div>`;
   return html;
 }
 
-
 function zeigeVorschlaege(){
-  const sVal = document.getElementById('stuteSelect').value;
-  const bVal = document.getElementById('besitzerSelect').value;
-  const out = document.getElementById('ergebnis');
-  out.innerHTML = '';
-
-  let zuZeigen = [];
-  if(sVal) zuZeigen = [stuten[parseInt(sVal)]];
-  else if(bVal) zuZeigen = stuten.filter(s => pickOwner(s) === bVal);
-  else zuZeigen = stuten;
-
-  if(zuZeigen.length === 0){
-    out.innerHTML = '<p>Keine Stuten gefunden.</p>';
-    return;
-  }
-  out.innerHTML = zuZeigen.map(createTop3Html).join('');
+  const s=document.getElementById('stuteSelect').value;
+  const b=document.getElementById('besitzerSelect').value;
+  let liste=[];
+  if(s) liste=[stuten[s]];
+  else if(b) liste=stuten.filter(x=>pickOwner(x)===b);
+  else liste=stuten;
+  document.getElementById('ergebnis').innerHTML=liste.map(createTop3Html).join("");
 }
 
 function zeigeAlle(){
-  document.getElementById('stuteSelect').value = '';
-  document.getElementById('besitzerSelect').value = '';
+  document.getElementById('stuteSelect').value="";
+  document.getElementById('besitzerSelect').value="";
   zeigeVorschlaege();
 }
 
-function escapeHtml(s){
-  return String(s).replace(/[&<>"'\/]/g, c => ({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#47;'
-  }[c]));
+// Tabs + Infofenster
+function openTab(evt,id){
+  document.querySelectorAll('.tab-content').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tab-button').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  evt.currentTarget.classList.add('active');
 }
+document.getElementById('infoButton').addEventListener('click',()=>document.getElementById('infoBox').classList.toggle('hidden'));
 
-window.addEventListener('DOMContentLoaded', ladeDaten);
+window.addEventListener('DOMContentLoaded',ladeDaten);
