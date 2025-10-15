@@ -321,5 +321,24 @@
     "Fesseln":"hH hh hh hh | hh Hh Hh hh",
     "Hufe":"Hh hh HH hh | hh hh hh hH",
     "Besitzer":"MaikiTaiki "
+  },
+  {
+    "Name":"A Sight To Behold °Sol°",
+    "Farbgenetik":null,
+    "Kopf":"\thh HH hh Hh | hh hH Hh Hh",
+    "Gebiss":"\thh HH HH hh | hh hh hh Hh",
+    "Hals":"\thh hh hh hH | hH hh HH hh",
+    "Halsansatz":"\thH HH hh hH | hh hh Hh hh",
+    "Widerrist":"\tHH Hh hH hH | hh hH HH hh",
+    "Schulter":"\thH Hh Hh hh | hh hh hH hh",
+    "Brust":"hh hH Hh HH | hh hh hh hh",
+    "Rückenlinie":"hh Hh HH hh | hh hh hh hh",
+    "Rückenlänge":"HH hh hh hh | hh hh hh hh",
+    "Kruppe":"hH hh Hh Hh | Hh hh hH hh",
+    "Beinwinkelung":"hh HH HH hh | hh hh hH hh",
+    "Beinstellung":"Hh hH Hh Hh | hh hh hh hH",
+    "Fesseln":"\thH HH hh Hh | hH Hh Hh hh",
+    "Hufe":"hH Hh HH HH | hh hH hH hh",
+    "Besitzer":"ElitaOne"
   }
 ]
