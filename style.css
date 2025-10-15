@@ -1,143 +1,170 @@
 body {
-  font-family: 'Segoe UI', Roboto, sans-serif;
-  margin: 0;
-  background: #f5f9f9;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: #f3faff;
   color: #222;
+  margin: 0;
+  padding: 0;
 }
 
 header {
-  background: linear-gradient(90deg, #6b9d00, #7fc4ff);
+  background: linear-gradient(90deg, #6b9d00, #99ccff);
   color: white;
+  padding: 15px;
   text-align: center;
-  padding: 1.5rem 1rem;
+  position: relative;
 }
 
-h1 {
-  margin: 0;
-  font-size: 1.8rem;
+#infoButton {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  font-size: 22px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: white;
 }
 
-#auswahl {
+main {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+.filter {
   display: flex;
   flex-wrap: wrap;
+  gap: 10px;
   justify-content: center;
-  gap: 1rem;
-  margin: 1.5rem 0;
-}
-
-.select-container {
-  display: flex;
-  flex-direction: column;
+  margin-bottom: 20px;
 }
 
 select, button {
-  padding: 0.6rem 1rem;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #6b9d00;
+  font-size: 14px;
 }
 
 button {
-  cursor: pointer;
   background: #6b9d00;
   color: white;
-  border: none;
-  transition: background 0.2s;
+  cursor: pointer;
+  transition: 0.2s;
 }
+
 button:hover {
-  background: #5a8600;
-}
-
-#infoBox {
-  max-width: 800px;
-  background: white;
-  margin: 0 auto 2rem;
-  padding: 1rem 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 0 8px rgba(0,0,0,0.1);
-}
-
-#infoBox h2 {
-  color: #6b9d00;
-}
-
-#infoBox .ideal {
-  font-family: monospace;
-  background: #e8f5e9;
-  padding: 0.4rem 0.8rem;
-  display: inline-block;
-  border-radius: 6px;
-  color: #2f7c00;
-}
-
-#infoBox table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 0.5rem 0;
-}
-#infoBox th, #infoBox td {
-  border: 1px solid #ddd;
-  padding: 0.5rem;
-  text-align: center;
-}
-#infoBox th {
-  background: #7fc4ff;
-  color: #003d5c;
-}
-
-.warnung {
-  background: #fff3cd;
-  color: #856404;
-  border: 1px solid #ffeeba;
-  border-radius: 6px;
-  padding: 0.8rem;
-  margin-top: 1rem;
-  font-size: 0.9rem;
-}
-
-#ergebnis {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 1rem;
+  background: #558000;
 }
 
 .match {
   background: white;
-  margin-bottom: 1rem;
+  border: 1px solid #6b9d00;
   border-radius: 10px;
-  padding: 1rem 1.2rem;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
+
 .match h3 {
   color: #6b9d00;
-  margin-bottom: 0.5rem;
 }
-.match .farbe {
-  color: #003d5c;
-  font-style: italic;
-}
+
 .match ol {
-  list-style: none;
-  padding-left: 1rem;
+  list-style-type: none;
+  padding-left: 0;
 }
-.match li {
-  margin-bottom: 0.4rem;
-}
-.match .wahl {
+
+.match li::before {
+  content: "• ";
   color: #6b9d00;
   font-weight: bold;
 }
-.match .hengstFarbe {
-  color: #0072b1;
+
+/* Debug */
+.debug-icon {
+  float: right;
+  cursor: pointer;
+  color: #99ccff;
+  font-size: 18px;
 }
-.match .score {
-  color: #555;
-  margin-left: 0.4rem;
+.debug-content {
+  display: none;
+  background: #eef9ff;
+  border: 1px dashed #99ccff;
+  margin-top: 10px;
+  padding: 8px;
+  font-size: 13px;
+}
+.debug-content.show {
+  display: block;
+}
+
+/* Tabs */
+.info-tabs {
+  background: #f8fcff;
+  border: 2px solid #6b9d00;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 15px auto;
+  max-width: 900px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.hidden { display: none; }
+
+.tab-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.tab-button {
+  flex: 1;
+  background-color: #d0ecff;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #004c70;
+}
+
+.tab-button.active {
+  background-color: #6b9d00;
+  color: white;
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.warning {
+  background: #fff8e1;
+  color: #a66a00;
+  border-left: 5px solid #ffcc00;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 6px;
+}
+
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+.score-table th {
+  background: #6b9d00;
+  color: white;
+  padding: 6px;
+}
+.score-table td {
+  border: 1px solid #ddd;
+  padding: 6px;
+  text-align: center;
 }
 
 footer {
   text-align: center;
-  font-size: 0.9rem;
+  padding: 10px;
   color: #555;
-  margin: 2rem 0;
+  font-size: 13px;
 }
