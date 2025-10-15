@@ -56,9 +56,11 @@ function fuelleDropdowns(){
 
 // ------------------------------------------------------
 // 🧬 Berechnet den genetischen Score für eine Stute/Hengst-Kombination
+//     und liefert zusätzlich eine Debug-Ausgabe pro Merkmal.
 // ------------------------------------------------------
 function scorePair(stute, hengst) {
   let totalScore = 0;
+  let debug = [];
 
   for (const merkmal of MERKMALE) {
     const sGen = (stute[merkmal] || "").trim();
@@ -68,23 +70,76 @@ function scorePair(stute, hengst) {
     const [sVorneStr, sHintenStr] = sGen.split('|').map(x => x.trim());
     const [hVorneStr, hHintenStr] = hGen.split('|').map(x => x.trim());
 
-    const sVorne = sVorneStr ? sVorneStr.split(/\s+/) : [];
-    const sHinten = sHintenStr ? sHintenStr.split(/\s+/) : [];
-    const hVorne = hVorneStr ? hVorneStr.split(/\s+/) : [];
-    const hHinten = hHintenStr ? hHintenStr.split(/\s+/) : [];
+    // vordere vier Gen-Paare
+    const sVorne = sVorneStr ? sVorneStr.split(/\s+/).slice(0,4) : [];
+    const hVorne = hVorneStr ? hVorneStr.split(/\s+/).slice(0,4) : [];
 
-    // Für jede Position vorne (HH-Ziel)
-    for (let i = 0; i < sVorne.length; i++) {
-      totalScore += getFrontScore(cleanGenValue(sVorne[i]), cleanGenValue(hVorne[i]));
+    // hintere vier Gen-Paare
+    const sHinten = sHintenStr ? sHintenStr.split(/\s+/).slice(0,4) : [];
+    const hHinten = hHintenStr ? hHintenStr.split(/\s+/).slice(0,4) : [];
+
+    let merkmalScore = 0;
+    let details = [];
+
+    // vorne bewerten (HH-Ziel)
+    for (let i = 0; i < 4; i++) {
+      const sVal = cleanGenValue(sVorne[i]);
+      const hVal = cleanGenValue(hVorne[i]);
+      const sc = getFrontScore(sVal, hVal);
+      merkmalScore += sc;
+      details.push(`V${i+1}:${sVal}-${hVal}(${sc})`);
     }
 
-    // Für jede Position hinten (hh-Ziel)
-    for (let i = 0; i < sHinten.length; i++) {
-      totalScore += getBackScore(cleanGenValue(sHinten[i]), cleanGenValue(hHinten[i]));
+    // hinten bewerten (hh-Ziel)
+    for (let i = 0; i < 4; i++) {
+      const sVal = cleanGenValue(sHinten[i]);
+      const hVal = cleanGenValue(hHinten[i]);
+      const sc = getBackScore(sVal, hVal);
+      merkmalScore += sc;
+      details.push(`H${i+1}:${sVal}-${hVal}(${sc})`);
     }
+
+    debug.push({
+      merkmal,
+      details: details.join(', '),
+      score: merkmalScore
+    });
+
+    totalScore += merkmalScore;
   }
 
-  return totalScore;
+  return { totalScore, debug };
+}
+
+// ------------------------------------------------------
+// Scoring-Regeln laut deiner Tabelle
+// ------------------------------------------------------
+function getFrontScore(s, h) {
+  const combos = {
+    "HHHH": 4, "HHHh": 3, "HHhh": 2,
+    "HhHH": 3, "HhHh": 2, "Hhhh": 1,
+    "hhHH": 2, "hhHh": 1, "hhhh": 0
+  };
+  return combos[s + h] ?? 0;
+}
+
+function getBackScore(s, h) {
+  const combos = {
+    "HHHH": 0, "HHHh": 1, "HHhh": 2,
+    "HhHH": 1, "HhHh": 2, "Hhhh": 3,
+    "hhHH": 2, "hhHh": 3, "hhhh": 4
+  };
+  return combos[s + h] ?? 0;
+}
+
+// Hilfsfunktion: Normalisiert Schreibweise (Hh, hH → Hh)
+function cleanGenValue(v) {
+  if (!v) return "";
+  const sorted = v.split("").sort().join("");
+  if (sorted === "HH") return "HH";
+  if (sorted === "Hh") return "Hh";
+  if (sorted === "hh") return "hh";
+  return v;
 }
 
 // ------------------------------------------------------
@@ -124,22 +179,34 @@ function createTop3Html(stute){
   const owner = pickOwner(stute);
   const color = pickColor(stute) || "-";
 
-  const scored = hengste
-    .map(h => ({...h, __score: scorePair(stute, h)}))
-    .sort((a,b) => b.__score - a.__score)
-    .slice(0,3);
+  const scored = hengste.map(h => {
+    const { totalScore, debug } = scorePair(stute, h);
+    return { ...h, __score: totalScore, __debug: debug };
+  }).sort((a,b) => b.__score - a.__score).slice(0,3);
 
-  let html = `<div class="match"><h3>${escapeHtml(name)} — Besitzer: ${escapeHtml(owner)}</h3>`;
-  html += `<p class="farbe">Farbgenetik: ${escapeHtml(color)}</p>`;
-  html += `<ol>`;
-  scored.forEach((h, i) => {
-    html += `<li><span class="wahl">•${i+1}. Wahl:</span> ${escapeHtml(pickName(h))} 
-             — <span class="hengstFarbe">${escapeHtml(pickColor(h) || "-")}</span> 
-             <span class="score">(Score: ${h.__score})</span></li>`;
-  });
-  html += `</ol></div>`;
+  let html = `<div class="match">
+    <h3>${escapeHtml(name)} — Besitzer: ${escapeHtml(owner)}</h3>
+    <p>Farbgenetik Stute: ${escapeHtml(color)}</p>`;
+
+  if(scored.length === 0){
+    html += `<p><em>Keine passenden Hengste gefunden.</em></p>`;
+  } else {
+    html += `<ol>`;
+    scored.forEach((h, i) => {
+      html += `<li><strong>.${i+1} Wahl:</strong> ${escapeHtml(pickName(h))} — Farbe: ${escapeHtml(pickColor(h) || "-")} (Score: ${h.__score})</li>`;
+      // Debug-Fenster
+      html += `<details><summary>Debug: ${escapeHtml(pickName(h))}</summary><ul>`;
+      h.__debug.forEach(d => {
+        html += `<li><strong>${d.merkmal}:</strong> ${escapeHtml(d.details)} = ${d.score}</li>`;
+      });
+      html += `</ul></details>`;
+    });
+    html += `</ol>`;
+  }
+  html += `</div>`;
   return html;
 }
+
 
 function zeigeVorschlaege(){
   const sVal = document.getElementById('stuteSelect').value;
