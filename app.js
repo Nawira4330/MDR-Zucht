@@ -97,80 +97,79 @@ function fuelleDropdowns(){
 
 // ==========================================
 
-function scorePair(stute, hengst, debug){
+// Scoring-Funktion für eine Stute gegen einen Hengst
+function scorePair(stute, hengst) {
   let score = 0;
-  const details = [];
 
-  for(const m of MERKMALE){
-    const sVal = (stute[m] || "").trim();
-    const hVal = (hengst[m] || "").trim();
-    if(!sVal || !hVal) continue;
+  for (const merkmal of MERKMALE) {
+    let sv = stute[merkmal] ? String(stute[merkmal]).replace(/\s+/g, '') : '';
+    let hv = hengst[merkmal] ? String(hengst[merkmal]).replace(/\s+/g, '') : '';
 
-    const [sFront, sBack] = splitSides(sVal);
-    const [hFront, hBack] = splitSides(hVal);
+    if (!sv || !hv) continue;
 
-    let partScore = 0;
-    const det = [];
+    // Aufteilen in vorne/hinten (erste 4 Paare vorne, letzte 4 hinten)
+    const [svFront, svBack] = [sv.slice(0, 8), sv.slice(8)];
+    const [hvFront, hvBack] = [hv.slice(0, 8), hv.slice(8)];
 
-    for(let i=0;i<4;i++){
-      const sPair = normalizePair(sFront[i]||"");
-      const hPair = normalizePair(hFront[i]||"");
-      const sc = getScoreFront(sPair, hPair);
-      det.push(`V${i+1}:${sPair}-${hPair}(${sc})`);
-      partScore += sc;
+    // Score für vorne
+    for (let i = 0; i < 4; i++) {
+      score += frontScore(svFront.slice(i*2,i*2+2), hvFront.slice(i*2,i*2+2));
     }
-    for(let i=0;i<4;i++){
-      const sPairB = normalizePair(sBack[i]||"");
-      const hPairB = normalizePair(hBack[i]||"");
-      const scB = getScoreBack(sPairB, hPairB);
-      det.push(`H${i+1}:${sPairB}-${hPairB}(${scB})`);
-      partScore += scB;
+    // Score für hinten
+    for (let i = 0; i < 4; i++) {
+      score += backScore(svBack.slice(i*2,i*2+2), hvBack.slice(i*2,i*2+2));
     }
-
-    score += partScore;
-    details.push(`${m}: ${det.join(", ")} — ${partScore}`);
   }
-
-  if(debug) debug.push(...details);
   return score;
 }
 
-// ==========================================
+// Front-Score nach deiner Tabelle
+function frontScore(stuteVal, hengstVal){
+  const mapping = {
+    'HH-HH':4,'HH-Hh':3,'HH-hh':2,
+    'Hh-HH':3,'Hh-Hh':2,'Hh-hh':1,
+    'hh-HH':2,'hh-Hh':1,'hh-hh':0
+  };
+  return mapping[`${stuteVal}-${hengstVal}`] || 0;
+}
 
-function createTop3Html(stute){
+// Back-Score nach deiner Tabelle
+function backScore(stuteVal, hengstVal){
+  const mapping = {
+    'HH-HH':0,'HH-Hh':1,'HH-hh':2,
+    'Hh-HH':1,'Hh-Hh':2,'Hh-hh':3,
+    'hh-HH':2,'hh-Hh':3,'hh-hh':4
+  };
+  return mapping[`${stuteVal}-${hengstVal}`] || 0;
+}
+
+// Top-3-Hengste für diese Stute berechnen
+function createTop3Html(stute) {
   const name = pickName(stute);
   const owner = pickOwner(stute);
   const color = pickColor(stute) || "-";
 
+  // Für diese Stute: Score gegen alle Hengste
   const scored = hengste
-    .map(h => {
-      const dbg = [];
-      const sc = scorePair(stute, h, dbg);
-      return {...h, __score: sc, __debug: dbg.join("\n")};
-    })
+    .filter(h => MERKMALE.some(m => h[m] && String(h[m]).trim() !== "")) // ignore Hengste ohne Werte
+    .map(h => ({...h, __score: scorePair(stute, h)}))
     .sort((a,b) => b.__score - a.__score)
     .slice(0,3);
 
   let html = `<div class="match"><h3>${escapeHtml(name)} — Besitzer: ${escapeHtml(owner)}</h3>`;
   html += `<p>Farbgenetik Stute: ${escapeHtml(color)}</p>`;
-
   if(scored.length === 0) html += `<p><em>Keine passenden Hengste gefunden.</em></p>`;
   else {
     html += `<ol>`;
     scored.forEach((h, i) => {
-      const infoId = `info_${Math.random().toString(36).slice(2)}`;
-      html += `<li><strong>${i+1}.</strong> ${escapeHtml(pickName(h))} 
-               — Farbe: ${escapeHtml(pickColor(h) || "-")} 
-               (Score: ${h.__score})
-               <span class="info-icon" data-info="${infoId}">ℹ️</span>
-               <div id="${infoId}" class="info-popup"><pre>${escapeHtml(h.__debug)}</pre></div>
-               </li>`;
+      html += `<li><strong>${i+1}.</strong> ${escapeHtml(pickName(h))} — Farbe: ${escapeHtml(pickColor(h) || "-")} (Score: ${h.__score}) <span class="info-icon" onclick="showDebug(${i})">ℹ️</span></li>`;
     });
     html += `</ol>`;
   }
   html += `</div>`;
   return html;
 }
+
 
 // ==========================================
 
