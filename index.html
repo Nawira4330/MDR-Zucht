@@ -2,104 +2,63 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Paarungsanalyse – Exterieur-Matching</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
     <h1>Paarungsanalyse – Exterieur-Matching</h1>
+    <p class="warning">Hinweis: Inzucht und doppelte Vererbung des Overo-Gens werden nicht berücksichtigt.</p>
   </header>
 
-  <section id="controls">
-    <div class="select-group">
-      <label for="stuteSelect">Stute:</label>
+  <section class="controls">
+    <div class="dropdowns">
+      <label for="stuteSelect">Stute auswählen:</label>
       <select id="stuteSelect"></select>
-    </div>
-    <div class="select-group">
-      <label for="besitzerSelect">Besitzer:</label>
+
+      <label for="besitzerSelect">Besitzer auswählen:</label>
       <select id="besitzerSelect"></select>
+
+      <button id="alleBtn" onclick="zeigeAlle()">Alle anzeigen</button>
     </div>
-    <button id="alleBtn" onclick="zeigeAlle()">Alle anzeigen</button>
   </section>
 
- <div id="infoBox">
-  <h2>Genetische Bewertungslogik (Score-System)</h2>
-  <p>
-    Jeder <strong>Hengst</strong> wird individuell danach bewertet, wie gut er die 
-    <strong>genetischen Schwächen</strong> einer ausgewählten <strong>Stute</strong> ausgleicht 
-    und ihre Stärken unterstützt. 
-    Das Ziel ist, für das Fohlen eine möglichst ideale Kombination der Exterieurwerte zu erreichen:
-  </p>
+  <section id="ergebnis" class="ergebnis">
+    <p>Wähle eine Stute oder einen Besitzer, um die besten Hengste zu sehen.</p>
+  </section>
 
-  <p class="ideal">
-    <strong>Idealer Zielwert des Fohlens:</strong> HH HH HH HH hh hh hh hh
-  </p>
-
-  <h3>🔬 Bewertung je Genpaar</h3>
-  <p>
-    Jedes Exterieurmerkmal (z. B. Kopf, Hals, Schulter, etc.) besteht aus <strong>8 Gen-Paaren</strong> —
-    4 vor dem Trennstrich („vorne“) und 4 danach („hinten“).<br>
-    Für jedes Paar werden Punkte nach folgender Logik vergeben:
-  </p>
-
-  <div class="score-table">
-    <table>
-      <thead>
-        <tr><th>Vorne (HH bevorzugt)</th><th>Punkte</th><th>Hinten (hh bevorzugt)</th><th>Punkte</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>HH – HH</td><td>4</td><td>hh – hh</td><td>4</td></tr>
-        <tr><td>HH – Hh</td><td>3</td><td>hh – Hh</td><td>3</td></tr>
-        <tr><td>HH – hh</td><td>2</td><td>hh – HH</td><td>2</td></tr>
-        <tr><td>Hh – HH</td><td>3</td><td>Hh – hh</td><td>3</td></tr>
-        <tr><td>Hh – Hh</td><td>2</td><td>Hh – Hh</td><td>2</td></tr>
-        <tr><td>Hh – hh</td><td>1</td><td>Hh – HH</td><td>1</td></tr>
-        <tr><td>hh – HH</td><td>2</td><td>HH – hh</td><td>2</td></tr>
-        <tr><td>hh – Hh</td><td>1</td><td>HH – Hh</td><td>1</td></tr>
-        <tr><td>hh – hh</td><td>0</td><td>HH – HH</td><td>0</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <h3>Score-Berechnung</h3>
-  <p>
+  <section class="info-text">
+    <h2>Info zur Berechnung der Hengste</h2>
+    <p>
+      Die Top-3-Hengste für jede Stute werden anhand der Exterieur-Merkmale ausgewählt. 
+      Ziel ist es, dass das Fohlen den Idealwert <strong>HH HH HH HH | hh hh hh hh</strong> erreicht:
+    </p>
+    <ul>
+      <li>Stärken der Stute werden unterstützt (vorne HH, hinten hh)</li>
+      <li>Schwächen werden möglichst ausgeglichen</li>
+      <li>Score basiert auf Front- und Back-Genetik nach Tabelle</li>
+    </ul>
+     <h3>Score-Berechnung und Interpretation</h3>
+      <p>
     Für jedes der <strong>14 Exterieurmerkmale</strong> (Kopf, Gebiss, Hals, Halsansatz, 
     Widerrist, Schulter, Brust, Rückenlinie, Rückenlänge, Kruppe, Beinwinkelung, Beinstellung, 
-    Fesseln, Hufe) werden die 8 Genpaare einzeln bewertet.<br>
+    Fesseln, Hufe) werden die 8 Genpaare einzeln nach Korrektheit bewertet.<br>
     Ein Merkmal kann daher maximal <strong>32 Punkte</strong> erreichen 
-    (8 Genpaare × 4 Punkte).
+    (8 Genpaare × 4 Punkte; 14 Merkmale × 32 Punkte = 448 Punkte).
   </p>
-
-  <p class="highlight">
-    Insgesamt ergibt sich also ein theoretischer <strong>Maximal-Score von 448 Punkten</strong>
-    (14 Merkmale × 32 Punkte).
-  </p>
-
-  <h3>Interpretation des Scores</h3>
-  <table class="interpretation">
-    <thead><tr><th>Scorebereich</th><th>Bedeutung</th></tr></thead>
-    <tbody>
+      <table>
       <tr><td>400–448</td><td>Nahezu perfekte genetische Ergänzung</td></tr>
       <tr><td>300–400</td><td>Sehr gute Kombination, empfohlen</td></tr>
       <tr><td>200–300</td><td>Solide Kombination mit Potenzial</td></tr>
       <tr><td>100–200</td><td>Genetisch eher ungünstig</td></tr>
       <tr><td>0–100</td><td>Nicht empfohlen</td></tr>
-    </tbody>
-  </table>
-
-  <h3>Hinweise</h3>
-  <ul>
-    <li>Die Berechnung berücksichtigt keine Inzucht oder Doppelvererbung des Overo-Gens.</li>
-    <li>Es werden nur Hengste einbezogen, für die vollständige genetische Daten vorliegen.</li>
-    <li>Die Punktwerte dienen ausschließlich zur Zuchtplanung und stellen keine Garantie dar.</li>
-  </ul>
-</div>
-
-
-  <main id="ergebnis"></main>
+      </table>
+    <p>Ein ℹ️-Icon neben jedem Hengst zeigt, wie der Score aus den einzelnen Merkmalen berechnet wurde.</p>
+  </section>
 
   <footer>
-    <p>© 2025 MDR-Zucht | Entwickelt mit ❤️ für die Zuchtplanung<</p>
+    <p>&copy;@ 2025 MDR-Zucht | Entwickelt mit ❤️ für die Zuchtplanung<</p>
   </footer>
 
   <script src="app.js"></script>
