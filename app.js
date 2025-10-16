@@ -123,3 +123,109 @@ function scorePair(stute, hengst, debug){
       const sPairB = normalizePair(sBack[i]||"");
       const hPairB = normalizePair(hBack[i]||"");
       const scB = getScoreBack(sPairB, hPairB);
+      det.push(`H${i+1}:${sPairB}-${hPairB}(${scB})`);
+      partScore += scB;
+    }
+
+    score += partScore;
+    details.push(`${m}: ${det.join(", ")} — ${partScore}`);
+  }
+
+  if(debug) debug.push(...details);
+  return score;
+}
+
+// ==========================================
+
+function createTop3Html(stute){
+  const name = pickName(stute);
+  const owner = pickOwner(stute);
+  const color = pickColor(stute) || "-";
+
+  const scored = hengste
+    .map(h => {
+      const dbg = [];
+      const sc = scorePair(stute, h, dbg);
+      return {...h, __score: sc, __debug: dbg.join("\n")};
+    })
+    .sort((a,b) => b.__score - a.__score)
+    .slice(0,3);
+
+  let html = `<div class="match"><h3>${escapeHtml(name)} — Besitzer: ${escapeHtml(owner)}</h3>`;
+  html += `<p>Farbgenetik Stute: ${escapeHtml(color)}</p>`;
+
+  if(scored.length === 0) html += `<p><em>Keine passenden Hengste gefunden.</em></p>`;
+  else {
+    html += `<ol>`;
+    scored.forEach((h, i) => {
+      const infoId = `info_${Math.random().toString(36).slice(2)}`;
+      html += `<li><strong>${i+1}.</strong> ${escapeHtml(pickName(h))} 
+               — Farbe: ${escapeHtml(pickColor(h) || "-")} 
+               (Score: ${h.__score})
+               <span class="info-icon" data-info="${infoId}">ℹ️</span>
+               <div id="${infoId}" class="info-popup"><pre>${escapeHtml(h.__debug)}</pre></div>
+               </li>`;
+    });
+    html += `</ol>`;
+  }
+  html += `</div>`;
+  return html;
+}
+
+// ==========================================
+
+function zeigeVorschlaege(){
+  const selStute = document.getElementById('stuteSelect').value;
+  const selBesitzer = document.getElementById('besitzerSelect').value;
+  const out = document.getElementById('ergebnis');
+  out.innerHTML = '';
+
+  let toShow = [];
+
+  if(selStute !== ""){
+    const idx = parseInt(selStute, 10);
+    if(!Number.isNaN(idx) && stuten[idx]) toShow.push(stuten[idx]);
+  } else if(selBesitzer !== ""){
+    toShow = stuten.filter(s => pickOwner(s) === selBesitzer);
+  } else {
+    toShow = stuten;
+  }
+
+  if(toShow.length === 0){
+    out.innerHTML = '<p>Keine Stuten gefunden (prüfe JSON und Feldnamen).</p>';
+    return;
+  }
+
+  let html = '';
+  toShow.forEach(s => html += createTop3Html(s));
+  out.innerHTML = html;
+
+  // Info-Icons aktivieren
+  document.querySelectorAll('.info-icon').forEach(icon=>{
+    icon.addEventListener('click', e=>{
+      const id = icon.getAttribute('data-info');
+      const popup = document.getElementById(id);
+      popup.classList.toggle('visible');
+    });
+  });
+
+  document.addEventListener('click', e=>{
+    if(!e.target.classList.contains('info-icon') && !e.target.closest('.info-popup')){
+      document.querySelectorAll('.info-popup.visible').forEach(p=>p.classList.remove('visible'));
+    }
+  });
+}
+
+function zeigeAlle(){
+  document.getElementById('stuteSelect').value = '';
+  document.getElementById('besitzerSelect').value = '';
+  zeigeVorschlaege();
+}
+
+function escapeHtml(s){ 
+  return String(s).replace(/[&<>"'\/]/g, c => (
+    {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#47;'}[c]
+  ));
+}
+
+window.addEventListener('DOMContentLoaded', ladeDaten);
