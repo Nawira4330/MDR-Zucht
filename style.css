@@ -1,149 +1,56 @@
-/* ====== Grundlayout ====== */
+/* Allgemeines Layout */
 body {
-  font-family: "Segoe UI", Roboto, sans-serif;
-  background: #f8fbff;
-  color: #222;
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  background-color: #f0f8ff; /* hellblau */
+  color: #333;
 }
 
 header {
-  background: linear-gradient(90deg, #6b9d00, #b3e5ff);
-  color: #fff;
+  background-color: #6b9d00; /* grüner Header */
+  color: white;
+  padding: 1rem;
   text-align: center;
-  padding: 1.5rem;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-h1 {
+header h1 {
   margin: 0;
-  font-size: 1.8rem;
-  letter-spacing: 0.5px;
+  font-size: 2rem;
 }
 
-/* ====== Auswahlfelder ====== */
-#controls {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 1rem;
-  background: #e9f8ff;
-  border-bottom: 2px solid #6b9d00;
+.warning {
+  color: #ff4d4d;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.controls {
+  padding: 1rem;
+  background: #e6f0d4;
+}
+
+.dropdowns label {
+  margin-right: 0.5rem;
+  font-weight: bold;
+}
+
+.dropdowns select, .dropdowns button {
+  margin-right: 1rem;
+  padding: 0.4rem 0.6rem;
+  font-size: 1rem;
+}
+
+.ergebnis {
   padding: 1rem;
 }
 
-.select-group label {
-  display: block;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 0.25rem;
-}
-
-.select-group select {
-  padding: 0.4rem;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: 1px solid #6b9d00;
-  background: #fff;
-}
-
-#alleBtn {
-  background: #6b9d00;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 0.6rem 1.2rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-#alleBtn:hover {
-  background: #588300;
-}
-
-/* ====== Infobox ====== */
-#infoBox {
-  background: #eef9ff;
-  border: 2px solid #6b9d00;
-  border-radius: 16px;
-  padding: 1.5rem;
-  margin-top: 2rem;
-  color: #222;
-  box-shadow: 0 4px 10px rgba(107, 157, 0, 0.2);
-}
-
-#infoBox h2, #infoBox h3 {
-  color: #6b9d00;
-  margin-top: 1rem;
-}
-
-#infoBox .ideal {
-  background: #d8f7ff;
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
-  font-weight: bold;
-  color: #006b9d;
-}
-
-#infoBox .highlight {
-  background: #e4ffd4;
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
-  font-weight: bold;
-  color: #4a7b00;
-}
-
-#infoBox table {
-  width: 100%;
-  border-collapse: collapse;
-  margin: 1rem 0;
-}
-
-#infoBox table th,
-#infoBox table td {
-  border: 1px solid #cde;
-  padding: 0.4rem 0.6rem;
-  text-align: center;
-}
-
-#infoBox table thead {
-  background: #ccecff;
-  color: #003b5f;
-}
-
-#infoBox .interpretation thead {
-  background: #e0f7c5;
-  color: #2f4f00;
-}
-
-#infoBox ul {
-  margin-top: 0.5rem;
-  padding-left: 1.2rem;
-}
-
-
-/* ====== Ergebnisliste ====== */
-#ergebnis {
-  max-width: 900px;
-  margin: 0 auto 3rem;
-  padding: 0 1rem;
-}
-
 .match {
-  background: #ffffff;
-  border: 1px solid #b3e5ff;
-  border-left: 6px solid #6b9d00;
+  background: white;
+  border: 1px solid #6b9d00;
   border-radius: 10px;
-  padding: 1rem 1.2rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-  transition: 0.3s;
-}
-
-.match:hover {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  padding: 1rem;
+  margin-bottom: 1rem;
 }
 
 .match h3 {
@@ -152,15 +59,27 @@ h1 {
 }
 
 .match ol {
-  padding-left: 1.5rem;
+  padding-left: 1.2rem;
 }
 
 .match li {
-  margin-bottom: 0.5rem;
-  line-height: 1.4;
+  margin: 0.4rem 0;
 }
 
-/* ====== Info-Icon und Popup ====== */
+.info-text {
+  padding: 1rem;
+  background-color: #e6f0d4;
+  border-top: 2px solid #6b9d00;
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  background-color: #6b9d00;
+  color: white;
+}
+
+/* Info-Icon und Popup */
 .info-icon {
   cursor: pointer;
   margin-left: 6px;
@@ -182,14 +101,13 @@ h1 {
   max-width: 90%;
   max-height: 70%;
   overflow: auto;
-  background: rgba(255,255,255,0.97);
+  background: rgba(255,255,255,0.95);
   border: 2px solid #6b9d00;
   box-shadow: 0 4px 15px rgba(0,0,0,0.3);
   padding: 1rem;
   border-radius: 10px;
   z-index: 9999;
   white-space: pre-wrap;
-  color: #111;
 }
 
 .info-popup.visible {
@@ -198,16 +116,6 @@ h1 {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translate(-50%, -48%); }
-  to   { opacity: 1; transform: translate(-50%, -50%); }
-}
-
-/* ====== Footer ====== */
-footer {
-  text-align: center;
-  padding: 1rem;
-  font-size: 0.9rem;
-  color: #555;
-  background: #e9f8ff;
-  border-top: 2px solid #6b9d00;
+  from { opacity: 0; transform: translate(-50%,-48%); }
+  to { opacity: 1; transform: translate(-50%,-50%); }
 }
