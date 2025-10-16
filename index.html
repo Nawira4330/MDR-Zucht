@@ -1,61 +1,102 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
   <title>Paarungsanalyse – Exterieur-Matching</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <div class="hdr-inner">
-      <h1>MPaarungsanalyse – Exterieur-Matching</h1>
-      <p class="sub">Ziel: Fohlen möglichst nahe an <code>HH HH HH HH hh hh hh hh</code></p>
-    </div>
+    <h1>Paarungsanalyse – Exterieur-Matching</h1>
   </header>
 
-  <main>
-    <section class="controls">
-      <div class="control">
-        <label for="stuteSelect">Stute:</label>
-        <select id="stuteSelect"><option value="">-- bitte wählen --</option></select>
-      </div>
+  <section id="controls">
+    <div class="select-group">
+      <label for="stuteSelect">Stute:</label>
+      <select id="stuteSelect"></select>
+    </div>
+    <div class="select-group">
+      <label for="besitzerSelect">Besitzer:</label>
+      <select id="besitzerSelect"></select>
+    </div>
+    <button id="alleBtn" onclick="zeigeAlle()">Alle anzeigen</button>
+  </section>
 
-      <div class="control">
-        <label for="besitzerSelect">Besitzer:</label>
-        <select id="besitzerSelect"><option value="">-- bitte wählen --</option></select>
-      </div>
+ <div id="infoBox">
+  <h2>ℹ️ Genetische Bewertungslogik (Score-System)</h2>
+  <p>
+    Jeder <strong>Hengst</strong> wird individuell danach bewertet, wie gut er die 
+    <strong>genetischen Schwächen</strong> einer ausgewählten <strong>Stute</strong> ausgleicht 
+    und ihre Stärken unterstützt. 
+    Das Ziel ist, für das Fohlen eine möglichst ideale Kombination der Exterieurwerte zu erreichen:
+  </p>
 
-      <div class="control actions">
-        <button id="btnShow" onclick="zeigeVorschlaege()">Vorschläge</button>
-        <button id="btnAll" onclick="zeigeAlle()">Alle anzeigen</button>
-      </div>
-    </section>
+  <p class="ideal">
+    <strong>Idealer Zielwert des Fohlens:</strong> HH HH HH HH hh hh hh hh
+  </p>
 
-    <section class="info">
-      <h2>Info — Berechnung & Hinweise</h2>
-      <p>
-        Die Seite vergleicht die Exterieur‑Genetik der Stute mit jedem Hengst und berechnet einen Score,
-        der zeigt, wie gut der Hengst die Stärken der Stute unterstützt und ihre Schwächen ausgleicht.
-        Ziel für das Fohlen: <strong>HH HH HH HH hh hh hh hh</strong>.
-      </p>
+  <h3>🔬 Bewertung je Genpaar</h3>
+  <p>
+    Jedes Exterieurmerkmal (z. B. Kopf, Hals, Schulter, etc.) besteht aus <strong>8 Gen-Paaren</strong> —
+    4 vor dem Trennstrich („vorne“) und 4 danach („hinten“).<br>
+    Für jedes Paar werden Punkte nach folgender Logik vergeben:
+  </p>
 
-      <ul>
-        <li>Jedes Merkmal enthält 8 Paare: <em>4 vorne</em> (vor dem '|') und <em>4 hinten</em> (nach dem '|').</li>
-        <li>Vorne ist das Ziel <strong>HH</strong>, hinten ist das Ziel <strong>hh</strong>.</li>
-        <li>Für jede der 8 Einzelpositionen (V1–V4, H1–H4) werden Punkte gemäß deiner Matrix vergeben.</li>
-      </ul>
+  <div class="score-table">
+    <table>
+      <thead>
+        <tr><th>Vorne (HH bevorzugt)</th><th>Punkte</th><th>Hinten (hh bevorzugt)</th><th>Punkte</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>HH – HH</td><td>4</td><td>hh – hh</td><td>4</td></tr>
+        <tr><td>HH – Hh</td><td>3</td><td>hh – Hh</td><td>3</td></tr>
+        <tr><td>HH – hh</td><td>2</td><td>hh – HH</td><td>2</td></tr>
+        <tr><td>Hh – HH</td><td>3</td><td>Hh – hh</td><td>3</td></tr>
+        <tr><td>Hh – Hh</td><td>2</td><td>Hh – Hh</td><td>2</td></tr>
+        <tr><td>Hh – hh</td><td>1</td><td>Hh – HH</td><td>1</td></tr>
+        <tr><td>hh – HH</td><td>2</td><td>HH – hh</td><td>2</td></tr>
+        <tr><td>hh – Hh</td><td>1</td><td>HH – Hh</td><td>1</td></tr>
+        <tr><td>hh – hh</td><td>0</td><td>HH – HH</td><td>0</td></tr>
+      </tbody>
+    </table>
+  </div>
 
-      <div class="warn">
-        ⚠️ Wichtig: <strong>Inzucht</strong> und die doppelte Vererbung des <strong>Overo-Gens</strong> werden hier nicht berücksichtigt.
-        Solche Risiken müssen gesondert geprüft.
-      </div>
-    </section>
+  <h3>Score-Berechnung</h3>
+  <p>
+    Für jedes der <strong>14 Exterieurmerkmale</strong> (Kopf, Gebiss, Hals, Halsansatz, 
+    Widerrist, Schulter, Brust, Rückenlinie, Rückenlänge, Kruppe, Beinwinkelung, Beinstellung, 
+    Fesseln, Hufe) werden die 8 Genpaare einzeln bewertet.<br>
+    Ein Merkmal kann daher maximal <strong>32 Punkte</strong> erreichen 
+    (8 Genpaare × 4 Punkte).
+  </p>
 
-    <section id="ergebnis">
-      <p class="hint">Wähle eine Stute oder einen Besitzer — oder klicke „Alle anzeigen“.</p>
-    </section>
-  </main>
+  <p class="highlight">
+    Insgesamt ergibt sich also ein theoretischer <strong>Maximal-Score von 448 Punkten</strong>
+    (14 Merkmale × 32 Punkte).
+  </p>
+
+  <h3>Interpretation des Scores</h3>
+  <table class="interpretation">
+    <thead><tr><th>Scorebereich</th><th>Bedeutung</th></tr></thead>
+    <tbody>
+      <tr><td>400–448</td><td>Nahezu perfekte genetische Ergänzung</td></tr>
+      <tr><td>300–400</td><td>Sehr gute Kombination, empfohlen</td></tr>
+      <tr><td>200–300</td><td>Solide Kombination mit Potenzial</td></tr>
+      <tr><td>100–200</td><td>Genetisch eher ungünstig</td></tr>
+      <tr><td>0–100</td><td>Nicht empfohlen</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Hinweise</h3>
+  <ul>
+    <li>Die Berechnung berücksichtigt keine Inzucht oder Doppelvererbung des Overo-Gens.</li>
+    <li>Es werden nur Hengste einbezogen, für die vollständige genetische Daten vorliegen.</li>
+    <li>Die Punktwerte dienen ausschließlich zur Zuchtplanung und stellen keine Garantie dar.</li>
+  </ul>
+</div>
+
+
+  <main id="ergebnis"></main>
 
   <footer>
     <p>© 2025 MDR-Zucht | Entwickelt mit ❤️ für die Zuchtplanung<</p>
