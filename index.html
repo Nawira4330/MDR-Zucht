@@ -9,56 +9,65 @@
 <body>
   <header>
     <h1>Paarungsanalyse – Exterieur-Matching</h1>
-    <p class="warning">Hinweis: Inzucht und doppelte Vererbung des Overo-Gens werden nicht berücksichtigt.</p>
+    <button id="infoToggle" class="info-button">ℹ️ Info</button>
   </header>
 
-  <section class="controls">
-    <div class="dropdowns">
-      <label for="stuteSelect">Stute auswählen:</label>
-      <select id="stuteSelect"></select>
+  <!-- Aufklappbares Infofenster -->
+  <section id="infoBox" class="info-box hidden">
+    <div class="info-content">
+      <h2>Info zur Berechnung der Hengste</h2>
+      <p>
+        Die Top-3-Hengste für jede Stute werden anhand der Exterieur-Merkmale ausgewählt. 
+        Ziel ist es, dass das Fohlen den Idealwert <strong>HH HH HH HH | hh hh hh hh</strong> erreicht:
+      </p>
+      <ul>
+        <li>Stärken der Stute werden unterstützt (vorne HH, hinten hh)</li>
+        <li>Schwächen werden möglichst ausgeglichen</li>
+        <li>Score basiert auf Front- und Back-Genetik nach Tabelle</li>
+      </ul>
 
-      <label for="besitzerSelect">Besitzer auswählen:</label>
-      <select id="besitzerSelect"></select>
+      <h3>Score-Berechnung und Interpretation</h3>
+      <p>
+        Für jedes der <strong>14 Exterieurmerkmale</strong> (Kopf, Gebiss, Hals, Halsansatz, 
+        Widerrist, Schulter, Brust, Rückenlinie, Rückenlänge, Kruppe, Beinwinkelung, Beinstellung, 
+        Fesseln, Hufe) werden die 8 Genpaare einzeln nach Korrektheit bewertet.<br>
+        Ein Merkmal kann daher maximal <strong>32 Punkte</strong> erreichen 
+        (8 Genpaare × 4 Punkte; 14 Merkmale × 32 Punkte = 448 Punkte).
+      </p>
 
-      <button id="alleBtn" onclick="zeigeAlle()">Alle anzeigen</button>
+      <table class="score-table">
+        <tr><th>Score</th><th>Bedeutung</th></tr>
+        <tr><td>400–448</td><td>Nahezu perfekte genetische Ergänzung</td></tr>
+        <tr><td>300–400</td><td>Sehr gute Kombination, empfohlen</td></tr>
+        <tr><td>200–300</td><td>Solide Kombination mit Potenzial</td></tr>
+        <tr><td>100–200</td><td>Genetisch eher ungünstig</td></tr>
+        <tr><td>0–100</td><td>Nicht empfohlen</td></tr>
+      </table>
+
+      <p>Ein ℹ️-Icon neben jedem Hengst zeigt, wie der Score aus den einzelnen Merkmalen berechnet wurde.</p>
+
+      <div class="warning">
+        ⚠️ Hinweis: Inzucht und Doppelvererbung des Overo-Gens werden derzeit nicht berücksichtigt.
+      </div>
     </div>
   </section>
+  
+ <main>
+    <div class="controls">
+      <label for="mareSelect">Stute:</label>
+      <select id="mareSelect"></select>
 
-  <section id="ergebnis" class="ergebnis">
-    <p>Wähle eine Stute oder einen Besitzer, um die besten Hengste zu sehen.</p>
-  </section>
+      <label for="ownerSelect">Besitzer:</label>
+      <select id="ownerSelect"></select>
 
-  <section class="info-text">
-    <h2>Info zur Berechnung der Hengste</h2>
-    <p>
-      Die Top-3-Hengste für jede Stute werden anhand der Exterieur-Merkmale ausgewählt. 
-      Ziel ist es, dass das Fohlen den Idealwert <strong>HH HH HH HH | hh hh hh hh</strong> erreicht:
-    </p>
-    <ul>
-      <li>Stärken der Stute werden unterstützt (vorne HH, hinten hh)</li>
-      <li>Schwächen werden möglichst ausgeglichen</li>
-      <li>Score basiert auf Front- und Back-Genetik nach Tabelle</li>
-    </ul>
-     <h3>Score-Berechnung und Interpretation</h3>
-      <p>
-    Für jedes der <strong>14 Exterieurmerkmale</strong> (Kopf, Gebiss, Hals, Halsansatz, 
-    Widerrist, Schulter, Brust, Rückenlinie, Rückenlänge, Kruppe, Beinwinkelung, Beinstellung, 
-    Fesseln, Hufe) werden die 8 Genpaare einzeln nach Korrektheit bewertet.<br>
-    Ein Merkmal kann daher maximal <strong>32 Punkte</strong> erreichen 
-    (8 Genpaare × 4 Punkte; 14 Merkmale × 32 Punkte = 448 Punkte).
-  </p>
-      <table>
-      <tr><td>400–448</td><td>Nahezu perfekte genetische Ergänzung</td></tr>
-      <tr><td>300–400</td><td>Sehr gute Kombination, empfohlen</td></tr>
-      <tr><td>200–300</td><td>Solide Kombination mit Potenzial</td></tr>
-      <tr><td>100–200</td><td>Genetisch eher ungünstig</td></tr>
-      <tr><td>0–100</td><td>Nicht empfohlen</td></tr>
-      </table>
-    <p>Ein ℹ️-Icon neben jedem Hengst zeigt, wie der Score aus den einzelnen Merkmalen berechnet wurde.</p>
-  </section>
+      <button id="showAll">Alle anzeigen</button>
+    </div>
+
+    <section id="results" class="results"></section>
+  </main>
 
   <footer>
-    <p>&copy;@ 2025 MDR-Zucht | Entwickelt mit ❤️ für die Zuchtplanung<</p>
+    <p>© 2025 MDR-Zucht | Entwickelt mit ❤️ für die Zuchtplanung</p>
   </footer>
 
   <script src="app.js"></script>
