@@ -1,163 +1,208 @@
+// --- Globale Variablen ---
 let stuten = [];
 let hengste = [];
 
-const NAME_KEYS = ["Name", "Stutenname", "Stute", "name"];
-const OWNER_KEYS = ["Besitzer", "Owner", "besitzer", "owner"];
-const COLOR_KEYS = ["Farbgenetik", "Farbe", "FarbGenetik", "color", "Genetik"];
-const MERKMALE = ["Kopf","Gebiss","Hals","Halsansatz","Widerrist","Schulter","Brust","Rückenlinie","Rückenlänge","Kruppe","Beinwinkelung","Beinstellung","Fesseln","Hufe"];
+// Merkmale laut Tabelle
+const MERKMALE = [
+  "Kopf", "Gebiss", "Hals", "Halsansatz", "Widerrist",
+  "Schulter", "Brust", "Rückenlinie", "Rückenlänge",
+  "Kruppe", "Beinwinkelung", "Beinstellung", "Fesseln", "Hufe"
+];
 
-function pickField(obj, keys){
-  for(const k of keys) if(obj && obj[k]) return obj[k];
+// Feldnamen-Erkennung
+function getField(obj, names) {
+  for (const n of names) {
+    if (obj[n] !== undefined && obj[n] !== "") return obj[n];
+  }
   return "";
 }
-function pickName(obj){ return pickField(obj, NAME_KEYS) || "(ohne Name)"; }
-function pickOwner(obj){ return pickField(obj, OWNER_KEYS) || "(kein Besitzer)"; }
-function pickColor(obj){ return pickField(obj, COLOR_KEYS) || ""; }
 
-async function ladeDaten(){
+function pickName(o) { return getField(o, ["Name", "Stutenname", "Stute", "Hengstname"]); }
+function pickOwner(o) { return getField(o, ["Besitzer", "Owner", "besitzer"]); }
+function pickColor(o) { return getField(o, ["Farbgenetik", "Farbe", "Genetik"]); }
+
+// --- Daten laden ---
+async function ladeDaten() {
   try {
-    const s = await fetch('data/stuten.json').then(r=>r.json());
-    const h = await fetch('data/hengste.json').then(r=>r.json());
-    stuten = Array.isArray(s)?s:[];
-    hengste = Array.isArray(h)?h:[];
+    const stutenData = await fetch("data/stuten.json").then(r => r.json());
+    const hengsteData = await fetch("data/hengste.json").then(r => r.json());
+
+    stuten = Array.isArray(stutenData) ? stutenData : [];
+    hengste = Array.isArray(hengsteData) ? hengsteData : [];
+
     fuelleDropdowns();
-  } catch(e){
-    document.getElementById('ergebnis').innerHTML = "<p style='color:red'>Fehler beim Laden der JSON-Dateien.</p>";
+  } catch (err) {
+    console.error("Fehler beim Laden:", err);
+    document.getElementById("results").innerHTML =
+      "<p style='color:red'>Fehler beim Laden der Daten.</p>";
   }
 }
 
-function fuelleDropdowns(){
-  const selStute = document.getElementById('stuteSelect');
-  const selBesitzer = document.getElementById('besitzerSelect');
-  selStute.innerHTML = '<option value="">-- bitte wählen --</option>';
-  selBesitzer.innerHTML = '<option value="">-- bitte wählen --</option>';
+// --- Dropdowns ---
+function fuelleDropdowns() {
+  const mareSelect = document.getElementById("mareSelect");
+  const ownerSelect = document.getElementById("ownerSelect");
+  mareSelect.innerHTML = "<option value=''>-- bitte wählen --</option>";
+  ownerSelect.innerHTML = "<option value=''>-- bitte wählen --</option>";
 
-  stuten.forEach((s, i)=>{
-    const o = document.createElement('option');
-    o.value = i;
-    o.textContent = pickName(s);
-    selStute.appendChild(o);
+  stuten.forEach((s, idx) => {
+    const opt = document.createElement("option");
+    opt.value = idx;
+    opt.textContent = pickName(s);
+    mareSelect.appendChild(opt);
   });
-  const owners = [...new Set(stuten.map(s=>pickOwner(s)))].filter(x=>x);
-  owners.forEach(o=>{
-    const op = document.createElement('option');
-    op.value = o;
-    op.textContent = o;
-    selBesitzer.appendChild(op);
+
+  const owners = [...new Set(stuten.map(s => pickOwner(s)))].filter(x => x);
+  owners.forEach(o => {
+    const opt = document.createElement("option");
+    opt.value = o;
+    opt.textContent = o;
+    ownerSelect.appendChild(opt);
   });
 }
 
-// Bewertungstabelle nach deiner Logik
-const FRONT_MAP = {
-  "HHHH":4,"HHHh":3,"HHhh":2,"HhHH":3,"HhHh":2,"Hhhh":1,
-  "hhHH":2,"hhHh":1,"hhhh":0
-};
-const BACK_MAP = {
-  "HHHH":0,"HHHh":1,"HHhh":2,"HhHH":1,"HhHh":2,"Hhhh":3,
-  "hhHH":2,"hhHh":3,"hhhh":4
-};
-
-function normalizeGen(str){
-  return str.replace(/\s|\|/g,"").trim(); // Leerzeichen & | entfernen
+// --- Genetik-Parser ---
+function parseGenetik(str) {
+  if (!str) return [];
+  // Leerzeichen entfernen, in Paare splitten, dann vorder/hinter Teil trennen
+  str = str.replace(/\s+/g, "");
+  const [front, back] = str.split("|").map(s => s.trim());
+  const frontPairs = (front.match(/.{1,2}/g) || []).slice(0, 4);
+  const backPairs = (back.match(/.{1,2}/g) || []).slice(0, 4);
+  return { front: frontPairs, back: backPairs };
 }
 
-function splitGenes(genStr){
-  genStr = normalizeGen(genStr);
-  return [genStr.slice(0,8), genStr.slice(8,16)];
-}
-
-function scorePair(stute, hengst){
+// --- Score-Berechnung ---
+function scorePair(stuteGen, hengstGen) {
+  const fStute = parseGenetik(stuteGen).front;
+  const bStute = parseGenetik(stuteGen).back;
+  const fHengst = parseGenetik(hengstGen).front;
+  const bHengst = parseGenetik(hengstGen).back;
   let score = 0;
-  let debug = "";
-  for(const merk of MERKMALE){
-    const sVal = stute[merk] ? normalizeGen(String(stute[merk])) : "";
-    const hVal = hengst[merk] ? normalizeGen(String(hengst[merk])) : "";
-    if(sVal.length < 16 || hVal.length < 16) continue;
 
-    const [svFront, svBack] = splitGenes(sVal);
-    const [hvFront, hvBack] = splitGenes(hVal);
-    let merkScore = 0;
-    let merkDebug = `${merk}: `;
-
-    for(let i=0;i<4;i++){
-      const sGene = svFront.slice(i*2,i*2+2);
-      const hGene = hvFront.slice(i*2,i*2+2);
-      const key = (sGene+hGene).replace(/[^Hh]/g,"");
-      const val = FRONT_MAP[key] ?? 0;
-      merkScore += val;
-      merkDebug += `V${i+1}:${sGene}-${hGene}(${val}) `;
-    }
-    for(let i=0;i<4;i++){
-      const sGene = svBack.slice(i*2,i*2+2);
-      const hGene = hvBack.slice(i*2,i*2+2);
-      const key = (sGene+hGene).replace(/[^Hh]/g,"");
-      const val = BACK_MAP[key] ?? 0;
-      merkScore += val;
-      merkDebug += `H${i+1}:${sGene}-${hGene}(${val}) `;
-    }
-    debug += `${merkDebug} — ${merkScore}\n`;
-    score += merkScore;
+  // Bewertungslogik vorne
+  for (let i = 0; i < 4; i++) {
+    const s = (fStute[i] || "").toUpperCase();
+    const h = (fHengst[i] || "").toUpperCase();
+    score += frontScore(s, h);
   }
-  return {score, debug};
+  // Bewertungslogik hinten
+  for (let i = 0; i < 4; i++) {
+    const s = (bStute[i] || "").toUpperCase();
+    const h = (bHengst[i] || "").toUpperCase();
+    score += backScore(s, h);
+  }
+  return score;
 }
 
-function createTop3Html(stute){
-  const name = pickName(stute);
-  const owner = pickOwner(stute);
-  const color = pickColor(stute);
-
-  const scored = hengste.map(h=>{
-    const res = scorePair(stute,h);
-    return {...h, __score: res.score, __debug: res.debug};
-  }).sort((a,b)=>b.__score - a.__score).slice(0,3);
-
-  let html = `<div class="match"><h3>${name} — Besitzer: ${owner}</h3>`;
-  html += `<p><strong>Farbgenetik:</strong> ${color || "-"}</p><ol>`;
-  scored.forEach((h,i)=>{
-    const id = `${name.replace(/\W/g,"")}_${i}`;
-    html += `<li><strong>.${i+1} Wahl:</strong> ${pickName(h)} — Farbe: ${pickColor(h)||"-"} (Score: ${h.__score})
-             <span class="info-icon" onclick="toggleDebug('${id}')">i</span>
-             <div id="${id}" class="debug-box">${h.__debug}</div></li>`;
-  });
-  html += `</ol></div>`;
-  return html;
+// Tabellenbasierte Punktvergabe
+function frontScore(s, h) {
+  const t = {
+    "HH-HH": 4, "HH-HH": 4, "HH-HH": 4,
+    "HH-Hh": 3, "HH-hh": 2,
+    "Hh-HH": 3, "Hh-Hh": 2, "Hh-hh": 1,
+    "hh-HH": 2, "hh-Hh": 1, "hh-hh": 0
+  };
+  return t[`${s}-${h}`] ?? 0;
+}
+function backScore(s, h) {
+  const t = {
+    "HH-HH": 0, "HH-Hh": 1, "HH-hh": 2,
+    "Hh-HH": 1, "Hh-Hh": 2, "Hh-hh": 3,
+    "hh-HH": 2, "hh-Hh": 3, "hh-hh": 4
+  };
+  return t[`${s}-${h}`] ?? 0;
 }
 
-function toggleDebug(id){
-  const box = document.getElementById(id);
-  box.style.display = box.style.display === "block" ? "none" : "block";
+// --- Score pro Stute/Hengst ---
+function berechneScore(stute, hengst) {
+  let total = 0;
+  const debug = [];
+  for (const m of MERKMALE) {
+    const sVal = stute[m];
+    const hVal = hengst[m];
+    if (!sVal || !hVal) continue;
+    const s = scorePair(sVal, hVal);
+    debug.push(`${m}: ${sVal} × ${hVal} → ${s}`);
+    total += s;
+  }
+  return { score: total, debug };
 }
 
-function zeigeVorschlaege(){
-  const selStute = document.getElementById('stuteSelect').value;
-  const selBesitzer = document.getElementById('besitzerSelect').value;
-  const out = document.getElementById('ergebnis');
+// --- Anzeige der Top-3 ---
+function zeigeVorschlaege() {
+  const mareVal = document.getElementById("mareSelect").value;
+  const ownerVal = document.getElementById("ownerSelect").value;
+  const out = document.getElementById("results");
   out.innerHTML = "";
 
-  let show = [];
-  if(selStute !== ""){
-    const idx = parseInt(selStute);
-    if(stuten[idx]) show.push(stuten[idx]);
-  } else if(selBesitzer !== ""){
-    show = stuten.filter(s=>pickOwner(s)===selBesitzer);
+  let stutenListe = [];
+
+  if (mareVal) {
+    const idx = parseInt(mareVal, 10);
+    if (stuten[idx]) stutenListe.push(stuten[idx]);
+  } else if (ownerVal) {
+    stutenListe = stuten.filter(s => pickOwner(s) === ownerVal);
   } else {
-    show = stuten;
+    stutenListe = stuten;
   }
 
-  let html = "";
-  show.forEach(s=> html += createTop3Html(s));
-  out.innerHTML = html || "<p>Keine Daten gefunden.</p>";
+  stutenListe.forEach(stute => {
+    const name = pickName(stute);
+    const owner = pickOwner(stute);
+    const color = pickColor(stute);
+
+    // Scores berechnen
+    const scored = hengste
+      .map(h => {
+        const { score, debug } = berechneScore(stute, h);
+        return { ...h, __score: score, __debug: debug };
+      })
+      .sort((a, b) => b.__score - a.__score)
+      .slice(0, 3);
+
+    const card = document.createElement("div");
+    card.className = "horse-card";
+    card.innerHTML = `
+      <div class="horse-header">
+        <h3>${name}</h3>
+        <span class="score">${owner}</span>
+      </div>
+      <p><strong>Farbgenetik Stute:</strong> ${color || "-"}</p>
+      <ul class="horse-list">
+        ${scored.map((h, i) => `
+          <li>
+            <strong>• ${pickName(h)}</strong> 
+            – ${pickColor(h) || "-"} 
+            <span class="score">(${h.__score})</span>
+            <span class="info-icon" data-debug="${encodeURIComponent(h.__debug.join("\n"))}">ℹ️</span>
+          </li>
+        `).join("")}
+      </ul>
+    `;
+    out.appendChild(card);
+  });
+
+  // Info-Icons aktivieren
+  document.querySelectorAll(".info-icon").forEach(icon => {
+    icon.addEventListener("click", e => {
+      const msg = decodeURIComponent(e.target.getAttribute("data-debug"));
+      alert("Score-Details:\n\n" + msg);
+    });
+  });
 }
 
-function zeigeAlle(){
-  document.getElementById('stuteSelect').value = "";
-  document.getElementById('besitzerSelect').value = "";
-  zeigeVorschlaege();
-}
-
-window.addEventListener("DOMContentLoaded", ()=>{
+// --- Event-Listener ---
+document.addEventListener("DOMContentLoaded", () => {
   ladeDaten();
-  document.getElementById('zeigeAlle').addEventListener('click', zeigeAlle);
-  document.getElementById('stuteSelect').addEventListener('change', zeigeVorschlaege);
-  document.getElementById('besitzerSelect').addEventListener('change', zeigeVorschlaege);
+
+  document.getElementById("mareSelect").addEventListener("change", zeigeVorschlaege);
+  document.getElementById("ownerSelect").addEventListener("change", zeigeVorschlaege);
+  document.getElementById("showAll").addEventListener("click", zeigeVorschlaege);
+
+  const infoToggle = document.getElementById("infoToggle");
+  const infoBox = document.getElementById("infoBox");
+  infoToggle.addEventListener("click", () => {
+    infoBox.classList.toggle("visible");
+  });
 });
