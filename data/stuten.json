@@ -473,5 +473,24 @@
     "Fesseln":"hH hh hh hH | hh hh Hh hh",
     "Hufe":"\tHh HH hh hh | hh hh hH hH",
     "Besitzer":"ElitaOne"
+  },
+  {
+    "Name":"SPZ* Dakota",
+    "Farbgenetik":null,
+    "Kopf":"hh hh hh Hh | Hh hh Hh hh",
+    "Gebiss":"HH Hh Hh Hh | hh hh Hh hh",
+    "Hals":"hh HH hh hH | hh Hh hh hh",
+    "Halsansatz":"HH Hh Hh hH | hh hh hh hh",
+    "Widerrist":"Hh Hh hh Hh | hh HH hH hh",
+    "Schulter":"\tHH hh hH hh | hh hh hh hh",
+    "Brust":"\tHh hH HH hH | hh Hh hh hh",
+    "Rückenlinie":"\thh Hh Hh hh | hh hH hh hh",
+    "Rückenlänge":"HH Hh Hh hh | hh hh hh hH",
+    "Kruppe":"HH hh hH hh | Hh hH HH hH",
+    "Beinwinkelung":"\thh Hh hh Hh | hh hh hH hh",
+    "Beinstellung":"\tHh Hh hh Hh | hh hh hh hh",
+    "Fesseln":"\thh HH hH hH | hh hh Hh hH",
+    "Hufe":"\thH HH Hh Hh | hh hh hh hH",
+    "Besitzer":"ElitaOne"
   }
 ]
