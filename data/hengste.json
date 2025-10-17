@@ -872,5 +872,24 @@
     "Fesseln":"Hh Hh hH Hh | hH Hh Hh hh",
     "Hufe":"Hh hH hh hH | hh hh Hh hh",
     "Besitzer":"Ice"
+  },
+  {
+    "Name":"Elros Eldaliéva",
+    "Farbgenetik":null,
+    "Kopf":"hh hH hh HH | hH Hh hh HH",
+    "Gebiss":"\thh hH hH hh | hh hh hh hH",
+    "Hals":"hh hh Hh Hh | hh HH hH hh",
+    "Halsansatz":"\thH hh hH hh | hh HH hH hh",
+    "Widerrist":"Hh hH hH hh | hh Hh hh Hh",
+    "Schulter":"\thH hH hH Hh | hh hh hH hh",
+    "Brust":"HH hh hH HH | Hh hh Hh Hh",
+    "Rückenlinie":"hh Hh hH Hh | hh hH Hh HH",
+    "Rückenlänge":"Hh Hh Hh Hh | hh hh hH hh",
+    "Kruppe":"\thH Hh hH hh | hh HH hH hh",
+    "Beinwinkelung":"HH Hh HH Hh | hh hh hh Hh",
+    "Beinstellung":"hh hH Hh hh | hh HH hh hh",
+    "Fesseln":"HH Hh hh hH | hh hh hh hh",
+    "Hufe":null,
+    "Besitzer":null
   }
 ]
