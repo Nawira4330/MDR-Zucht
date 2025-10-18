@@ -760,25 +760,6 @@
     "Besitzer":"ElitaOne "
   },
   {
-    "Name":"Vasco Sameiro °16.4° ~VL~",
-    "Farbgenetik":null,
-    "Kopf":"HH hh hh hH | hh hH hh hh\n",
-    "Gebiss":"hH hh hh HH | hH hh hh hh",
-    "Hals":"hh hH hh hh | Hh Hh hh hH",
-    "Halsansatz":"HH hh HH Hh | hh hh hh hH",
-    "Widerrist":"HH HH Hh hH | hh hh hh hh",
-    "Schulter":"hh hh hH hH | hh hh hh hh",
-    "Brust":"hH hh hh Hh | Hh hh Hh hH",
-    "Rückenlinie":"hH Hh hh HH | hh hh hh HH",
-    "Rückenlänge":"\tHH hh Hh hh | hh Hh Hh hH",
-    "Kruppe":"\thh hH hH hH | hh hh hh hh",
-    "Beinwinkelung":"hh Hh hH hh | hh hH Hh hh",
-    "Beinstellung":"hh hH Hh hH | hh hH hh hh",
-    "Fesseln":"hH hh hH hH | hH hH Hh hH",
-    "Hufe":"hH Hh hH hh | HH hh hh Hh",
-    "Besitzer":"ElitaOne"
-  },
-  {
     "Name":"Copasih °16.4° ~VL~",
     "Farbgenetik":"dD, Oo",
     "Kopf":"hh hh hH hH | hh Hh hh Hh",
@@ -890,6 +871,25 @@
     "Beinstellung":"hh hH Hh hh | hh HH hh hh",
     "Fesseln":"HH Hh hh hH | hh hh hh hh",
     "Hufe":"hH hh HH hh | hH Hh hh hh",
+    "Besitzer":"ElitaOne"
+  },
+  {
+    "Name":"Vasco Sameiro °16.4° ~VL~",
+    "Farbgenetik":null,
+    "Kopf":"HH hh hh hH | hh hH hh hh",
+    "Gebiss":"hH hh hh HH | hH hh hh hh",
+    "Hals":"hh hH hh hh | Hh Hh hh hH",
+    "Halsansatz":"HH hh HH Hh | hh hh hh hH",
+    "Widerrist":"HH HH Hh hH | hh hh hh hh",
+    "Schulter":"hh hh hH hH | hh hh hh hh",
+    "Brust":"hH hh hh Hh | Hh hh Hh hH",
+    "Rückenlinie":"hH Hh hh HH | hh hh hh HH",
+    "Rückenlänge":"HH hh Hh hh | hh Hh Hh hH",
+    "Kruppe":"hh hH hH hH | hh hh hh hh",
+    "Beinwinkelung":"hh Hh hH hh | hh hH Hh hh",
+    "Beinstellung":"hh hH Hh hH | hh hH hh hh",
+    "Fesseln":"hH hh hH hH | hH hH Hh hH",
+    "Hufe":"hH Hh hH hh | HH hh hh Hh",
     "Besitzer":"ElitaOne"
   }
 ]
