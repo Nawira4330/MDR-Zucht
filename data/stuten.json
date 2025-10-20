@@ -492,5 +492,24 @@
     "Fesseln":"\thh HH hH hH | hh hh Hh hH",
     "Hufe":"\thH HH Hh Hh | hh hh hh hH",
     "Besitzer":"ElitaOne"
+  },
+  {
+    "Name":"Amanyar~ Variel Eldaliéva",
+    "Farbgenetik":null,
+    "Kopf":"\tHh Hh hh hH | hH Hh hH hh",
+    "Gebiss":"Hh hh hh HH | Hh Hh HH hh",
+    "Hals":"hH HH hh hH | hh hH hh Hh",
+    "Halsansatz":"\thH hh hh hh | hh Hh Hh hh",
+    "Widerrist":"Hh hH hH hH | hH hh hh hh",
+    "Schulter":"hH hH hH hh | hh HH Hh hh",
+    "Brust":"\thh Hh Hh hh | hh hh HH HH",
+    "Rückenlinie":"\thh HH HH hh | hh hH hh hH",
+    "Rückenlänge":"hH Hh HH hh | hH hH hH Hh",
+    "Kruppe":"\thH hH hh HH | hh hh hh hh",
+    "Beinwinkelung":"HH hh hh hH | hh hh Hh Hh",
+    "Beinstellung":"hh Hh Hh Hh | hh hh hh hh",
+    "Fesseln":"\tHH Hh HH hH | hh hh hh HH",
+    "Hufe":"\thH hH HH hh | hh hh hh Hh",
+    "Besitzer":"ElitaOne"
   }
 ]
