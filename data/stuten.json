@@ -530,5 +530,24 @@
     "Fesseln":"hH hH hH hh | hh hH hh hh",
     "Hufe":"hh hH hh hh | hh HH hh Hh",
     "Besitzer":"MaikiTaiki "
+  },
+  {
+    "Name":"~B.H~ Elaine",
+    "Farbgenetik":null,
+    "Kopf":"hh HH Hh hH | hh Hh hh hh",
+    "Gebiss":"\thh HH HH Hh | Hh Hh hh hh",
+    "Hals":"Hh hH HH hH | hh hh hh hH",
+    "Halsansatz":"\thH Hh Hh hh | hh hH hh hh",
+    "Widerrist":"hh hh hH hh | Hh hh hh hh",
+    "Schulter":"hH hH Hh Hh | hH hH hh hh",
+    "Brust":"Hh hh hH Hh | Hh hh hH hH",
+    "Rückenlinie":"HH hh hH hh | hh hH hH hh",
+    "Rückenlänge":"Hh hH hh Hh | hh hh hh HH",
+    "Kruppe":"hh Hh hH Hh | hh hH hH hh",
+    "Beinwinkelung":"hH hH Hh Hh | hh hh HH hh",
+    "Beinstellung":"hH Hh HH hH | hH hh Hh Hh",
+    "Fesseln":"HH hh hH hh | hh HH hh hh",
+    "Hufe":"HH HH hh hh | Hh Hh hh HH",
+    "Besitzer":"ElitaOne"
   }
 ]
